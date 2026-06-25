@@ -1,0 +1,1520 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<script>document.documentElement.setAttribute('data-theme', localStorage.getItem('sentria-theme') || 'dark');</script>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sentria</title>
+<meta name="description" content="Sentria — a modular ecosystem for dream exploration, lucid dreaming, and reflective consciousness research.">
+<link rel="icon" type="image/png" href="favicon.png">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://sentria.vercel.app/">
+<meta property="og:title" content="Sentria — Explore Consciousness">
+<meta property="og:description" content="A modular ecosystem for dream exploration, lucid dreaming, symbolic continuity, and reflective consciousness research.">
+<meta property="og:image" content="https://sentria.vercel.app/logo.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://sentria.vercel.app/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Mono:wght@300;400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================
+   TOKENS
+   ============================================================ */
+:root {
+  --bg:             #0a0b0f;
+  --bg-card:        #0f1018;
+  --bg-card-hover:  #141620;
+  --surface:        #13151e;
+  --border:         rgba(126,207,196,0.09);
+  --border-hover:   rgba(126,207,196,0.26);
+  --text-primary:   #f0ede8;
+  --text-secondary: #8ba8a5;
+  --text-muted:     #3d5452;
+  --seafoam:        #7ecfc4;
+  --seafoam-dim:    #4a9e96;
+  --seafoam-soft:   rgba(126,207,196,0.08);
+  --seafoam-glow:   rgba(126,207,196,0.04);
+  --obsidian:       #0a0b0f;
+  --font-display:   'Cormorant Garamond', Georgia, serif;
+  --font-body:      'DM Sans', sans-serif;
+  --font-mono:      'DM Mono', monospace;
+  --radius:         14px;
+  --radius-lg:      22px;
+  --transition:     0.35s cubic-bezier(0.4,0,0.2,1);
+}
+
+[data-theme="light"] {
+  --bg:             #f2efe9;
+  --bg-card:        #ffffff;
+  --bg-card-hover:  #faf8f4;
+  --surface:        #e8e3da;
+  --border:         rgba(45,107,100,0.12);
+  --border-hover:   rgba(45,107,100,0.30);
+  --text-primary:   #0d0e12;
+  --text-secondary: #3d6b66;
+  --text-muted:     #9ab0ac;
+  --seafoam:        #2d6b64;
+  --seafoam-dim:    #4a9e96;
+  --seafoam-soft:   rgba(45,107,100,0.07);
+  --seafoam-glow:   rgba(45,107,100,0.03);
+  --obsidian:       #0d0e12;
+}
+
+/* ============================================================
+   BASE
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-weight: 300;
+  overflow-x: hidden;
+  min-height: 100vh;
+  transition: background var(--transition), color var(--transition);
+}
+
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.014'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 0;
+}
+
+.container {
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  position: relative; z-index: 1;
+}
+
+/* ============================================================
+   NAV
+   ============================================================ */
+header {
+  position: fixed; top: 0; left: 0; right: 0;
+  z-index: 200; padding: 1.1rem 0;
+  border-bottom: 1px solid transparent;
+  transition: all var(--transition);
+}
+header.scrolled {
+  background: rgba(10,11,15,0.88);
+  backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+  border-bottom-color: var(--border);
+}
+[data-theme="light"] header.scrolled { background: rgba(242,239,233,0.88); }
+
+nav { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+
+.nav-logo { display: flex; align-items: center; gap: 0.6rem; text-decoration: none; }
+.nav-logo img { height: 26px; width: auto; display: block; }
+
+.nav-right { display: flex; align-items: center; gap: 0.5rem; }
+
+#lang-switcher {
+  display: flex; gap: 2px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 100px; padding: 3px;
+}
+.lang-btn {
+  background: none; border: none; cursor: pointer;
+  font-family: var(--font-mono); font-size: 0.65rem;
+  letter-spacing: 0.1em; color: var(--text-muted);
+  padding: 0.3rem 0.65rem; border-radius: 100px;
+  transition: all var(--transition);
+}
+.lang-btn.active, .lang-btn:hover { background: var(--seafoam); color: var(--obsidian); }
+
+.theme-btn {
+  background: none; border: 1px solid var(--border);
+  border-radius: 50%; width: 36px; height: 36px;
+  cursor: pointer; color: var(--text-secondary);
+  display: flex; align-items: center; justify-content: center;
+  transition: all var(--transition); flex-shrink: 0;
+}
+.theme-btn:hover { border-color: var(--border-hover); color: var(--seafoam); background: var(--seafoam-soft); }
+.icon-sun, .icon-moon { width: 15px; height: 15px; display: block; }
+[data-theme="dark"]  .icon-sun  { display: none; }
+[data-theme="dark"]  .icon-moon { display: block; }
+[data-theme="light"] .icon-sun  { display: block; }
+[data-theme="light"] .icon-moon { display: none; }
+
+/* ============================================================
+   HERO — full screen with mini constellation
+   ============================================================ */
+.hero {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 4rem;
+  padding: 8rem 0 5rem;
+  position: relative;
+}
+
+.hero-text { position: relative; z-index: 2; }
+
+.hero-tag {
+  display: inline-block;
+  font-family: var(--font-mono); font-size: 0.65rem;
+  letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--seafoam); border: 1px solid var(--border);
+  padding: 0.35rem 1rem; border-radius: 100px;
+  margin-bottom: 2rem; background: var(--seafoam-soft);
+  animation: fadeUp 0.8s ease both;
+}
+
+.hero h1 {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 6vw, 6rem);
+  font-weight: 300; line-height: 1.02;
+  color: var(--text-primary);
+  margin-bottom: 1.5rem;
+  animation: fadeUp 0.8s 0.1s ease both;
+}
+.hero h1 em { font-style: italic; color: var(--seafoam); }
+
+.hero-sub {
+  font-size: 1rem; color: var(--text-secondary);
+  max-width: 420px; line-height: 1.85; font-weight: 300;
+  margin-bottom: 2.5rem;
+  animation: fadeUp 0.8s 0.2s ease both;
+}
+
+.hero-cta {
+  display: flex; gap: 0.75rem; flex-wrap: wrap;
+  animation: fadeUp 0.8s 0.3s ease both;
+}
+
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  background: var(--seafoam); color: var(--obsidian);
+  text-decoration: none; padding: 0.8rem 1.8rem;
+  border-radius: 100px; font-size: 0.88rem; font-weight: 400;
+  transition: all var(--transition); border: none; cursor: pointer;
+}
+.btn-primary:hover { background: var(--seafoam-dim); transform: translateY(-2px); }
+.btn-primary svg { width: 14px; height: 14px; }
+
+/* Mini constellation — right side of hero */
+.hero-visual {
+  position: relative;
+  height: 500px;
+  animation: fadeUp 1s 0.4s ease both;
+}
+
+#hero-canvas {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+}
+
+.hero-node {
+  position: absolute;
+  display: flex; flex-direction: column; align-items: center;
+  cursor: pointer;
+  text-decoration: none;
+}
+.hero-node:hover .hero-node-dot { background: var(--seafoam); box-shadow: 0 0 18px rgba(126,207,196,0.5); }
+.hero-node:hover .hero-node-label { color: var(--seafoam); }
+
+/* Dot wrapper — this is what drifts in JS */
+.hero-node-dot-wrap {
+  position: relative;
+  display: flex; align-items: center; justify-content: center;
+  width: 9px; height: 9px;
+}
+
+.hero-node-dot {
+  width: 9px; height: 9px; border-radius: 50%;
+  background: var(--text-muted);
+  transition: background 0.4s ease, box-shadow 0.4s ease;
+  position: relative; z-index: 2;
+  flex-shrink: 0;
+}
+
+.hero-node[data-active="true"] .hero-node-dot {
+  background: var(--seafoam);
+  box-shadow: 0 0 10px rgba(126,207,196,0.35);
+}
+
+.hero-node-ring {
+  position: absolute; width: 9px; height: 9px;
+  border-radius: 50%; border: 1px solid var(--seafoam);
+  top: 0; left: 0;
+}
+.hero-node[data-active="true"] .hero-node-ring {
+  animation: nodePulse 2.8s ease-in-out infinite;
+}
+@keyframes nodePulse {
+  0%,100% { transform: scale(1); opacity: 0.5; }
+  50%      { transform: scale(2.4); opacity: 0; }
+}
+
+/* Label stays fixed — NOT moved by drift */
+.hero-node-label {
+  font-family: var(--font-display); font-size: 0.85rem;
+  font-weight: 400; color: var(--text-secondary);
+  margin-top: 0.5rem; white-space: nowrap;
+  transition: color var(--transition);
+  pointer-events: none;
+}
+
+/* Scroll hint */
+.hero-scroll {
+  position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+  color: var(--text-muted); font-family: var(--font-mono);
+  font-size: 0.6rem; letter-spacing: 0.18em; text-transform: uppercase;
+  animation: fadeUp 1s 0.6s ease both;
+}
+.scroll-line {
+  width: 1px; height: 36px;
+  background: linear-gradient(to bottom, var(--seafoam), transparent);
+  animation: scrollPulse 2.2s ease-in-out infinite;
+}
+@keyframes scrollPulse { 0%,100% { opacity: 0.2; } 50% { opacity: 0.7; } }
+
+/* ============================================================
+   DIVIDER
+   ============================================================ */
+.divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 0;
+  position: relative; z-index: 1;
+}
+
+/* ============================================================
+   CARDS SECTION
+   ============================================================ */
+.cards-section {
+  padding: 7rem 0 5rem;
+  position: relative; z-index: 1;
+}
+
+.section-header {
+  margin-bottom: 4rem;
+}
+
+.section-label {
+  font-family: var(--font-mono); font-size: 0.62rem;
+  letter-spacing: 0.25em; text-transform: uppercase;
+  color: var(--seafoam); margin-bottom: 0.75rem; display: block;
+}
+
+.section-header h2 {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 300; color: var(--text-primary); line-height: 1.15;
+}
+.section-header h2 em { font-style: italic; color: var(--text-secondary); }
+
+/* Grid */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+
+@media (max-width: 1000px) {
+  .cards-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* Card */
+.app-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  display: flex; flex-direction: column;
+  transition: border-color var(--transition), background var(--transition), transform var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+
+.app-card:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--border-hover);
+  transform: translateY(-3px);
+}
+
+/* Screenshot — logo shown by default, screenshot on hover */
+.card-visual {
+  position: relative;
+  aspect-ratio: 16/9;
+  overflow: hidden;
+  background: var(--surface);
+  cursor: pointer;
+}
+
+.card-logo {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  z-index: 2;
+  background: var(--bg-card);
+}
+
+.card-logo svg {
+  width: 36px; height: 36px;
+  color: var(--card-color, var(--seafoam));
+  opacity: 0.5;
+  transition: opacity 0.4s ease;
+}
+.app-card:hover .card-logo svg { opacity: 0.8; }
+
+.card-screenshot {
+  position: absolute; inset: 0;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  z-index: 1;
+}
+.card-screenshot img {
+  width: 100%; height: 100%;
+  object-fit: cover; object-position: top;
+  display: block;
+}
+
+/* Hover: hide logo, show screenshot */
+.card-visual:hover .card-logo    { opacity: 0; transform: scale(0.95); }
+.card-visual:hover .card-screenshot { opacity: 1; }
+
+/* Hover label */
+.card-visual::after {
+  content: attr(data-hint);
+  position: absolute; bottom: 0.75rem; left: 50%; transform: translateX(-50%);
+  font-family: var(--font-mono); font-size: 0.58rem;
+  letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--text-muted); opacity: 0;
+  transition: opacity 0.3s ease;
+  white-space: nowrap; z-index: 3;
+}
+.card-visual:hover::after { opacity: 1; }
+
+/* Card body */
+.card-body {
+  padding: 1.4rem 1.6rem 1.6rem;
+  display: flex; flex-direction: column;
+  gap: 0.75rem; flex: 1;
+  border-top: 1px solid var(--border);
+}
+
+.card-header {
+  display: flex; align-items: flex-start;
+  justify-content: space-between; gap: 1rem;
+}
+
+.card-name {
+  font-family: var(--font-display);
+  font-size: 1.3rem; font-weight: 400;
+  color: var(--text-primary); line-height: 1.2;
+}
+
+.card-tagline {
+  font-family: var(--font-mono); font-size: 0.58rem;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--card-color, var(--seafoam));
+  margin-top: 0.15rem;
+}
+
+.card-status {
+  font-family: var(--font-mono); font-size: 0.55rem;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  padding: 0.25rem 0.6rem; border-radius: 100px;
+  border: 1px solid var(--border);
+  color: var(--text-muted); white-space: nowrap; flex-shrink: 0;
+}
+.card-status.live {
+  color: var(--seafoam);
+  border-color: rgba(126,207,196,0.2);
+  background: var(--seafoam-soft);
+}
+[data-theme="light"] .card-status.live {
+  border-color: rgba(45,107,100,0.2);
+}
+
+.card-desc {
+  font-size: 0.875rem; color: var(--text-secondary);
+  line-height: 1.8; font-weight: 300; flex: 1;
+}
+
+.card-cta {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  color: var(--card-color, var(--seafoam));
+  text-decoration: none; font-size: 0.82rem;
+  padding-top: 0.9rem; border-top: 1px solid var(--border);
+  transition: gap var(--transition); font-weight: 400;
+}
+.card-cta:hover { gap: 0.85rem; }
+.card-cta svg { width: 13px; height: 13px; }
+
+.card-cta--nolink {
+  font-family: var(--font-mono); font-size: 0.62rem;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--text-muted); padding-top: 0.9rem;
+  border-top: 1px solid var(--border);
+}
+
+/* Continuity tag inside card */
+.card-continuity {
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  padding: 0.4rem 0.7rem;
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  width: fit-content;
+  transition: color var(--transition), border-color var(--transition);
+}
+.card-continuity::before {
+  content: '';
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  background: var(--card-color, var(--seafoam));
+  opacity: 0.45;
+  flex-shrink: 0;
+}
+.app-card:hover .card-continuity {
+  color: var(--text-secondary);
+  border-color: var(--border-hover);
+}
+
+/* Color variants */
+.app-card[data-color="seafoam"] { --card-color: var(--seafoam); }
+.app-card[data-color="amber"]   { --card-color: #c9a96e; }
+.app-card[data-color="rose"]    { --card-color: #c47e8a; }
+.app-card[data-color="slate"]   { --card-color: #8a9fc4; }
+.app-card[data-color="sage"]    { --card-color: #8ab89a; }
+.app-card[data-color="lavender"]{ --card-color: #a08ac4; }
+.app-card[data-color="gold"]    { --card-color: #c4a84a; }
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 4rem 0 2.5rem; margin-top: 5rem;
+  position: relative; z-index: 1;
+}
+
+.footer-manifesto {
+  text-align: center;
+  padding-bottom: 3rem;
+  margin-bottom: 2.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.footer-manifesto-text {
+  font-family: var(--font-display);
+  font-size: clamp(1.1rem, 2.2vw, 1.55rem);
+  font-weight: 300;
+  font-style: italic;
+  color: var(--text-muted);
+  line-height: 1.65;
+  max-width: 620px;
+  margin: 0 auto;
+  transition: color var(--transition);
+}
+
+.footer-manifesto-text br { display: block; margin-top: 0.25rem; }
+
+footer:hover .footer-manifesto-text { color: var(--text-secondary); }
+
+.footer-inner {
+  display: flex; align-items: center;
+  justify-content: space-between; flex-wrap: wrap; gap: 1.25rem;
+}
+.footer-logo { font-family: var(--font-display); font-size: 1.1rem; color: var(--text-muted); letter-spacing: 0.08em; }
+.footer-links { display: flex; gap: 2rem; list-style: none; }
+.footer-links a { font-size: 0.78rem; color: var(--text-muted); text-decoration: none; font-family: var(--font-mono); letter-spacing: 0.08em; transition: color var(--transition); }
+.footer-links a:hover { color: var(--seafoam); }
+.footer-copy { font-size: 0.72rem; color: var(--text-muted); font-family: var(--font-mono); }
+
+/* ============================================================
+   ANIMATIONS
+   ============================================================ */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.65s ease, transform 0.65s ease; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 860px) {
+  .hero { grid-template-columns: 1fr; gap: 2rem; min-height: auto; padding: 7rem 0 4rem; }
+  .hero-visual { height: 320px; }
+  .cards-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 480px) {
+  .container { padding: 0 1.25rem; }
+  .footer-inner { flex-direction: column; text-align: center; }
+  .footer-links { justify-content: center; }
+}
+</style>
+</head>
+
+<body>
+
+<!-- ── NAV ─────────────────────────────────────────────────── -->
+<header id="main-header">
+  <div class="container">
+    <nav>
+      <a href="index.html" class="nav-logo">
+        <img src="logo.png" alt="Sentria">
+      </a>
+      <div class="nav-right">
+        <div id="lang-switcher"></div>
+        <button class="theme-btn" id="theme-toggle" aria-label="Toggle theme">
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </button>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<!-- ── HERO ────────────────────────────────────────────────── -->
+<section class="hero">
+  <div class="container" style="display:contents">
+
+    <div class="hero-text" style="padding-left:2rem">
+      <div class="hero-tag" data-i18n="hero_tag">Sentria · Explore Consciousness</div>
+      <h1>
+        <span data-i18n="hero_h1_line1">Places return.</span><br>
+        <em data-i18n="hero_h1_line2">Symbols evolve.</em>
+      </h1>
+      <p class="hero-sub" data-i18n="hero_sub">
+        Dreams are not isolated entries. Sentria is a modular ecosystem for long-term dream exploration — built around recurring structures, symbolic continuity, and the gradual emergence of inner cartography across time.
+      </p>
+      <div class="hero-cta">
+        <a href="#ecosystem" class="btn-primary">
+          <span data-i18n="hero_cta">Enter the ecosystem</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <!-- Mini constellation — right side -->
+    <div class="hero-visual" style="padding-right:2rem; position:relative">
+      <canvas id="hero-canvas"></canvas>
+
+      <!-- Node positions within the hero visual box -->
+      <div class="hero-node" data-active="true" data-node="somnia"
+           style="top:8%;left:12%">
+        <div class="hero-node-dot-wrap">
+          <div class="hero-node-ring"></div>
+          <div class="hero-node-dot"></div>
+        </div>
+        <div class="hero-node-label">Somnia</div>
+      </div>
+
+      <div class="hero-node" data-active="true" data-node="orbis"
+           style="top:4%;left:55%">
+        <div class="hero-node-dot-wrap">
+          <div class="hero-node-ring"></div>
+          <div class="hero-node-dot"></div>
+        </div>
+        <div class="hero-node-label">Orbis</div>
+      </div>
+
+      <div class="hero-node" data-active="true" data-node="oneiro"
+           style="top:30%;left:75%">
+        <div class="hero-node-dot-wrap">
+          <div class="hero-node-ring"></div>
+          <div class="hero-node-dot"></div>
+        </div>
+        <div class="hero-node-label">Oneiro</div>
+      </div>
+
+      <div class="hero-node" data-active="true" data-node="oneiroweb"
+           style="top:55%;left:68%">
+        <div class="hero-node-dot-wrap">
+          <div class="hero-node-ring"></div>
+          <div class="hero-node-dot"></div>
+        </div>
+        <div class="hero-node-label">Oneiro Web</div>
+      </div>
+
+      <div class="hero-node" data-active="true" data-node="lucidlab"
+           style="top:72%;left:44%">
+        <div class="hero-node-dot-wrap">
+          <div class="hero-node-ring"></div>
+          <div class="hero-node-dot"></div>
+        </div>
+        <div class="hero-node-label">Lucid Lab</div>
+      </div>
+
+      <div class="hero-node" data-active="true" data-node="limina"
+           style="top:68%;left:10%">
+        <div class="hero-node-dot-wrap">
+          <div class="hero-node-ring"></div>
+          <div class="hero-node-dot"></div>
+        </div>
+        <div class="hero-node-label">Limina</div>
+      </div>
+
+      <div class="hero-node" data-active="true" data-node="consciousflow"
+           style="top:36%;left:4%">
+        <div class="hero-node-dot-wrap">
+          <div class="hero-node-ring"></div>
+          <div class="hero-node-dot"></div>
+        </div>
+        <div class="hero-node-label">Conscious Flow</div>
+      </div>
+
+      <!-- Loom hidden — remove style="display:none" to show -->
+      <div class="hero-node" data-active="false" data-node="loom"
+           style="top:40%;left:38%;display:none">
+        <div class="hero-node-dot-wrap">
+          <div class="hero-node-ring"></div>
+          <div class="hero-node-dot"></div>
+        </div>
+        <div class="hero-node-label">Loom</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="hero-scroll">
+    <span data-i18n="scroll_hint">Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ── CARDS SECTION ────────────────────────────────────────── -->
+<section class="cards-section" id="ecosystem">
+  <div class="container">
+
+    <div class="section-header reveal">
+      <span class="section-label" data-i18n="section_label">The Ecosystem</span>
+      <h2>
+        <span data-i18n="section_h2_line1">Independent systems,</span><br>
+        <em data-i18n="section_h2_line2">shared continuity</em>
+      </h2>
+    </div>
+
+    <!--
+      ✏️ HOW TO ADD A CARD:
+      Copy any .app-card block.
+      Set data-color: seafoam | amber | rose | slate | sage | lavender | gold
+      Set card-visual data-hint to hover label text
+      Replace screenshot src, name, tagline, desc, link
+    -->
+    <div class="cards-grid">
+
+      <!-- Somnia -->
+      <div class="app-card reveal" data-color="seafoam">
+        <div class="card-visual" data-hint="hover to preview">
+          <div class="card-logo">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>
+          </div>
+          <div class="card-screenshot">
+            <img src="screenshots/journal.png" alt="Somnia">
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="card-header">
+            <div>
+              <div class="card-name" data-i18n="app1_name">Somnia</div>
+              <div class="card-tagline" data-i18n="app1_tagline">Dream archive &amp; analytics</div>
+            </div>
+            <span class="card-status live" data-i18n="status_live">Live</span>
+          </div>
+          <p class="card-desc" data-i18n="app1_desc">
+            A local-first dream journaling system designed for long-term dream tracking, detailed analytics, and personal symbolic exploration. Built around privacy, continuity, and full ownership of your dream archive.
+          </p>
+          <div class="card-continuity" data-i18n="cont1">Primary archive · connects with Orbis and Loom</div>
+          <a href="https://somnia-weld.vercel.app/" target="_blank" class="card-cta">
+            <span data-i18n="app1_cta">Open Somnia</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Orbis -->
+      <div class="app-card reveal" data-color="amber">
+        <div class="card-visual" data-hint="hover to preview">
+          <div class="card-logo">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2c-4 5-4 15 0 20M12 2c4 5 4 15 0 20"/></svg>
+          </div>
+          <div class="card-screenshot">
+            <img src="screenshots/atlas.png" alt="Orbis">
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="card-header">
+            <div>
+              <div class="card-name" data-i18n="app2_name">Orbis</div>
+              <div class="card-tagline" data-i18n="app2_tagline">Visual dream mapping</div>
+            </div>
+            <span class="card-status live" data-i18n="status_live">Live</span>
+          </div>
+          <p class="card-desc" data-i18n="app2_desc">
+            A visual dream mapping system that transforms recurring dream locations into interconnected symbolic landscapes. Explore your inner world through evolving spatial continuity and dream geography.
+          </p>
+          <div class="card-continuity" data-i18n="cont2">Spatial memory · draws from Somnia archive</div>
+          <a href="https://orbis-brown.vercel.app/" target="_blank" class="card-cta">
+            <span data-i18n="app2_cta">Open Orbis</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Oneiro -->
+      <div class="app-card reveal" data-color="rose">
+        <div class="card-visual" data-hint="hover to preview">
+          <div class="card-logo">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M17.5 6.5C19 8 20 10 20 12c0 4.4-3.6 8-8 8s-8-3.6-8-8c0-2 .7-3.8 2-5.2"/><path d="M12 2v4"/><circle cx="12" cy="12" r="3"/></svg>
+          </div>
+          <div class="card-screenshot">
+            <img src="screenshots/ai.png" alt="Oneiro">
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="card-header">
+            <div>
+              <div class="card-name" data-i18n="app3_name">Oneiro</div>
+              <div class="card-tagline" data-i18n="app3_tagline">Dream journal &amp; AI reflection</div>
+            </div>
+            <span class="card-status live" data-i18n="status_live">Live</span>
+          </div>
+          <p class="card-desc" data-i18n="app3_desc">
+            A lightweight dream journal focused on fast capture and reflective AI-assisted interpretation. Explore your dreams through psychological, Jungian, and symbolic perspectives directly in your browser.
+          </p>
+          <div class="card-continuity" data-i18n="cont3">AI-assisted reflection · part of the continuity layer</div>
+          <a href="https://oneiro-delta.vercel.app/" target="_blank" class="card-cta">
+            <span data-i18n="app3_cta">Open Oneiro</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Oneiro Web -->
+      <div class="app-card reveal" data-color="slate">
+        <div class="card-visual" data-hint="hover to preview">
+          <div class="card-logo">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+          </div>
+          <div class="card-screenshot">
+            <img src="screenshots/patterns.png" alt="Oneiro Web">
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="card-header">
+            <div>
+              <div class="card-name" data-i18n="app4_name">Oneiro Web</div>
+              <div class="card-tagline" data-i18n="app4_tagline">Dream symbolism gateway</div>
+            </div>
+            <span class="card-status live" data-i18n="status_live">Live</span>
+          </div>
+          <p class="card-desc" data-i18n="app4_desc">
+            An interactive gateway into dream symbolism featuring interpretations of common dream motifs and AI-assisted reflection tools. Designed for accessible and intuitive dream exploration.
+          </p>
+          <div class="card-continuity" data-i18n="cont4">Entry point into the ecosystem</div>
+          <a href="https://oneiro-landing.vercel.app/" target="_blank" class="card-cta">
+            <span data-i18n="app4_cta">Open Oneiro Web</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Lucid Lab -->
+      <div class="app-card reveal" data-color="sage">
+        <div class="card-visual" data-hint="hover to preview">
+          <div class="card-logo">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M12 2a7 7 0 0 1 7 7c0 4-3 6-4 9H9c-1-3-4-5-4-9a7 7 0 0 1 7-7z"/><path d="M9 21h6"/></svg>
+          </div>
+          <div class="card-screenshot">
+            <img src="screenshots/lucidlab.png" alt="Lucid Lab">
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="card-header">
+            <div>
+              <div class="card-name" data-i18n="app5_name">Lucid Lab</div>
+              <div class="card-tagline" data-i18n="app5_tagline">Lucid dreaming practice</div>
+            </div>
+            <span class="card-status live" data-i18n="status_live">Live</span>
+          </div>
+          <p class="card-desc" data-i18n="app5_desc">
+            An experimental lucid dreaming dashboard combining dream journaling, custom analytics, and structured learning tools to support lucid dreaming practice and self-observation.
+          </p>
+          <div class="card-continuity" data-i18n="cont5">Longitudinal observation · shared symbolic memory</div>
+          <a href="http://127.0.0.1:5000" target="_blank" class="card-cta">
+            <span data-i18n="app5_cta">Open Lucid Lab</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Limina -->
+      <div class="app-card reveal" data-color="lavender">
+        <div class="card-visual" data-hint="hover to preview">
+          <div class="card-logo">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+          </div>
+          <div class="card-screenshot">
+            <img src="screenshots/brain.png" alt="Limina">
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="card-header">
+            <div>
+              <div class="card-name" data-i18n="app6_name">Limina</div>
+              <div class="card-tagline" data-i18n="app6_tagline">Sleep audio environment</div>
+            </div>
+            <span class="card-status live" data-i18n="status_live">Live</span>
+          </div>
+          <p class="card-desc" data-i18n="app6_desc">
+            An experimental audio environment focused on deep relaxation, hypnagogic drift, and lucid dreaming support through atmospheric sound design, binaural beats, and immersive sleep-oriented audio.
+          </p>
+          <div class="card-continuity" data-i18n="cont6">Threshold environment · supports lucid entry</div>
+          <a href="https://limina-pulse.vercel.app/" target="_blank" class="card-cta">
+            <span data-i18n="app6_cta">Open Limina</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Conscious Flow -->
+      <div class="app-card reveal" data-color="gold">
+        <div class="card-visual" data-hint="hover to preview">
+          <div class="card-logo">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+          </div>
+          <div class="card-screenshot">
+            <img src="screenshots/flow.png" alt="Conscious Flow">
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="card-header">
+            <div>
+              <div class="card-name" data-i18n="app7_name">Conscious Flow</div>
+              <div class="card-tagline" data-i18n="app7_tagline">Research &amp; narrative</div>
+            </div>
+            <span class="card-status live" data-i18n="status_live">Live</span>
+          </div>
+          <p class="card-desc" data-i18n="app7_desc">
+            A reflective journal exploring dreams, lucid dreaming, symbolism, and consciousness through over twenty years of personal research. The philosophical and narrative foundation of the Sentria ecosystem.
+          </p>
+          <div class="card-continuity" data-i18n="cont7">Philosophical foundation · narrative continuity</div>
+          <a href="https://consciousflow.substack.com/" target="_blank" class="card-cta">
+            <span data-i18n="app7_cta">Read on Substack</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Loom — hidden until launch, remove style="display:none" to reveal -->
+      <div class="app-card reveal" data-color="seafoam" style="display:none" aria-hidden="true">
+        <div class="card-visual" data-hint="">
+          <div class="card-logo">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+          </div>
+          <div class="card-screenshot">
+            <img src="screenshots/continuity.png" alt="Loom">
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="card-header">
+            <div>
+              <div class="card-name" data-i18n="app8_name">Loom</div>
+              <div class="card-tagline" data-i18n="app8_tagline">Coming soon</div>
+            </div>
+            <span class="card-status" data-i18n="app8_tagline">Soon</span>
+          </div>
+          <p class="card-desc" data-i18n="app8_desc">
+            An evolving semantic memory system designed to connect dreams, symbols, locations, and recurring patterns across time — gradually building a living map of inner continuity.
+          </p>
+          <div class="card-cta--nolink" data-i18n="app8_tagline">Coming soon</div>
+        </div>
+      </div>
+
+      <!-- ✏️ ADD NEW CARD: copy any block above -->
+
+    </div><!-- /cards-grid -->
+  </div>
+</section>
+
+<!-- ── FOOTER ────────────────────────────────────────────────── -->
+<footer>
+  <div class="container">
+    <div class="footer-manifesto">
+      <p class="footer-manifesto-text" data-i18n="footer_manifesto">
+        Dreams are not isolated entries — they are evolving structures of continuity across time.<br>
+        Sentria is built to explore that continuity.
+      </p>
+    </div>
+    <div class="footer-inner">
+      <div class="footer-logo">Sentria</div>
+      <ul class="footer-links">
+        <li><a href="about.html"   data-i18n="footer_about">About</a></li>
+        <li><a href="privacy.html" data-i18n="footer_privacy">Privacy</a></li>
+        <li><a href="contact.html" data-i18n="footer_contact">Contact</a></li>
+      </ul>
+      <div class="footer-copy" data-i18n="footer_copy">© 2026 Sentria</div>
+    </div>
+  </div>
+</footer>
+
+<!-- ============================================================
+     SCRIPTS
+     ============================================================ -->
+<script>
+/* ── i18n ─────────────────────────────────────────────────── */
+const TRANSLATIONS = {
+  en: {
+    hero_tag:         "Sentria · Dream Continuity Ecosystem",
+    hero_h1_line1:    "Places return.",
+    hero_h1_line2:    "Symbols evolve.",
+    hero_sub:         "Dreams are not isolated entries. Sentria is a modular ecosystem for long-term dream exploration — built around recurring structures, symbolic continuity, and the gradual emergence of inner cartography across time.",
+    hero_cta:         "Enter the ecosystem",
+    scroll_hint:      "Scroll",
+    section_label:    "The Ecosystem",
+    section_h2_line1: "Independent systems,",
+    section_h2_line2: "shared continuity",
+    status_live:      "Live",
+    app1_name: "Somnia",       app1_tagline: "Dream archive & analytics",      app1_desc: "A local-first dream journaling system designed for long-term dream tracking, detailed analytics, and personal symbolic exploration. Built around privacy, continuity, and full ownership of your dream archive.",        app1_cta: "Open Somnia",
+    app2_name: "Orbis",        app2_tagline: "Visual dream mapping",            app2_desc: "A visual dream mapping system that transforms recurring dream locations into interconnected symbolic landscapes. Explore your inner world through evolving spatial continuity and dream geography.",                      app2_cta: "Open Orbis",
+    app3_name: "Oneiro",       app3_tagline: "Dream journal & AI reflection",   app3_desc: "A lightweight dream journal focused on fast capture and reflective AI-assisted interpretation. Explore your dreams through psychological, Jungian, and symbolic perspectives directly in your browser.",               app3_cta: "Open Oneiro",
+    app4_name: "Oneiro Web",   app4_tagline: "Dream symbolism gateway",         app4_desc: "An interactive gateway into dream symbolism featuring interpretations of common dream motifs and AI-assisted reflection tools. Designed for accessible and intuitive dream exploration.",                                app4_cta: "Open Oneiro Web",
+    app5_name: "Lucid Lab",    app5_tagline: "Lucid dreaming practice",         app5_desc: "An experimental lucid dreaming dashboard combining dream journaling, custom analytics, and structured learning tools to support lucid dreaming practice and self-observation.",                                         app5_cta: "Open Lucid Lab",
+    app6_name: "Limina",       app6_tagline: "Sleep audio environment",         app6_desc: "An experimental audio environment focused on deep relaxation, hypnagogic drift, and lucid dreaming support through atmospheric sound design, binaural beats, and immersive sleep-oriented audio.",                     app6_cta: "Open Limina",
+    app7_name: "Conscious Flow",app7_tagline: "Research & narrative",           app7_desc: "A reflective journal exploring dreams, lucid dreaming, symbolism, and consciousness through over twenty years of personal research. The philosophical and narrative foundation of the Sentria ecosystem.",             app7_cta: "Read on Substack",
+    app8_name: "Loom",         app8_tagline: "Coming soon",                     app8_desc: "An evolving semantic memory system designed to connect dreams, symbols, locations, and recurring patterns across time — gradually building a living map of inner continuity.",
+    cont1: "Primary archive · connects with Orbis and Loom",
+    cont2: "Spatial memory · draws from Somnia archive",
+    cont3: "AI-assisted reflection · part of the continuity layer",
+    cont4: "Entry point into the ecosystem",
+    cont5: "Longitudinal observation · shared symbolic memory",
+    cont6: "Threshold environment · supports lucid entry",
+    cont7: "Philosophical foundation · narrative continuity",
+    footer_manifesto: "Dreams are not isolated entries — they are evolving structures of continuity across time.<br>Sentria is built to explore that continuity.",
+    signup_trigger: "Stay connected",
+    signup_label: "Stay connected",
+    signup_title: "Follow the ecosystem<br>as it unfolds.",
+    signup_desc: "Occasional notes on new modules, early access, and the gradual emergence of continuity across Sentria.",
+    signup_placeholder: "your@email.com",
+    signup_submit: "Subscribe",
+    signup_privacy: "No spam. Unsubscribe anytime. See our <a href=\"privacy.html\">privacy policy</a>.",
+    signup_success: "Thank you — you're on the list.",
+    footer_about: "About", footer_privacy: "Privacy", footer_contact: "Contact", footer_copy: "© 2025 Sentria",
+  },
+  sl: {
+    hero_tag:         "Sentria · Ekosistem kontinuitete sanj",
+    hero_h1_line1:    "Kraji se vračajo.",
+    hero_h1_line2:    "Simboli se razvijajo.",
+    hero_sub:         "Sanje niso izolirani zapisi. Sentria je modularni ekosistem za dolgoročno raziskovanje sanj — zgrajen okoli ponavljajočih se struktur, simbolne kontinuitete in postopnega nastajanja notranje kartografije skozi čas.",
+    hero_cta:         "Vstopi v ekosistem",
+    scroll_hint:      "Pobrskaj",
+    section_label:    "Ekosistem",
+    section_h2_line1: "Neodvisni sistemi,",
+    section_h2_line2: "skupna kontinuiteta",
+    status_live:      "Aktivno",
+    app1_name: "Somnia",        app1_tagline: "Arhiv sanj in analitika",         app1_desc: "Lokalni sistem za vodenje dnevnika sanj, zasnovan za dolgoročno sledenje, podrobno analitiko in osebno simbolno raziskovanje. Zgrajen z mislijo na zasebnost, kontinuiteto in popolno lastništvo arhiva sanj.",      app1_cta: "Odpri Somnia",
+    app2_name: "Orbis",         app2_tagline: "Vizualno kartiranje sanj",        app2_desc: "Vizualni sistem za kartiranje sanj, ki ponavljajoče se lokacije pretvori v med seboj povezane simbolne pokrajine. Raziščite notranji svet skozi prostorsko kontinuiteto in geografijo sanj.",                          app2_cta: "Odpri Orbis",
+    app3_name: "Oneiro",        app3_tagline: "Dnevnik sanj in AI refleksija",   app3_desc: "Lahek dnevnik sanj s poudarkom na hitrem zapisovanju in reflektivni AI-interpretaciji. Raziščite sanje skozi psihološke, jungovske in simbolne perspektive neposredno v brskalniku.",                                  app3_cta: "Odpri Oneiro",
+    app4_name: "Oneiro Web",    app4_tagline: "Prehod v simboliko sanj",         app4_desc: "Interaktivni vhod v simboliko sanj z interpretacijami pogostih motivov in orodji za AI-refleksijo. Zasnovan za dostopno in intuitivno raziskovanje sanj.",                                                              app4_cta: "Odpri Oneiro Web",
+    app5_name: "Lucid Lab",     app5_tagline: "Praksa lucidnega sanjanja",       app5_desc: "Eksperimentalna nadzorna plošča za lucidno sanjanje, ki združuje dnevnik sanj, analitiko po meri in strukturirana učna orodja za podporo praksi in samoopazovanju.",                                                   app5_cta: "Odpri Lucid Lab",
+    app6_name: "Limina",        app6_tagline: "Zvočno okolje za spanje",         app6_desc: "Eksperimentalno zvočno okolje za globoko sprostitev, hipnagogično plavanje in podporo lucidnemu sanjanju — atmosferski zvočni design, binauralni utripi in poglobljene zvočne izkušnje.",                              app6_cta: "Odpri Limina",
+    app7_name: "Conscious Flow", app7_tagline: "Raziskovanje in refleksija",     app7_desc: "Reflektivni dnevnik, ki skozi več kot dvajset let osebnih raziskav raziskuje sanje, lucidno sanjanje, simbolizem in zavest. Filozofska in narativna osnova ekosistema Sentria.",                                        app7_cta: "Beri na Substacku",
+    app8_name: "Loom",          app8_tagline: "Kmalu",                           app8_desc: "Razvijajoči se semantični sistem spomina za povezovanje sanj, simbolov, lokacij in ponavljajočih se vzorcev skozi čas — postopoma gradi živo karto notranje kontinuitete.",
+    cont1: "Primarni arhiv · povezan z Orbisom in Loomom",
+    cont2: "Prostorski spomin · črpa iz arhiva Somnia",
+    cont3: "AI-refleksija · del kontinuitetnega sloja",
+    cont4: "Vstopna točka v ekosistem",
+    cont5: "Longitudinalno opazovanje · skupni simbolni spomin",
+    cont6: "Mejno okolje · podpira lucidni vstop",
+    cont7: "Filozofska osnova · narativna kontinuiteta",
+    footer_manifesto: "Sanje niso izolirani zapisi — so razvijajoče se strukture kontinuitete skozi čas.<br>Sentria je zgrajena za raziskovanje te kontinuitete.",
+    signup_trigger: "Ostani povezan",
+    signup_label: "Ostani povezan",
+    signup_title: "Spremljaj ekosistem,<br>ko se razvija.",
+    signup_desc: "Občasna obvestila o novih modulih, zgodnjem dostopu in postopnem nastajanju kontinuitete v Sentria.",
+    signup_placeholder: "tvoj@email.com",
+    signup_submit: "Naroči se",
+    signup_privacy: "Brez vsiljive pošte. Odjava kadarkoli. Glej našo <a href=\"privacy.html\">politiko zasebnosti</a>.",
+    signup_success: "Hvala — na seznamu si.",
+    footer_about: "O nas", footer_privacy: "Zasebnost", footer_contact: "Kontakt", footer_copy: "© 2025 Sentria",
+  }
+};
+
+const LANG_NAMES = { en: "EN", sl: "SL" };
+function getLang() { return localStorage.getItem("sentria-lang") || (navigator.language.startsWith("sl") ? "sl" : "en"); }
+function setLang(lang) {
+  if (!TRANSLATIONS[lang]) return;
+  localStorage.setItem("sentria-lang", lang);
+  document.documentElement.setAttribute("lang", lang);
+  document.querySelectorAll("[data-i18n]").forEach(el => {
+    const v = TRANSLATIONS[lang][el.getAttribute("data-i18n")];
+    if (v !== undefined) el.innerHTML = v;
+  });
+  document.querySelectorAll("[data-i18n-placeholder]").forEach(el => {
+    const v = TRANSLATIONS[lang][el.getAttribute("data-i18n-placeholder")];
+    if (v !== undefined) el.setAttribute("placeholder", v);
+  });
+  document.querySelectorAll(".lang-btn").forEach(b => b.classList.toggle("active", b.dataset.lang === lang));
+}
+function buildLangSwitcher(id) {
+  const wrap = document.getElementById(id); if (!wrap) return;
+  Object.keys(TRANSLATIONS).forEach(lang => {
+    const btn = document.createElement("button");
+    btn.className = "lang-btn"; btn.dataset.lang = lang;
+    btn.textContent = LANG_NAMES[lang] || lang.toUpperCase();
+    btn.addEventListener("click", () => setLang(lang));
+    wrap.appendChild(btn);
+  });
+}
+buildLangSwitcher("lang-switcher");
+setLang(getLang());
+
+/* ── Theme ───────────────────────────────────────────────── */
+const themeBtn = document.getElementById('theme-toggle');
+const html = document.documentElement;
+function setTheme(t) { html.setAttribute('data-theme', t); localStorage.setItem('sentria-theme', t); }
+themeBtn.addEventListener('click', () => setTheme(html.dataset.theme === 'dark' ? 'light' : 'dark'));
+const savedTheme = localStorage.getItem('sentria-theme');
+if (savedTheme) setTheme(savedTheme);
+
+/* ── Header scroll ───────────────────────────────────────── */
+const mainHeader = document.getElementById('main-header');
+window.addEventListener('scroll', () => {
+  mainHeader.classList.toggle('scrolled', window.scrollY > 40);
+}, { passive: true });
+
+/* ── Scroll reveal ───────────────────────────────────────── */
+const revealObs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.08 });
+document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+
+/* ── Active footer link ──────────────────────────────────── */
+(function() {
+  const page = location.pathname.split('/').pop() || 'index.html';
+  document.querySelectorAll('.footer-links a').forEach(a => {
+    if (a.getAttribute('href').split('/').pop() === page) {
+      a.style.color = 'var(--seafoam)';
+      a.setAttribute('aria-current', 'page');
+    }
+  });
+})();
+
+/* ── Hero constellation canvas ───────────────────────────── */
+(function() {
+  const canvas = document.getElementById('hero-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const wrap = canvas.parentElement;
+  let W, H, pos = {}, animFrame;
+
+  const CONNECTIONS = [
+    ['somnia','orbis'], ['somnia','consciousflow'], ['somnia','lucidlab'],
+    ['orbis','oneiro'], ['oneiro','oneiroweb'], ['oneiro','lucidlab'],
+    ['lucidlab','limina'], ['limina','consciousflow'],
+  ];
+
+  // Subtle drift — only the dot moves, label stays fixed
+  const drift = {};
+  function initDrift() {
+    wrap.querySelectorAll('.hero-node').forEach(node => {
+      const id = node.dataset.node;
+      drift[id] = {
+        px: Math.random() * Math.PI * 2,
+        py: Math.random() * Math.PI * 2,
+        ax: 0.8 + Math.random() * 0.8, // amplitude in px
+        ay: 0.6 + Math.random() * 0.7,
+        sx: 0.00006 + Math.random() * 0.00004,
+        sy: 0.00007 + Math.random() * 0.00004,
+      };
+    });
+  }
+
+  function applyDrift(t) {
+    wrap.querySelectorAll('.hero-node').forEach(node => {
+      if (node.style.display === 'none') return;
+      const id = node.dataset.node;
+      const d = drift[id];
+      if (!d) return;
+      const dotWrap = node.querySelector('.hero-node-dot-wrap');
+      if (!dotWrap) return;
+      const dx = Math.sin(t * d.sx * 1000 + d.px) * d.ax;
+      const dy = Math.cos(t * d.sy * 1000 + d.py) * d.ay;
+      dotWrap.style.transform = `translate(${dx}px, ${dy}px)`;
+    });
+  }
+
+  function resize() {
+    W = canvas.width  = wrap.offsetWidth;
+    H = canvas.height = wrap.offsetHeight;
+    collect();
+  }
+
+  function collect() {
+    pos = {};
+    wrap.querySelectorAll('.hero-node').forEach(node => {
+      if (node.style.display === 'none') return;
+      const id  = node.dataset.node;
+      const dot = node.querySelector('.hero-node-dot-wrap') || node.querySelector('.hero-node-dot');
+      const wr  = wrap.getBoundingClientRect();
+      const dr  = dot.getBoundingClientRect();
+      pos[id] = { x: dr.left - wr.left + dr.width/2, y: dr.top - wr.top + dr.height/2 };
+    });
+  }
+
+  let t = 0;
+  let lastTime = 0;
+  function draw(timestamp) {
+    const dt = timestamp - lastTime;
+    lastTime = timestamp;
+    t += dt;
+
+    // Apply drift every frame, collect new positions
+    applyDrift(t);
+    collect();
+
+    ctx.clearRect(0, 0, W, H);
+
+    const dark = html.dataset.theme !== 'light';
+    const c = dark ? 'rgba(126,207,196,' : 'rgba(45,107,100,';
+
+    CONNECTIONS.forEach(([a, b]) => {
+      const pa = pos[a], pb = pos[b];
+      if (!pa || !pb) return;
+
+      // Each line breathes at its own pace
+      const seed = (a.charCodeAt(0) + b.charCodeAt(0)) * 0.01;
+      const alpha = 0.05 + 0.04 * Math.sin(t * 0.0004 + seed);
+
+      const g = ctx.createLinearGradient(pa.x, pa.y, pb.x, pb.y);
+      g.addColorStop(0,   c + '0)');
+      g.addColorStop(0.35, c + alpha + ')');
+      g.addColorStop(0.65, c + alpha + ')');
+      g.addColorStop(1,   c + '0)');
+
+      ctx.beginPath();
+      ctx.moveTo(pa.x, pa.y);
+      ctx.lineTo(pb.x, pb.y);
+      ctx.strokeStyle = g;
+      ctx.lineWidth = 0.75;
+      ctx.stroke();
+    });
+
+    animFrame = requestAnimationFrame(draw);
+  }
+
+  function init() {
+    resize();
+    initDrift();
+    cancelAnimationFrame(animFrame);
+    requestAnimationFrame(draw);
+  }
+
+  window.addEventListener('resize', () => { resize(); });
+  setTimeout(init, 300);
+
+  // Click node → scroll to card
+  wrap.querySelectorAll('.hero-node').forEach(node => {
+    node.addEventListener('click', () => {
+      const map = { somnia:1, orbis:2, oneiro:3, oneiroweb:4, lucidlab:5, limina:6, consciousflow:7, loom:8 };
+      const idx = map[node.dataset.node];
+      if (!idx) return;
+      const card = document.querySelector(`[data-i18n="app${idx}_name"]`);
+      if (card) card.closest('.app-card').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+  });
+})();
+</script>
+
+<!-- Back to top -->
+<button id="back-to-top" aria-label="Back to top">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+</button>
+
+<style>
+#back-to-top {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 150;
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0;
+  transform: translateY(8px);
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+#back-to-top svg { width: 14px; height: 14px; }
+#back-to-top.visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: all;
+}
+#back-to-top:hover {
+  color: var(--seafoam);
+  border-color: var(--border-hover);
+}
+</style>
+
+<script>
+(function() {
+  const btn = document.getElementById('back-to-top');
+  window.addEventListener('scroll', () => {
+    btn.classList.toggle('visible', window.scrollY > 400);
+  }, { passive: true });
+  btn.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+})();
+</script>
+
+<!-- ============================================================
+     SIGNUP — floating button + modal
+     ============================================================ -->
+<button id="signup-trigger" aria-label="Stay connected">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h16v16H4z" opacity="0"/><path d="M4 6h16v12H4z"/><path d="M4 7l8 6 8-6"/></svg>
+  <span class="signup-trigger-label" data-i18n="signup_trigger">Stay connected</span>
+</button>
+
+<div class="signup-backdrop" id="signup-backdrop"></div>
+
+<div class="signup-modal" id="signup-modal" aria-hidden="true">
+  <button class="signup-close" id="signup-close" aria-label="Close">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+  </button>
+
+  <span class="signup-label" data-i18n="signup_label">Stay connected</span>
+  <h3 class="signup-title" data-i18n="signup_title">Follow the ecosystem<br>as it unfolds.</h3>
+  <p class="signup-desc" data-i18n="signup_desc">
+    Occasional notes on new modules, early access, and the gradual emergence of continuity across Sentria.
+  </p>
+
+  <!-- ✏️ Replace with your Formspree (or other) form endpoint -->
+  <form class="signup-form" id="signup-form" action="https://formspree.io/f/YOUR_SIGNUP_FORM_ID" method="POST">
+    <input type="email" name="email" placeholder="your@email.com" data-i18n-placeholder="signup_placeholder" required>
+    <button type="submit" class="signup-submit" data-i18n="signup_submit">Subscribe</button>
+  </form>
+
+  <p class="signup-privacy" data-i18n="signup_privacy">
+    No spam. Unsubscribe anytime. See our <a href="privacy.html">privacy policy</a>.
+  </p>
+
+  <div class="signup-success" id="signup-success" data-i18n="signup_success">
+    Thank you — you're on the list.
+  </div>
+</div>
+
+<style>
+/* ── Floating trigger ──────────────────────────────────────── */
+#signup-trigger {
+  position: fixed;
+  bottom: 2rem; left: 2rem;
+  z-index: 150;
+  display: flex; align-items: center; gap: 0.55rem;
+  height: 40px;
+  padding: 0 0.95rem 0 0.85rem;
+  border-radius: 100px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+#signup-trigger svg { width: 15px; height: 15px; flex-shrink: 0; }
+#signup-trigger:hover {
+  color: var(--seafoam);
+  border-color: var(--border-hover);
+  background: var(--seafoam-soft);
+}
+.signup-trigger-label {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+@media (max-width: 600px) {
+  #signup-trigger { left: 1.25rem; bottom: 1.25rem; }
+  .signup-trigger-label { display: none; }
+  #signup-trigger { padding: 0; width: 40px; justify-content: center; }
+}
+
+/* ── Backdrop ──────────────────────────────────────────────── */
+.signup-backdrop {
+  position: fixed; inset: 0;
+  background: rgba(10,11,15,0.55);
+  backdrop-filter: blur(6px);
+  z-index: 299;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+.signup-backdrop.open { opacity: 1; pointer-events: all; }
+[data-theme="light"] .signup-backdrop { background: rgba(242,239,233,0.6); }
+
+/* ── Modal ─────────────────────────────────────────────────── */
+.signup-modal {
+  position: fixed;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -48%) scale(0.97);
+  width: min(420px, calc(100vw - 2.5rem));
+  background: var(--bg-card, var(--surface));
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 2.5rem 2.25rem 2.25rem;
+  z-index: 300;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
+.signup-modal.open {
+  opacity: 1;
+  pointer-events: all;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.signup-close {
+  position: absolute; top: 1.1rem; right: 1.1rem;
+  background: none; border: 1px solid var(--border);
+  border-radius: 50%; width: 32px; height: 32px;
+  cursor: pointer; color: var(--text-muted);
+  display: flex; align-items: center; justify-content: center;
+  transition: all var(--transition);
+}
+.signup-close:hover { color: var(--seafoam); border-color: var(--border-hover); }
+.signup-close svg { width: 13px; height: 13px; }
+
+.signup-label {
+  font-family: var(--font-mono); font-size: 0.6rem;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--seafoam); display: block; margin-bottom: 1rem;
+}
+
+.signup-title {
+  font-family: var(--font-display);
+  font-size: 1.7rem; font-weight: 300; font-style: italic;
+  color: var(--text-primary); line-height: 1.25;
+  margin-bottom: 0.9rem;
+}
+
+.signup-desc {
+  font-size: 0.85rem; color: var(--text-secondary);
+  line-height: 1.75; margin-bottom: 1.75rem; font-weight: 300;
+}
+
+.signup-form {
+  display: flex; flex-direction: column; gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.signup-form input {
+  background: var(--bg, var(--obsidian));
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.8rem 1rem;
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 0.88rem; font-weight: 300;
+  outline: none;
+  transition: border-color var(--transition);
+}
+.signup-form input:focus { border-color: var(--seafoam); }
+.signup-form input::placeholder { color: var(--text-muted); }
+
+.signup-submit {
+  background: var(--seafoam); color: var(--obsidian);
+  border: none; border-radius: 100px;
+  padding: 0.8rem 1.5rem;
+  font-size: 0.85rem; font-weight: 400;
+  cursor: pointer; transition: all var(--transition);
+}
+.signup-submit:hover { background: var(--seafoam-dim); }
+
+.signup-privacy {
+  font-family: var(--font-mono); font-size: 0.62rem;
+  letter-spacing: 0.04em; color: var(--text-muted); line-height: 1.6;
+}
+.signup-privacy a { color: var(--text-secondary); text-decoration: underline; text-underline-offset: 2px; }
+.signup-privacy a:hover { color: var(--seafoam); }
+
+.signup-success {
+  display: none;
+  font-family: var(--font-display);
+  font-size: 1.1rem; font-style: italic;
+  color: var(--seafoam);
+  text-align: center;
+  padding: 1.5rem 0;
+}
+.signup-modal.submitted .signup-form,
+.signup-modal.submitted .signup-privacy,
+.signup-modal.submitted .signup-desc { display: none; }
+.signup-modal.submitted .signup-success { display: block; }
+</style>
+
+<script>
+(function() {
+  const trigger  = document.getElementById('signup-trigger');
+  const backdrop = document.getElementById('signup-backdrop');
+  const modal    = document.getElementById('signup-modal');
+  const closeBtn = document.getElementById('signup-close');
+  const form     = document.getElementById('signup-form');
+
+  function openModal() {
+    modal.classList.add('open');
+    backdrop.classList.add('open');
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeModal() {
+    modal.classList.remove('open');
+    backdrop.classList.remove('open');
+    modal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  }
+
+  trigger.addEventListener('click', openModal);
+  closeBtn.addEventListener('click', closeModal);
+  backdrop.addEventListener('click', closeModal);
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+  // Submit via fetch to avoid page reload — falls back to default if it fails
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const data = new FormData(form);
+    try {
+      await fetch(form.action, {
+        method: 'POST',
+        body: data,
+        headers: { 'Accept': 'application/json' }
+      });
+    } catch (err) {
+      // Network error — still show success to avoid confusing the user;
+      // Formspree handles validation server-side.
+    }
+    modal.classList.add('submitted');
+    setTimeout(closeModal, 2600);
+  });
+})();
+</script>
+
+</body>
+</html>

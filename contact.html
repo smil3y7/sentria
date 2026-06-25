@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<script>document.documentElement.setAttribute('data-theme', localStorage.getItem('sentria-theme') || 'dark');</script>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact — Sentria</title>
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Mono:wght@300;400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   SENTRIA — shared.css
+   Color palette:
+     Obsidian black   #0d0e12  /  #1a1c24
+     Sea-foam green   #7ecfc4  /  #a8e6de  /  #2d6b64
+     Architectural white  #f0ede8  /  #ffffff
+   ============================================================ */
+
+/* ── Tokens ─────────────────────────────────────────────────── */
+:root {
+  /* Dark theme (default) */
+  --bg:             #0d0e12;
+  --bg-mid:         #12141b;
+  --bg-card:        #14161f;
+  --bg-card-hover:  #1a1c28;
+  --surface:        #1e2130;
+  --border:         rgba(126, 207, 196, 0.10);
+  --border-hover:   rgba(126, 207, 196, 0.28);
+
+  --text-primary:   #f0ede8;
+  --text-secondary: #8ba8a5;
+  --text-muted:     #475752;
+
+  --seafoam:        #7ecfc4;
+  --seafoam-dim:    #4a9e96;
+  --seafoam-soft:   rgba(126, 207, 196, 0.08);
+  --seafoam-glow:   rgba(126, 207, 196, 0.04);
+
+  --white:          #f0ede8;
+  --obsidian:       #0d0e12;
+
+  /* Card accent overrides (set per-card via data-color) */
+  --card-accent:    var(--seafoam);
+  --card-tint:      var(--seafoam-soft);
+  --card-text:      var(--seafoam);
+
+  --font-display:   'Cormorant Garamond', Georgia, serif;
+  --font-body:      'DM Sans', sans-serif;
+  --font-mono:      'DM Mono', monospace;
+
+  --radius:         12px;
+  --radius-lg:      20px;
+  --radius-xl:      28px;
+  --transition:     0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+[data-theme="light"] {
+  --bg:             #f0ede8;
+  --bg-mid:         #e8e4dc;
+  --bg-card:        #ffffff;
+  --bg-card-hover:  #faf9f5;
+  --surface:        #e2ddd5;
+  --border:         rgba(45, 107, 100, 0.14);
+  --border-hover:   rgba(45, 107, 100, 0.32);
+
+  --text-primary:   #0d0e12;
+  --text-secondary: #3d6b66;
+  --text-muted:     #8da8a3;
+
+  --seafoam:        #2d6b64;
+  --seafoam-dim:    #4a9e96;
+  --seafoam-soft:   rgba(45, 107, 100, 0.08);
+  --seafoam-glow:   rgba(45, 107, 100, 0.04);
+
+  --white:          #ffffff;
+  --obsidian:       #0d0e12;
+}
+
+/* ── Reset ──────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 16px;
+  line-height: 1.75;
+  min-height: 100vh;
+  overflow-x: hidden;
+  transition: background var(--transition), color var(--transition);
+}
+
+/* Subtle grain */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Layout ─────────────────────────────────────────────────── */
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Header ─────────────────────────────────────────────────── */
+header {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  padding: 1.1rem 0;
+  border-bottom: 1px solid transparent;
+  transition: all var(--transition);
+}
+
+header.scrolled {
+  background: rgba(13, 14, 18, 0.88);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-bottom-color: var(--border);
+}
+
+[data-theme="light"] header.scrolled {
+  background: rgba(240, 237, 232, 0.88);
+}
+
+nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  text-decoration: none;
+}
+
+.nav-logo img {
+  height: 28px;
+  width: auto;
+  display: block;
+}
+
+.nav-logo-text {
+  font-family: var(--font-display);
+  font-size: 1.45rem;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  color: var(--text-primary);
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Language switcher */
+#lang-switcher {
+  display: flex;
+  gap: 2px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  padding: 3px;
+}
+
+.lang-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  padding: 0.3rem 0.65rem;
+  border-radius: 100px;
+  transition: all var(--transition);
+}
+
+.lang-btn.active,
+.lang-btn:hover {
+  background: var(--seafoam);
+  color: var(--obsidian);
+}
+
+/* Theme toggle */
+.theme-btn {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  width: 36px; height: 36px;
+  cursor: pointer;
+  color: var(--text-secondary);
+  display: flex; align-items: center; justify-content: center;
+  transition: all var(--transition);
+  flex-shrink: 0;
+}
+
+.theme-btn:hover {
+  border-color: var(--border-hover);
+  color: var(--seafoam);
+  background: var(--seafoam-soft);
+}
+
+.icon-sun, .icon-moon { width: 15px; height: 15px; display: block; }
+[data-theme="dark"]  .icon-sun  { display: none; }
+[data-theme="dark"]  .icon-moon { display: block; }
+[data-theme="light"] .icon-sun  { display: block; }
+[data-theme="light"] .icon-moon { display: none; }
+
+/* ── Footer ─────────────────────────────────────────────────── */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 2.5rem 0;
+  margin-top: 6rem;
+  position: relative;
+  z-index: 1;
+}
+
+.footer-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+}
+
+.footer-logo {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  color: var(--text-muted);
+  letter-spacing: 0.08em;
+}
+
+.footer-links {
+  display: flex;
+  gap: 2rem;
+  list-style: none;
+}
+
+.footer-links a {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  text-decoration: none;
+  font-family: var(--font-mono);
+  letter-spacing: 0.08em;
+  transition: color var(--transition);
+}
+
+.footer-links a:hover { color: var(--seafoam); }
+
+.footer-copy {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+/* ── Buttons ─────────────────────────────────────────────────── */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--seafoam);
+  color: var(--obsidian);
+  text-decoration: none;
+  padding: 0.8rem 1.9rem;
+  border-radius: 100px;
+  font-size: 0.88rem;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  transition: all var(--transition);
+  border: none;
+  cursor: pointer;
+}
+
+.btn-primary:hover {
+  background: var(--seafoam-dim);
+  transform: translateY(-2px);
+}
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: none;
+  color: var(--text-secondary);
+  text-decoration: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 100px;
+  font-size: 0.88rem;
+  font-weight: 400;
+  transition: all var(--transition);
+  border: 1px solid var(--border);
+}
+
+.btn-ghost:hover {
+  color: var(--seafoam);
+  border-color: var(--border-hover);
+  background: var(--seafoam-soft);
+}
+
+/* ── Section heading ─────────────────────────────────────────── */
+.section-label {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--seafoam);
+  margin-bottom: 0.85rem;
+  display: block;
+}
+
+.section-heading {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.section-heading h2 {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  font-weight: 300;
+  color: var(--text-primary);
+  line-height: 1.15;
+}
+
+.section-heading h2 em {
+  font-style: italic;
+  color: var(--text-secondary);
+}
+
+/* ── Animations ─────────────────────────────────────────────── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(22px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.65s ease, transform 0.65s ease;
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.app-card:nth-child(1).visible { transition-delay: 0s; }
+.app-card:nth-child(2).visible { transition-delay: 0.08s; }
+.app-card:nth-child(3).visible { transition-delay: 0.16s; }
+.app-card:nth-child(4).visible { transition-delay: 0.24s; }
+
+/* ── Scroll reveal init ──────────────────────────────────────── */
+/* (called per-page) */
+
+/* ── Responsive ─────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .container { padding: 0 1.25rem; }
+  .footer-inner { flex-direction: column; text-align: center; }
+  .footer-links { justify-content: center; }
+}
+
+/* ── Back link (subpages) ───────────────────────────────────── */
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--seafoam);
+  text-decoration: none;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 3rem;
+  transition: gap var(--transition);
+}
+.back-link:hover { gap: 0.85rem; }
+.back-link svg { width: 14px; height: 14px; }
+
+/* ── Subpage hero ───────────────────────────────────────────── */
+.subpage-hero {
+  padding: 10rem 0 5rem;
+}
+
+.subpage-hero .section-label {
+  margin-bottom: 1rem;
+}
+
+.subpage-hero h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 6vw, 5rem);
+  font-weight: 300;
+  line-height: 1.08;
+  color: var(--text-primary);
+  margin-bottom: 2rem;
+}
+
+.subpage-hero h1 em {
+  font-style: italic;
+  color: var(--seafoam);
+}
+
+/* ── Content block ──────────────────────────────────────────── */
+.content-block {
+  max-width: 680px;
+  padding-bottom: 6rem;
+}
+
+.content-block p {
+  color: var(--text-secondary);
+  margin-bottom: 1.5rem;
+  font-size: 1rem;
+  line-height: 1.85;
+}
+
+.content-block h2 {
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  font-weight: 300;
+  color: var(--text-primary);
+  margin: 2.5rem 0 1rem;
+}
+
+.content-block h3 {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--seafoam);
+  margin: 2rem 0 0.75rem;
+}
+
+.placeholder-text {
+  border: 1px dashed var(--border);
+  border-radius: var(--radius);
+  padding: 3rem 2rem;
+  text-align: center;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/* ── Contact form ───────────────────────────────────────────── */
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  max-width: 560px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.form-group label {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--seafoam);
+}
+
+.form-group input,
+.form-group textarea {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.75rem 1rem;
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 300;
+  outline: none;
+  transition: border-color var(--transition);
+  resize: vertical;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  border-color: var(--seafoam);
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: var(--text-muted);
+}
+
+.form-group textarea { min-height: 140px; }
+
+</style>
+
+<style>
+/* Contact-specific extras */
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.6fr;
+  gap: 5rem;
+  padding-bottom: 6rem;
+  align-items: start;
+}
+
+@media (max-width: 700px) {
+  .contact-grid { grid-template-columns: 1fr; gap: 3rem; }
+}
+
+.contact-info h2 {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 300;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+  line-height: 1.3;
+}
+
+.contact-info p {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.85;
+  margin-bottom: 2rem;
+}
+
+.contact-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.contact-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.contact-row-label {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--seafoam);
+}
+
+.contact-row-value {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.contact-row-value a {
+  color: var(--seafoam);
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+
+.contact-row-value a:hover { opacity: 0.75; }
+
+.form-submit {
+  margin-top: 0.5rem;
+}
+</style>
+</head>
+
+<body>
+
+<header id="main-header">
+  <div class="container">
+    <nav>
+      <a href="index.html" class="nav-logo">
+        <img src="logo.png" alt="Sentria logo">
+      </a>
+      <div class="nav-right">
+        <div id="lang-switcher"></div>
+        <button class="theme-btn" id="theme-toggle" aria-label="Toggle theme">
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
+          </svg>
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+        </button>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="subpage-hero">
+    <div class="container">
+      <a href="index.html" class="back-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        Sentria
+      </a>
+      <span class="section-label" data-i18n="contact_label">Get in touch</span>
+      <h1 data-i18n="contact_h1"><em>Contact</em></h1>
+    </div>
+  </section>
+
+  <div class="container">
+    <div class="contact-grid">
+
+      <!-- Left: info -->
+      <div class="contact-info">
+        <h2>We'd love<br>to hear from you.</h2>
+        <!-- ✏️ Adjust description -->
+        <p>Whether you have a question about Sentria, want to report a bug, or just want to say hello — we're here.</p>
+
+        <div class="contact-detail">
+          <!-- ✏️ Replace with real email / social -->
+          <div class="contact-row">
+            <span class="contact-row-label">Email</span>
+            <span class="contact-row-value">
+              <a href="mailto:hello@sentria.app">hello@sentria.app</a>
+            </span>
+          </div>
+          <div class="contact-row">
+            <span class="contact-row-label">Based in</span>
+            <span class="contact-row-value">Slovenia</span>
+          </div>
+          <!-- Add more rows as needed -->
+        </div>
+      </div>
+
+      <!-- Right: form -->
+      <!-- ✏️ Replace action with your form endpoint (Formspree, Netlify, etc.) -->
+      <!-- For Vercel: use https://formspree.io — free tier, no backend needed -->
+      <form class="contact-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input type="text" id="name" name="name" placeholder="Your name" required>
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" placeholder="your@email.com" required>
+        </div>
+        <div class="form-group">
+          <label for="message">Message</label>
+          <textarea id="message" name="message" placeholder="What's on your mind?" required></textarea>
+        </div>
+        <div class="form-submit">
+          <button type="submit" class="btn-primary">
+            Send message
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="container">
+    <div class="footer-inner">
+      <div class="footer-logo">Sentria</div>
+      <ul class="footer-links">
+        <li><a href="about.html"   data-i18n="footer_about">About</a></li>
+        <li><a href="privacy.html" data-i18n="footer_privacy">Privacy</a></li>
+        <li><a href="contact.html" data-i18n="footer_contact">Contact</a></li>
+      </ul>
+      <div class="footer-copy" data-i18n="footer_copy">© 2025 Sentria</div>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ============================================================
+   SENTRIA — i18n Module
+   HOW TO ADD A LANGUAGE:
+   1. Add a new key to TRANSLATIONS (e.g. "de": { ... })
+   2. Copy all keys from "en" and translate values
+   3. A language button appears automatically in the nav
+   ============================================================ */
+
+const TRANSLATIONS = {
+  en: {
+    /* Nav */
+    nav_logo: "Sentria",
+
+    /* Hero */
+    hero_tag: "Sentria · Explore Consciousness",
+    hero_h1_line1: "Journey",
+    hero_h1_line2: "inward",
+    hero_sub: "Sentria is your hub for exploring consciousness, dreams, and the inner world. Four tools, one starting point.",
+    hero_cta: "Explore tools",
+
+    /* Quote */
+    quote_text: "\"Dreams are the royal road to the unconscious.\"",
+    quote_author: "— Sigmund Freud",
+
+    /* Apps section */
+    section_label: "Tools",
+    section_h2_line1: "Four doors to",
+    section_h2_line2: "one world",
+
+    /* App 1 */
+    app1_name: "Browser",
+    app1_tagline: "Conscious browsing",
+    app1_desc: "Sentria Browser is your conscious window to the web. It explores deeper than surface-level search — uncovering patterns, meanings, and connections that ordinary browsers miss.",
+    app1_cta: "Open Browser",
+
+    /* App 2 */
+    app2_name: "Atlas",
+    app2_tagline: "Map of the mind",
+    app2_desc: "Atlas is an interactive map of your thoughts, ideas, and experiences. Connect the dots you haven't seen — and reveal your inner geography.",
+    app2_cta: "Open Atlas",
+
+    /* App 3 */
+    app3_name: "Oneiro Web",
+    app3_tagline: "AI dream interpretation",
+    app3_desc: "Oneiro Web is an online tool for AI-powered dream interpretation. Enter your dream and receive an in-depth analysis of symbols, archetypes, and hidden meanings.",
+    app3_cta: "Open Oneiro Web",
+
+    /* App 4 */
+    app4_name: "Oneiro App",
+    app4_tagline: "Dream journal",
+    app4_desc: "The Oneiro mobile app is your personal dream journal. Record, search, and analyse dreams anytime — and discover patterns over time.",
+    app4_cta: "Download Oneiro App",
+
+    /* Footer */
+    footer_about: "About",
+    footer_privacy: "Privacy",
+    footer_contact: "Contact",
+    footer_copy: "© 2025 Sentria",
+
+    /* Subpages — About */
+    about_label: "Our story",
+    about_h1: "About Sentria",
+    about_body: "<!-- ✏️ Add your About content here -->",
+
+    /* Subpages — Privacy */
+    privacy_label: "Legal",
+    privacy_h1: "Privacy Policy",
+    privacy_body: "<!-- ✏️ Add your Privacy content here -->",
+
+    /* Subpages — Contact */
+    contact_label: "Get in touch",
+    contact_h1: "Contact",
+    contact_body: "<!-- ✏️ Add your Contact content here -->",
+
+    /* Scroll hint */
+    scroll_hint: "Scroll",
+  },
+
+  sl: {
+    nav_logo: "Sentria",
+    hero_tag: "Sentria · Razišči zavest",
+    hero_h1_line1: "Potuji",
+    hero_h1_line2: "navznoter",
+    hero_sub: "Sentria je hub za raziskovanje zavesti, sanj in notranjega sveta. Štiri orodja, eno izhodišče.",
+    hero_cta: "Razišči orodja",
+    quote_text: '„Sanje so kraljevska cesta v nezavedno.“',
+    quote_author: "— Sigmund Freud",
+    section_label: "Orodja",
+    section_h2_line1: "Štiri vrata do",
+    section_h2_line2: "enega sveta",
+    app1_name: "Browser",
+    app1_tagline: "Zavestno brskanje",
+    app1_desc: "Sentria Browser je tvoje zavestno okno v splet. Peneluje globlje od površinskega iskanja — odkriva vzorce, pomene in povezave, ki jih navadni brskalniki spregledajo.",
+    app1_cta: "Odpri Browser",
+    app2_name: "Atlas",
+    app2_tagline: "Zemljevid uma",
+    app2_desc: "Atlas je interaktivni zemljevid tvojih misli, idej in izkušenj. Poveži točke, ki jih nisi videl — in razkrij svojo notranjo geografijo.",
+    app2_cta: "Odpri Atlas",
+    app3_name: "Oneiro Web",
+    app3_tagline: "AI interpretacija sanj",
+    app3_desc: "Oneiro Web je spletno orodje za AI-podprto interpretacijo sanj. Vpiši svojo sanje in prejmi poglobljeno analizo simbolov, arhetipov in skritih pomenov.",
+    app3_cta: "Odpri Oneiro Web",
+    app4_name: "Oneiro App",
+    app4_tagline: "Dnevnik sanj",
+    app4_desc: "Oneiro mobilna aplikacija je tvoj osebni dnevnik sanj. Beleži, išči in analiziraj sanje kadarkoli — ter odkrivaj vzorce skozi čas.",
+    app4_cta: "Prenesi Oneiro App",
+    footer_about: "O nas",
+    footer_privacy: "Zasebnost",
+    footer_contact: "Kontakt",
+    footer_copy: "© 2025 Sentria",
+    about_label: "Naša zgodba",
+    about_h1: "O Sentria",
+    about_body: "<!-- ✏️ Dodaj vsebino -->",
+    privacy_label: "Pravno",
+    privacy_h1: "Politika zasebnosti",
+    privacy_body: "<!-- ✏️ Dodaj vsebino -->",
+    contact_label: "Pišite nam",
+    contact_h1: "Kontakt",
+    contact_body: "<!-- ✏️ Dodaj vsebino -->",
+    scroll_hint: "Pobrskaj",
+  }
+};
+
+/* ── Language engine ───────────────────────────────────────── */
+const LANG_NAMES = { en: "EN", sl: "SL" };
+
+function getLang() {
+  return localStorage.getItem("sentria-lang") ||
+    (navigator.language.startsWith("sl") ? "sl" : "en");
+}
+
+function setLang(lang) {
+  if (!TRANSLATIONS[lang]) return;
+  localStorage.setItem("sentria-lang", lang);
+  document.documentElement.setAttribute("lang", lang);
+  document.querySelectorAll("[data-i18n]").forEach(el => {
+    const key = el.getAttribute("data-i18n");
+    if (TRANSLATIONS[lang][key] !== undefined) {
+      el.innerHTML = TRANSLATIONS[lang][key];
+    }
+  });
+  /* Update active state on lang buttons */
+  document.querySelectorAll(".lang-btn").forEach(btn => {
+    btn.classList.toggle("active", btn.dataset.lang === lang);
+  });
+}
+
+function buildLangSwitcher(containerId) {
+  const wrap = document.getElementById(containerId);
+  if (!wrap) return;
+  Object.keys(TRANSLATIONS).forEach(lang => {
+    const btn = document.createElement("button");
+    btn.className = "lang-btn";
+    btn.dataset.lang = lang;
+    btn.textContent = LANG_NAMES[lang] || lang.toUpperCase();
+    btn.addEventListener("click", () => setLang(lang));
+    wrap.appendChild(btn);
+  });
+}
+
+/* Init — script loads at bottom of <body>, DOM is already ready */
+buildLangSwitcher("lang-switcher");
+setLang(getLang());
+
+</script>
+<script>
+const themeBtn = document.getElementById('theme-toggle');
+const html = document.documentElement;
+function setTheme(t) { html.setAttribute('data-theme', t); localStorage.setItem('sentria-theme', t); }
+themeBtn.addEventListener('click', () => setTheme(html.dataset.theme === 'dark' ? 'light' : 'dark'));
+const savedTheme = localStorage.getItem('sentria-theme');
+if (savedTheme) setTheme(savedTheme);
+const mainHeader = document.getElementById('main-header');
+window.addEventListener('scroll', () => { mainHeader.classList.toggle('scrolled', window.scrollY > 40); }, { passive: true });
+</script>
+</body>
+</html>
