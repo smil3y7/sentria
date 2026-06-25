@@ -55,7 +55,7 @@ const TRANSLATIONS = {
     footer_about: "About",
     footer_privacy: "Privacy",
     footer_contact: "Contact",
-    footer_copy: "© 2025 Sentria",
+    footer_copy: "© 2026 Sentria",
 
     /* Subpages — About */
     about_label: "Our story",
@@ -107,7 +107,7 @@ const TRANSLATIONS = {
     footer_about: "O nas",
     footer_privacy: "Zasebnost",
     footer_contact: "Kontakt",
-    footer_copy: "© 2025 Sentria",
+    footer_copy: "© 2026 Sentria",
     about_label: "Naša zgodba",
     about_h1: "O Sentria",
     about_body: "<!-- ✏️ Dodaj vsebino -->",
