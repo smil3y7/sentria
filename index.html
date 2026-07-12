@@ -8,12 +8,14 @@
 <meta name="description" content="Sentria — a modular ecosystem for dream exploration, lucid dreaming, and reflective consciousness research.">
 <link rel="icon" type="image/png" href="favicon.png">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://sentria.vercel.app/">
-<meta property="og:title" content="Sentria — Explore Consciousness">
-<meta property="og:description" content="A modular ecosystem for dream exploration, lucid dreaming, symbolic continuity, and reflective consciousness research.">
-<meta property="og:image" content="https://sentria.vercel.app/logo.png">
+<meta property="og:url" content="https://sentria-navy.vercel.app/">
+<meta property="og:title" content="Sentria — Places return. Symbols evolve.">
+<meta property="og:description" content="A modular ecosystem for dream exploration, symbolic continuity, and reflective consciousness research — connecting independent tools into an evolving inner cartography.">
+<meta property="og:image" content="https://sentria-navy.vercel.app/logo.png">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://sentria.vercel.app/logo.png">
+<meta name="twitter:title" content="Sentria — Places return. Symbols evolve.">
+<meta name="twitter:description" content="A modular ecosystem for dream exploration, symbolic continuity, and reflective consciousness research.">
+<meta name="twitter:image" content="https://sentria-navy.vercel.app/logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Mono:wght@300;400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
@@ -83,6 +85,18 @@ body::before {
   position: fixed; inset: 0;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.014'/%3E%3C/svg%3E");
   pointer-events: none; z-index: 0;
+}
+
+/* Global keyboard focus state — visible, consistent, matches the palette.
+   Only shows for keyboard navigation (:focus-visible), not mouse clicks. */
+a:focus-visible,
+button:focus-visible,
+.hero-node:focus-visible,
+.card-visual:focus-visible,
+input:focus-visible {
+  outline: 2px solid var(--seafoam);
+  outline-offset: 3px;
+  border-radius: 4px;
 }
 
 .container {
@@ -343,7 +357,7 @@ nav { display: flex; align-items: center; justify-content: space-between; gap: 1
   transform: translateY(-3px);
 }
 
-/* Screenshot — logo shown by default, screenshot on hover */
+/* Screenshot — logo shown by default, screenshot on hover/tap */
 .card-visual {
   position: relative;
   aspect-ratio: 16/9;
@@ -380,11 +394,18 @@ nav { display: flex; align-items: center; justify-content: space-between; gap: 1
   display: block;
 }
 
-/* Hover: hide logo, show screenshot */
-.card-visual:hover .card-logo    { opacity: 0; transform: scale(0.95); }
-.card-visual:hover .card-screenshot { opacity: 1; }
+/* Reveal screenshot — on hover (mouse-capable devices) or via .revealed
+   class toggled by JS on tap/click/keyboard (works on touch + desktop) */
+@media (hover: hover) {
+  .card-visual:hover .card-logo    { opacity: 0; transform: scale(0.95); }
+  .card-visual:hover .card-screenshot { opacity: 1; }
+  .card-visual:hover::after { opacity: 1; }
+}
+.card-visual.revealed .card-logo    { opacity: 0; transform: scale(0.95); }
+.card-visual.revealed .card-screenshot { opacity: 1; }
+.card-visual.revealed::after { opacity: 1; }
 
-/* Hover label */
+/* Hint label — text is set dynamically by JS ("Tap" vs "Hover" depending on device) */
 .card-visual::after {
   content: attr(data-hint);
   position: absolute; bottom: 0.75rem; left: 50%; transform: translateX(-50%);
@@ -393,8 +414,8 @@ nav { display: flex; align-items: center; justify-content: space-between; gap: 1
   color: var(--text-muted); opacity: 0;
   transition: opacity 0.3s ease;
   white-space: nowrap; z-index: 3;
+  pointer-events: none;
 }
-.card-visual:hover::after { opacity: 1; }
 
 /* Card body */
 .card-body {
@@ -591,7 +612,7 @@ footer:hover .footer-manifesto-text { color: var(--text-secondary); }
   <div class="container" style="display:contents">
 
     <div class="hero-text" style="padding-left:2rem">
-      <div class="hero-tag" data-i18n="hero_tag">Sentria · Explore Consciousness</div>
+      <div class="hero-tag" data-i18n="hero_tag">Sentria · Dream Continuity Ecosystem</div>
       <h1>
         <span data-i18n="hero_h1_line1">Places return.</span><br>
         <em data-i18n="hero_h1_line2">Symbols evolve.</em>
@@ -613,7 +634,7 @@ footer:hover .footer-manifesto-text { color: var(--text-secondary); }
 
       <!-- Node positions within the hero visual box -->
       <div class="hero-node" data-active="true" data-node="somnia"
-           style="top:8%;left:12%">
+           style="top:8%;left:12%" tabindex="0" role="button" aria-label="Jump to Somnia">
         <div class="hero-node-dot-wrap">
           <div class="hero-node-ring"></div>
           <div class="hero-node-dot"></div>
@@ -622,7 +643,7 @@ footer:hover .footer-manifesto-text { color: var(--text-secondary); }
       </div>
 
       <div class="hero-node" data-active="true" data-node="orbis"
-           style="top:4%;left:55%">
+           style="top:4%;left:55%" tabindex="0" role="button" aria-label="Jump to Orbis">
         <div class="hero-node-dot-wrap">
           <div class="hero-node-ring"></div>
           <div class="hero-node-dot"></div>
@@ -631,7 +652,7 @@ footer:hover .footer-manifesto-text { color: var(--text-secondary); }
       </div>
 
       <div class="hero-node" data-active="true" data-node="oneiro"
-           style="top:30%;left:75%">
+           style="top:30%;left:75%" tabindex="0" role="button" aria-label="Jump to Oneiro">
         <div class="hero-node-dot-wrap">
           <div class="hero-node-ring"></div>
           <div class="hero-node-dot"></div>
@@ -640,7 +661,7 @@ footer:hover .footer-manifesto-text { color: var(--text-secondary); }
       </div>
 
       <div class="hero-node" data-active="true" data-node="oneiroweb"
-           style="top:55%;left:68%">
+           style="top:55%;left:68%" tabindex="0" role="button" aria-label="Jump to Oneiro Web">
         <div class="hero-node-dot-wrap">
           <div class="hero-node-ring"></div>
           <div class="hero-node-dot"></div>
@@ -648,8 +669,9 @@ footer:hover .footer-manifesto-text { color: var(--text-secondary); }
         <div class="hero-node-label">Oneiro Web</div>
       </div>
 
-      <div class="hero-node" data-active="true" data-node="lucidlab"
-           style="top:72%;left:44%">
+      <!-- Lucid Lab hidden — remove style="display:none" to show -->
+      <div class="hero-node" data-active="false" data-node="lucidlab"
+           style="top:72%;left:44%;display:none" tabindex="0" role="button" aria-label="Jump to Lucid Lab">
         <div class="hero-node-dot-wrap">
           <div class="hero-node-ring"></div>
           <div class="hero-node-dot"></div>
@@ -658,7 +680,7 @@ footer:hover .footer-manifesto-text { color: var(--text-secondary); }
       </div>
 
       <div class="hero-node" data-active="true" data-node="limina"
-           style="top:68%;left:10%">
+           style="top:68%;left:10%" tabindex="0" role="button" aria-label="Jump to Limina">
         <div class="hero-node-dot-wrap">
           <div class="hero-node-ring"></div>
           <div class="hero-node-dot"></div>
@@ -667,7 +689,7 @@ footer:hover .footer-manifesto-text { color: var(--text-secondary); }
       </div>
 
       <div class="hero-node" data-active="true" data-node="consciousflow"
-           style="top:36%;left:4%">
+           style="top:36%;left:4%" tabindex="0" role="button" aria-label="Jump to Conscious Flow">
         <div class="hero-node-dot-wrap">
           <div class="hero-node-ring"></div>
           <div class="hero-node-dot"></div>
@@ -677,7 +699,7 @@ footer:hover .footer-manifesto-text { color: var(--text-secondary); }
 
       <!-- Loom hidden — remove style="display:none" to show -->
       <div class="hero-node" data-active="false" data-node="loom"
-           style="top:40%;left:38%;display:none">
+           style="top:40%;left:38%;display:none" tabindex="0" role="button" aria-label="Jump to Loom">
         <div class="hero-node-dot-wrap">
           <div class="hero-node-ring"></div>
           <div class="hero-node-dot"></div>
@@ -719,7 +741,7 @@ footer:hover .footer-manifesto-text { color: var(--text-secondary); }
 
       <!-- Somnia -->
       <div class="app-card reveal" data-color="seafoam">
-        <div class="card-visual" data-hint="hover to preview">
+        <div class="card-visual" data-hint="" tabindex="0" role="button" aria-label="Preview Somnia">
           <div class="card-logo">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>
           </div>
@@ -739,7 +761,8 @@ footer:hover .footer-manifesto-text { color: var(--text-secondary); }
             A local-first dream journaling system designed for long-term dream tracking, detailed analytics, and personal symbolic exploration. Built around privacy, continuity, and full ownership of your dream archive.
           </p>
           <div class="card-continuity" data-i18n="cont1">Primary archive · connects with Orbis and Loom</div>
-          <a href="https://somnia-weld.vercel.app/" target="_blank" class="card-cta">
+          <a href="https://somnia-weld.vercel.app/"
+             target="_blank" class="card-cta">
             <span data-i18n="app1_cta">Open Somnia</span>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           </a>
@@ -748,7 +771,7 @@ footer:hover .footer-manifesto-text { color: var(--text-secondary); }
 
       <!-- Orbis -->
       <div class="app-card reveal" data-color="amber">
-        <div class="card-visual" data-hint="hover to preview">
+        <div class="card-visual" data-hint="" tabindex="0" role="button" aria-label="Preview Orbis">
           <div class="card-logo">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2c-4 5-4 15 0 20M12 2c4 5 4 15 0 20"/></svg>
           </div>
@@ -768,7 +791,8 @@ footer:hover .footer-manifesto-text { color: var(--text-secondary); }
             A visual dream mapping system that transforms recurring dream locations into interconnected symbolic landscapes. Explore your inner world through evolving spatial continuity and dream geography.
           </p>
           <div class="card-continuity" data-i18n="cont2">Spatial memory · draws from Somnia archive</div>
-          <a href="https://orbis-brown.vercel.app/" target="_blank" class="card-cta">
+          <a href="https://orbis-brown.vercel.app/"
+             target="_blank" class="card-cta">
             <span data-i18n="app2_cta">Open Orbis</span>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           </a>
@@ -777,7 +801,7 @@ footer:hover .footer-manifesto-text { color: var(--text-secondary); }
 
       <!-- Oneiro -->
       <div class="app-card reveal" data-color="rose">
-        <div class="card-visual" data-hint="hover to preview">
+        <div class="card-visual" data-hint="" tabindex="0" role="button" aria-label="Preview Oneiro">
           <div class="card-logo">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M17.5 6.5C19 8 20 10 20 12c0 4.4-3.6 8-8 8s-8-3.6-8-8c0-2 .7-3.8 2-5.2"/><path d="M12 2v4"/><circle cx="12" cy="12" r="3"/></svg>
           </div>
@@ -806,7 +830,7 @@ footer:hover .footer-manifesto-text { color: var(--text-secondary); }
 
       <!-- Oneiro Web -->
       <div class="app-card reveal" data-color="slate">
-        <div class="card-visual" data-hint="hover to preview">
+        <div class="card-visual" data-hint="" tabindex="0" role="button" aria-label="Preview Oneiro Web">
           <div class="card-logo">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
           </div>
@@ -833,9 +857,9 @@ footer:hover .footer-manifesto-text { color: var(--text-secondary); }
         </div>
       </div>
 
-      <!-- Lucid Lab -->
-      <div class="app-card reveal" data-color="sage">
-        <div class="card-visual" data-hint="hover to preview">
+      <!-- Lucid Lab — hidden until deployed, remove style="display:none" to reveal -->
+      <div class="app-card reveal" data-color="sage" style="display:none" aria-hidden="true">
+        <div class="card-visual" data-hint="" tabindex="0" role="button" aria-label="Preview Lucid Lab">
           <div class="card-logo">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M12 2a7 7 0 0 1 7 7c0 4-3 6-4 9H9c-1-3-4-5-4-9a7 7 0 0 1 7-7z"/><path d="M9 21h6"/></svg>
           </div>
@@ -864,7 +888,7 @@ footer:hover .footer-manifesto-text { color: var(--text-secondary); }
 
       <!-- Limina -->
       <div class="app-card reveal" data-color="lavender">
-        <div class="card-visual" data-hint="hover to preview">
+        <div class="card-visual" data-hint="" tabindex="0" role="button" aria-label="Preview Limina">
           <div class="card-logo">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
           </div>
@@ -884,7 +908,8 @@ footer:hover .footer-manifesto-text { color: var(--text-secondary); }
             An experimental audio environment focused on deep relaxation, hypnagogic drift, and lucid dreaming support through atmospheric sound design, binaural beats, and immersive sleep-oriented audio.
           </p>
           <div class="card-continuity" data-i18n="cont6">Threshold environment · supports lucid entry</div>
-          <a href="https://limina-pulse.vercel.app/" target="_blank" class="card-cta">
+          <a href="https://limina-pulse.vercel.app/"
+             target="_blank" class="card-cta">
             <span data-i18n="app6_cta">Open Limina</span>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           </a>
@@ -893,7 +918,7 @@ footer:hover .footer-manifesto-text { color: var(--text-secondary); }
 
       <!-- Conscious Flow -->
       <div class="app-card reveal" data-color="gold">
-        <div class="card-visual" data-hint="hover to preview">
+        <div class="card-visual" data-hint="" tabindex="0" role="button" aria-label="Preview Conscious Flow">
           <div class="card-logo">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
           </div>
@@ -922,7 +947,7 @@ footer:hover .footer-manifesto-text { color: var(--text-secondary); }
 
       <!-- Loom — hidden until launch, remove style="display:none" to reveal -->
       <div class="app-card reveal" data-color="seafoam" style="display:none" aria-hidden="true">
-        <div class="card-visual" data-hint="">
+        <div class="card-visual" data-hint="" tabindex="0" role="button" aria-label="Preview Loom">
           <div class="card-logo">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
           </div>
@@ -1120,7 +1145,7 @@ document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
   const wrap = canvas.parentElement;
-  let W, H, pos = {}, animFrame;
+  let W, H, animFrame;
 
   const CONNECTIONS = [
     ['somnia','orbis'], ['somnia','consciousflow'], ['somnia','lucidlab'],
@@ -1128,64 +1153,70 @@ document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
     ['lucidlab','limina'], ['limina','consciousflow'],
   ];
 
-  // Subtle drift — only the dot moves, label stays fixed
-  const drift = {};
-  function initDrift() {
+  // Cache node refs + drift params once — never re-queried per frame
+  const nodes = {};
+  function cacheNodes() {
     wrap.querySelectorAll('.hero-node').forEach(node => {
+      if (node.style.display === 'none') return;
       const id = node.dataset.node;
-      drift[id] = {
+      nodes[id] = {
+        el: node,
+        dotWrap: node.querySelector('.hero-node-dot-wrap'),
         px: Math.random() * Math.PI * 2,
         py: Math.random() * Math.PI * 2,
         ax: 0.8 + Math.random() * 0.8, // amplitude in px
         ay: 0.6 + Math.random() * 0.7,
         sx: 0.00006 + Math.random() * 0.00004,
         sy: 0.00007 + Math.random() * 0.00004,
+        // base position in px, relative to wrap — computed on resize()
+        bx: 0, by: 0,
       };
     });
   }
 
-  function applyDrift(t) {
-    wrap.querySelectorAll('.hero-node').forEach(node => {
-      if (node.style.display === 'none') return;
-      const id = node.dataset.node;
-      const d = drift[id];
-      if (!d) return;
-      const dotWrap = node.querySelector('.hero-node-dot-wrap');
-      if (!dotWrap) return;
-      const dx = Math.sin(t * d.sx * 1000 + d.px) * d.ax;
-      const dy = Math.cos(t * d.sy * 1000 + d.py) * d.ay;
-      dotWrap.style.transform = `translate(${dx}px, ${dy}px)`;
+  // Measure each node's base position once (on load + resize), NOT every frame.
+  // This is the only place we touch getBoundingClientRect — avoids per-frame
+  // layout thrashing since we write transforms every frame afterward.
+  function measureBasePositions() {
+    const wr = wrap.getBoundingClientRect();
+    Object.values(nodes).forEach(n => {
+      // Reset drift transform before measuring so we get the true base position
+      n.dotWrap.style.transform = '';
+      const dr = n.dotWrap.getBoundingClientRect();
+      n.bx = dr.left - wr.left + dr.width / 2;
+      n.by = dr.top - wr.top + dr.height / 2;
     });
   }
 
   function resize() {
     W = canvas.width  = wrap.offsetWidth;
     H = canvas.height = wrap.offsetHeight;
-    collect();
+    measureBasePositions();
   }
 
-  function collect() {
-    pos = {};
-    wrap.querySelectorAll('.hero-node').forEach(node => {
-      if (node.style.display === 'none') return;
-      const id  = node.dataset.node;
-      const dot = node.querySelector('.hero-node-dot-wrap') || node.querySelector('.hero-node-dot');
-      const wr  = wrap.getBoundingClientRect();
-      const dr  = dot.getBoundingClientRect();
-      pos[id] = { x: dr.left - wr.left + dr.width/2, y: dr.top - wr.top + dr.height/2 };
-    });
+  let resizeTimer;
+  function debouncedResize() {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(resize, 150);
   }
 
   let t = 0;
-  let lastTime = 0;
+  let lastTime = null;
+
   function draw(timestamp) {
+    if (lastTime === null) lastTime = timestamp; // avoid huge dt on first frame
     const dt = timestamp - lastTime;
     lastTime = timestamp;
     t += dt;
 
-    // Apply drift every frame, collect new positions
-    applyDrift(t);
-    collect();
+    // Drift is computed purely from math — no DOM reads, only writes
+    const pos = {};
+    Object.entries(nodes).forEach(([id, n]) => {
+      const dx = Math.sin(t * n.sx * 1000 + n.px) * n.ax;
+      const dy = Math.cos(t * n.sy * 1000 + n.py) * n.ay;
+      n.dotWrap.style.transform = `translate(${dx}px, ${dy}px)`;
+      pos[id] = { x: n.bx + dx, y: n.by + dy };
+    });
 
     ctx.clearRect(0, 0, W, H);
 
@@ -1196,7 +1227,6 @@ document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
       const pa = pos[a], pb = pos[b];
       if (!pa || !pb) return;
 
-      // Each line breathes at its own pace
       const seed = (a.charCodeAt(0) + b.charCodeAt(0)) * 0.01;
       const alpha = 0.05 + 0.04 * Math.sin(t * 0.0004 + seed);
 
@@ -1218,23 +1248,66 @@ document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
   }
 
   function init() {
+    cacheNodes();
     resize();
-    initDrift();
     cancelAnimationFrame(animFrame);
-    requestAnimationFrame(draw);
+    lastTime = null;
+    animFrame = requestAnimationFrame(draw);
   }
 
-  window.addEventListener('resize', () => { resize(); });
+  window.addEventListener('resize', debouncedResize);
   setTimeout(init, 300);
 
-  // Click node → scroll to card
+  // Click or keyboard (Enter/Space) → scroll to card
+  const NODE_TO_APP = { somnia:1, orbis:2, oneiro:3, oneiroweb:4, lucidlab:5, limina:6, consciousflow:7, loom:8 };
+  function jumpToCard(node) {
+    const idx = NODE_TO_APP[node.dataset.node];
+    if (!idx) return;
+    const card = document.querySelector(`[data-i18n="app${idx}_name"]`);
+    if (card) card.closest('.app-card').scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
   wrap.querySelectorAll('.hero-node').forEach(node => {
-    node.addEventListener('click', () => {
-      const map = { somnia:1, orbis:2, oneiro:3, oneiroweb:4, lucidlab:5, limina:6, consciousflow:7, loom:8 };
-      const idx = map[node.dataset.node];
-      if (!idx) return;
-      const card = document.querySelector(`[data-i18n="app${idx}_name"]`);
-      if (card) card.closest('.app-card').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    node.addEventListener('click', () => jumpToCard(node));
+    node.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        jumpToCard(node);
+      }
+    });
+  });
+})();
+
+/* ── Card tap-to-reveal ───────────────────────────────────────
+   Hover already works on mouse-capable devices via CSS (hover: hover).
+   This adds click/tap + keyboard toggle so touch and keyboard users
+   can reveal the screenshot too. Only one card stays revealed at a
+   time on touch devices, to keep it calm rather than cluttered. */
+(function() {
+  const isTouch = !window.matchMedia('(hover: hover)').matches;
+  const hintText = isTouch ? 'tap to preview' : 'hover to preview';
+
+  document.querySelectorAll('.card-visual').forEach(visual => {
+    // Loom card intentionally has no screenshot yet — skip the hint
+    const isLoom = visual.getAttribute('aria-label') === 'Preview Loom';
+    if (!isLoom) visual.setAttribute('data-hint', hintText);
+
+    function toggle() {
+      const wasRevealed = visual.classList.contains('revealed');
+      if (isTouch) {
+        // Close any other open card first — one at a time on touch
+        document.querySelectorAll('.card-visual.revealed').forEach(v => {
+          if (v !== visual) v.classList.remove('revealed');
+        });
+      }
+      visual.classList.toggle('revealed', !wasRevealed);
+    }
+
+    visual.addEventListener('click', toggle);
+    visual.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        toggle();
+      }
     });
   });
 })();
