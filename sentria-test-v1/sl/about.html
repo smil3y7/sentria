@@ -161,96 +161,6 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
 }
 .content-block h2:first-child { margin-top: 0; }
 
-/* ── Lab experiment cards ─────────────────────────────────── */
-.lab-card {
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 1.5rem 1.75rem;
-  margin: 1.5rem 0;
-  transition: border-color var(--transition);
-}
-.lab-card:hover { border-color: var(--border-hover); }
-
-.lab-card-top {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 1rem;
-  flex-wrap: wrap;
-  margin-bottom: 0.3rem;
-}
-
-.lab-card-name {
-  font-family: var(--font-display);
-  font-size: 1.35rem;
-  font-weight: 400;
-  color: var(--text-primary);
-}
-
-.status-badge {
-  font-family: var(--font-mono);
-  font-size: 0.6rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  padding: 0.25rem 0.6rem;
-  border-radius: 100px;
-  border: 1px solid var(--border);
-  white-space: nowrap;
-}
-.status-badge.experimental { color: #c9a96e; border-color: rgba(201,169,110,0.3); }
-.status-badge.research     { color: #c47e8a; border-color: rgba(196,126,138,0.3); }
-.status-badge.beta         { color: var(--seafoam); border-color: rgba(126,207,196,0.3); }
-.status-badge.coming-soon  { color: var(--text-muted); }
-
-.lab-card-role {
-  font-family: var(--font-mono);
-  font-size: 0.68rem;
-  letter-spacing: 0.06em;
-  color: var(--seafoam);
-  margin-bottom: 0.85rem;
-}
-
-.lab-card p {
-  font-size: 0.9rem;
-  margin-bottom: 0.9rem;
-}
-
-.lab-card-meta {
-  display: flex;
-  gap: 1.5rem;
-  flex-wrap: wrap;
-  font-family: var(--font-mono);
-  font-size: 0.65rem;
-  color: var(--text-muted);
-  padding-top: 0.9rem;
-  border-top: 1px solid var(--border);
-}
-.lab-card-meta span strong {
-  color: var(--text-secondary);
-  font-weight: 400;
-}
-
-.lab-locked-tag {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  font-family: var(--font-mono);
-  font-size: 0.65rem;
-  letter-spacing: 0.08em;
-  color: var(--text-muted);
-  margin-top: 0.9rem;
-}
-
-.lab-join-block {
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 2rem;
-  margin-top: 3rem;
-  text-align: center;
-}
-.lab-join-block p { margin-bottom: 1rem; }
-.lab-join-block p:last-child { margin-bottom: 0; }
-
 @media (max-width: 768px) {
   .container { padding: 0 1.25rem; }
   .footer-inner { flex-direction: column; text-align: center; }
@@ -295,23 +205,11 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
 
   <div class="container">
     <div class="content-block">
-<p><em>Osebni raziskovalni projekt, ki je postal ekosistem.</em></p>
-
-<p>Pred več kot dvajsetimi leti sem začel beležiti svoje sanje. Sprva je bila to preprosta praksa: izboljšati priklic sanj, raziskovati lucidno sanjanje in razumeti lastne izkušnje med spanjem.</p>
-
-<p>Sčasoma se je zgodilo nekaj nepričakovanega. Dnevnik sanj je postal več kot zbirka posameznih spominov. Pojavljali so se ponavljajoči se kraji. Simboli so se vračali v različnih kontekstih. Teme so se razvijale. Skozi leta so nastajale povezave.</p>
-
-<p>Te vzorce sem želel raziskati, a obstoječa orodja so sanje obravnavala kot izolirane zapise — nekaj, kar zapišeš, enkrat interpretiraš in pustiš za seboj. Iskal sem nekaj drugačnega: ne sistem, ki mi pove, kaj moje sanje pomenijo, ampak takega, ki mi pomaga opazovati, kako pomen nastaja skozi čas.</p>
-
-<p>Sentria je zrasla iz tega vprašanja.</p>
-
-<h2>Kaj je Sentria?</h2>
-
 <p>Sentria je razvijajoč se ekosistem med seboj povezanih orodij, zasnovan za raziskovanje sanj, lucidnega sanjanja, simbolne kontinuitete in dolgoročnega notranjega opazovanja.</p>
 
 <p>Namesto da bi delovala kot ena sama monolitna platforma, je Sentria zgrajena kot zbirka neodvisnih, a postopoma povezanih sistemov — vsak osredotočen na drug vidik raziskovanja sanj, refleksije, kontinuitete in zavestne izkušnje.</p>
 
-<p>V svojem jedru je ekosistem zasnovan okoli refleksije, kontinuitete, simbolnega raziskovanja, lokalnega lastništva in razvijajoče se notranje kartografije — ne okoli meritev produktivnosti, družbenih funkcij ali dokončnih odgovorov o tem, kaj simbol "resnično" pomeni.</p>
+<p>V svojem jedru Sentria ni mišljena kot platforma za produktivnost, družbeno omrežje, nadzorna plošča za biohacking, deterministični sistem interpretacije ali sistem, ki si lasti avtoriteto nad osebnim pomenom. Namesto tega je ekosistem zasnovan okoli refleksije, kontinuitete, simbolnega raziskovanja, lokalnega lastništva in razvijajoče se notranje kartografije.</p>
 
 <h2>Drugačen pristop k raziskovanju sanj</h2>
 
@@ -390,22 +288,6 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
 
 <p>Ekosistem nastaja postopoma, z močnim poudarkom na prilagodljivosti, psihološki varnosti, modularnosti, zasebnosti in dolgoročni vzdržnosti.</p>
 
-<h2>Sentria Lab</h2>
-
-<p>Nekateri deli Sentrie so stabilna orodja, ki se uporabljajo v vsakodnevni praksi. Drugi so eksperimenti — zgodnja raziskovanja idej, ki lahko sčasoma postanejo zreli sistemi, ali pa v svoji trenutni obliki sploh ne preživijo.</p>
-
-<p>Sentria Lab je prostor, kjer živijo ti eksperimenti: prototipi, raziskovalna orodja, semantični eksperimenti in novi pristopi k raziskovanju dolgoročnih arhivov sanj. Nekateri eksperimenti iz Laba lahko postanejo prihodnji sistemi Sentrie. Drugi obstajajo preprosto zato, da raziščejo vprašanje.</p>
-
-<p><a href="/sl/lab.html">Razišči Lab →</a></p>
-
-<h2>Podpri projekt</h2>
-
-<p>Sentria je neodvisen projekt, ki nastaja postopoma skozi raziskovanje, eksperimentiranje in nenehno izpopolnjevanje. Osnovna ideja je preprosta: osebni arhivi sanj naj ostanejo osebni, orodja za njihovo raziskovanje pa naj spoštujejo lastništvo, zasebnost in avtonomijo uporabnika.</p>
-
-<p>Če ti je Sentria pomagala pri raziskovanju sanj, odkrivanju vzorcev, ali preprosto pri bolj zavestnem odnosu do tvojega notranjega sveta, lahko podpreš njen nadaljnji razvoj. Tvoja podpora pomaga financirati infrastrukturo, eksperimente in prihodnja orodja — hkrati pa ohranja Sentrio neodvisno.</p>
-
-<p><a href="https://ko-fi.com/PLACEHOLDER" target="_blank" rel="noopener">☕ Podpri Sentrio</a></p>
-
 <h2>V bistvu</h2>
 
 <p>Sentria je razvijajoč se ekosistem za reflektivno raziskovanje sanj in simbolno kontinuiteto — zbirka med seboj povezanih orodij, zasnovanih za podporo dolgoročnemu opazovanju sanj, lucidnega zavedanja, ponavljajočih se vzorcev in postopnega nastajanja notranje kartografije skozi čas.</p>
@@ -420,7 +302,6 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
       <div class="footer-logo">Sentria</div>
       <ul class="footer-links">
         <li><a href="/sl/about.html">O nas</a></li>
-        <li><a href="/sl/lab.html">Lab</a></li>
         <li><a href="/sl/privacy.html">Zasebnost</a></li>
         <li><a href="/contact.html">Kontakt</a></li>
       </ul>

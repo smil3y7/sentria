@@ -1,0 +1,8 @@
+# Folders
+_versions/
+_code/
+sentria-build/
+.git
+
+# Files
+structure.txt

@@ -161,6 +161,96 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
 }
 .content-block h2:first-child { margin-top: 0; }
 
+/* ── Lab experiment cards ─────────────────────────────────── */
+.lab-card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem 1.75rem;
+  margin: 1.5rem 0;
+  transition: border-color var(--transition);
+}
+.lab-card:hover { border-color: var(--border-hover); }
+
+.lab-card-top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.3rem;
+}
+
+.lab-card-name {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 400;
+  color: var(--text-primary);
+}
+
+.status-badge {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.25rem 0.6rem;
+  border-radius: 100px;
+  border: 1px solid var(--border);
+  white-space: nowrap;
+}
+.status-badge.experimental { color: #c9a96e; border-color: rgba(201,169,110,0.3); }
+.status-badge.research     { color: #c47e8a; border-color: rgba(196,126,138,0.3); }
+.status-badge.beta         { color: var(--seafoam); border-color: rgba(126,207,196,0.3); }
+.status-badge.coming-soon  { color: var(--text-muted); }
+
+.lab-card-role {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  color: var(--seafoam);
+  margin-bottom: 0.85rem;
+}
+
+.lab-card p {
+  font-size: 0.9rem;
+  margin-bottom: 0.9rem;
+}
+
+.lab-card-meta {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--border);
+}
+.lab-card-meta span strong {
+  color: var(--text-secondary);
+  font-weight: 400;
+}
+
+.lab-locked-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  margin-top: 0.9rem;
+}
+
+.lab-join-block {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 2rem;
+  margin-top: 3rem;
+  text-align: center;
+}
+.lab-join-block p { margin-bottom: 1rem; }
+.lab-join-block p:last-child { margin-bottom: 0; }
+
 @media (max-width: 768px) {
   .container { padding: 0 1.25rem; }
   .footer-inner { flex-direction: column; text-align: center; }
@@ -267,6 +357,7 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
       <div class="footer-logo">Sentria</div>
       <ul class="footer-links">
         <li><a href="/sl/about.html">O nas</a></li>
+        <li><a href="/sl/lab.html">Lab</a></li>
         <li><a href="/sl/privacy.html">Zasebnost</a></li>
         <li><a href="/contact.html">Kontakt</a></li>
       </ul>
