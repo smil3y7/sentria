@@ -2,6 +2,7 @@
 _versions/
 _code/
 sentria-build/
+sentria-test-v1
 .git
 
 # Files
