@@ -150,6 +150,7 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
 .subpage-hero h1 em { font-style: italic; color: var(--seafoam); }
 
 .content-block { max-width: 680px; padding-bottom: 6rem; }
+.content-block.wide { max-width: 920px; }
 .content-block p { color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 1rem; line-height: 1.85; }
 .content-block p em a,
 .content-block p a { color: var(--seafoam); text-decoration: underline; text-underline-offset: 3px; transition: opacity var(--transition); }
@@ -162,14 +163,46 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
 .content-block h2:first-child { margin-top: 0; }
 
 /* ── Lab experiment cards ─────────────────────────────────── */
+.lab-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem;
+  margin: 2rem 0;
+}
+@media (max-width: 680px) {
+  .lab-cards-grid { grid-template-columns: 1fr; }
+}
+
 .lab-card {
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 1.5rem 1.75rem;
-  margin: 1.5rem 0;
-  transition: border-color var(--transition);
+  overflow: hidden;
+  transition: border-color var(--transition), transform var(--transition);
+  display: flex;
+  flex-direction: column;
 }
-.lab-card:hover { border-color: var(--border-hover); }
+.lab-card:hover { border-color: var(--border-hover); transform: translateY(-2px); }
+
+.lab-card-visual {
+  aspect-ratio: 16/9;
+  background: var(--surface);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.lab-card-visual img {
+  width: 100%; height: 100%;
+  object-fit: cover; object-position: top;
+  display: block;
+  transition: transform 0.5s ease;
+}
+.lab-card:hover .lab-card-visual img { transform: scale(1.03); }
+
+.lab-card-body {
+  padding: 1.5rem 1.75rem;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
 
 .lab-card-top {
   display: flex;
@@ -213,6 +246,7 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
 .lab-card p {
   font-size: 0.9rem;
   margin-bottom: 0.9rem;
+  flex-grow: 1;
 }
 
 .lab-card-meta {
@@ -294,74 +328,212 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
   </section>
 
   <div class="container">
-    <div class="content-block">
+    <div class="content-block wide">
 <p>Not every idea becomes a product. Some remain experiments. Some evolve into core Sentria systems.</p>
 
 <p>The Sentria Lab is where new approaches to dream continuity, symbolic analysis, and reflective tools are explored — before they become part of the wider ecosystem, and sometimes instead of it.</p>
 
-<div class="lab-card">
-  <div class="lab-card-top">
-    <span class="lab-card-name">Loom</span>
-    <span class="status-badge experimental">Experimental</span>
+<div class="lab-cards-grid">
+
+  <div class="lab-card">
+    <div class="lab-card-visual">
+      <img src="screenshots/loom.png" alt="Loom" loading="lazy">
+    </div>
+    <div class="lab-card-body">
+      <div class="lab-card-top">
+        <span class="lab-card-name">Loom</span>
+        <span class="status-badge experimental">Experimental</span>
+      </div>
+      <div class="lab-card-role">Semantic continuity engine</div>
+      <p>Explores recurring symbols, locations, and emotional patterns across long-term dream archives — surfacing connections rather than imposing meaning.</p>
+      <div class="lab-card-meta">
+        <span><strong>Data</strong> · Local-first</span>
+        <span><strong>Requires</strong> · A dream archive</span>
+      </div>
+      <div class="lab-locked-tag">
+        🔒 Available to Lab members
+      </div>
+    </div>
   </div>
-  <div class="lab-card-role">Semantic continuity engine</div>
-  <p>Explores recurring symbols, locations, and emotional patterns across long-term dream archives — surfacing connections rather than imposing meaning.</p>
-  <div class="lab-card-meta">
-    <span><strong>Data</strong> · Local-first</span>
-    <span><strong>Requires</strong> · A dream archive</span>
+
+  <div class="lab-card">
+    <div class="lab-card-visual">
+      <img src="screenshots/echo.png" alt="Echo" loading="lazy">
+    </div>
+    <div class="lab-card-body">
+      <div class="lab-card-top">
+        <span class="lab-card-name">Echo</span>
+        <span class="status-badge beta">Beta</span>
+      </div>
+      <div class="lab-card-role">Voice capture &amp; AI transcription</div>
+      <p>Capture dreams naturally by voice and transform them into structured, searchable reflections — for the moments when typing isn't the right tool.</p>
+      <div class="lab-card-meta">
+        <span><strong>Data</strong> · Cloud AI</span>
+        <span><strong>Requires</strong> · Standalone</span>
+      </div>
+      <!-- ✏️ Echo has a live URL (https://echo-ten-phi.vercel.app/) but stays
+           visually locked like the rest of the Lab until real membership
+           gating exists — otherwise it would be the only "locked" card that
+           actually isn't, which undercuts the others. Swap the div below
+           for a real <a href="https://echo-ten-phi.vercel.app/" target="_blank" class="card-cta">
+           once Stripe/membership is wired up. -->
+      <div class="lab-locked-tag">
+        🔒 Available to Lab members
+      </div>
+    </div>
   </div>
-  <div class="lab-locked-tag">
-    🔒 Available to Lab members
+
+  <div class="lab-card">
+    <div class="lab-card-visual">
+      <img src="screenshots/afterimage.png" alt="AfterImage" loading="lazy">
+    </div>
+    <div class="lab-card-body">
+      <div class="lab-card-top">
+        <span class="lab-card-name">AfterImage</span>
+        <span class="status-badge research">Research</span>
+      </div>
+      <div class="lab-card-role">Dream archive exploration</div>
+      <p>A local research tool for surfacing hidden structures, timelines, and recurring themes inside a personal dream collection.</p>
+      <div class="lab-card-meta">
+        <span><strong>Data</strong> · Local-first</span>
+        <span><strong>Requires</strong> · A dream archive</span>
+      </div>
+      <div class="lab-locked-tag">
+        🔒 Available to Lab members
+      </div>
+    </div>
   </div>
+
+  <div class="lab-card">
+    <div class="lab-card-visual">
+      <img src="screenshots/brainwave-generator.png" alt="Brainwave Generator" loading="lazy">
+    </div>
+    <div class="lab-card-body">
+      <div class="lab-card-top">
+        <span class="lab-card-name">Brainwave Generator</span>
+        <span class="status-badge research">Research</span>
+      </div>
+      <div class="lab-card-role">Frequency &amp; sound experiment</div>
+      <p>An early, raw exploration of binaural and isochronic tone generation — the predecessor experiment behind what later became Limina.</p>
+      <div class="lab-card-meta">
+        <span><strong>Data</strong> · Local-first</span>
+        <span><strong>Requires</strong> · Standalone</span>
+      </div>
+      <div class="lab-locked-tag">
+        🔒 Available to Lab members
+      </div>
+    </div>
+  </div>
+
+  <div class="lab-card">
+    <div class="lab-card-visual">
+      <img src="screenshots/lucidlab.png" alt="Lucid Lab" loading="lazy">
+    </div>
+    <div class="lab-card-body">
+      <div class="lab-card-top">
+        <span class="lab-card-name">Lucid Lab</span>
+        <span class="status-badge experimental">Experimental</span>
+      </div>
+      <div class="lab-card-role">Lucid dreaming practice &amp; training</div>
+      <p>An experimental dashboard combining dream journaling, custom analytics, and structured learning tools to support lucid dreaming practice and self-observation.</p>
+      <div class="lab-card-meta">
+        <span><strong>Data</strong> · Local-first</span>
+        <span><strong>Requires</strong> · A dream archive</span>
+      </div>
+      <div class="lab-locked-tag">
+        🔒 Available to Lab members
+      </div>
+    </div>
+  </div>
+
 </div>
 
-<div class="lab-card">
-  <div class="lab-card-top">
-    <span class="lab-card-name">Echo</span>
-    <span class="status-badge beta">Beta</span>
-  </div>
-  <div class="lab-card-role">Voice capture &amp; AI transcription</div>
-  <p>Capture dreams naturally by voice and transform them into structured, searchable reflections — for the moments when typing isn't the right tool.</p>
-  <div class="lab-card-meta">
-    <span><strong>Data</strong> · Cloud AI</span>
-    <span><strong>Requires</strong> · Standalone</span>
-  </div>
-  <div class="lab-locked-tag">
-    🔒 Available to Lab members
-  </div>
+<h2>Lab Notes</h2>
+<p>Reflections on where Sentria is heading, written along the way. Available to Lab supporters.</p>
+
+<div class="notes-list">
+  <button class="notes-item" tabindex="0" role="button"><span class="notes-item-lock">🔒</span><span class="notes-item-title">Sentria Is Becoming More Than I Originally Planned</span></button>
 </div>
 
-<div class="lab-card">
-  <div class="lab-card-top">
-    <span class="lab-card-name">AfterImage</span>
-    <span class="status-badge research">Research</span>
-  </div>
-  <div class="lab-card-role">Dream archive exploration</div>
-  <p>A local research tool for surfacing hidden structures, timelines, and recurring themes inside a personal dream collection.</p>
-  <div class="lab-card-meta">
-    <span><strong>Data</strong> · Local-first</span>
-    <span><strong>Requires</strong> · A dream archive</span>
-  </div>
-  <div class="lab-locked-tag">
-    🔒 Available to Lab members
-  </div>
+<div class="notes-modal-backdrop" id="notes-modal-backdrop"></div>
+<div class="notes-modal" id="notes-modal" aria-hidden="true">
+  <button class="notes-modal-close" id="notes-modal-close" aria-label="Close">&times;</button>
+  <div class="notes-modal-body" id="notes-modal-body"></div>
 </div>
 
-<div class="lab-card">
-  <div class="lab-card-top">
-    <span class="lab-card-name">Brainwave Generator</span>
-    <span class="status-badge research">Research</span>
-  </div>
-  <div class="lab-card-role">Frequency &amp; sound experiment</div>
-  <p>An early, raw exploration of binaural and isochronic tone generation — the predecessor experiment behind what later became Limina.</p>
-  <div class="lab-card-meta">
-    <span><strong>Data</strong> · Local-first</span>
-    <span><strong>Requires</strong> · Standalone</span>
-  </div>
-  <div class="lab-locked-tag">
-    🔒 Available to Lab members
-  </div>
-</div>
+<style>
+.notes-list { display: flex; flex-direction: column; gap: 0.6rem; margin: 1.5rem 0 2.5rem; }
+.notes-item {
+  display: flex; align-items: center; gap: 0.75rem;
+  width: 100%; text-align: left; cursor: pointer;
+  background: none; border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 0.9rem 1.1rem; font-family: var(--font-body); font-size: 0.9rem;
+  color: var(--text-primary); transition: border-color var(--transition), background var(--transition);
+}
+.notes-item:hover { border-color: var(--border-hover); background: var(--seafoam-soft); }
+.notes-item-lock { flex-shrink: 0; opacity: 0.6; font-size: 0.85rem; }
+.notes-empty { font-size: 0.85rem; color: var(--text-muted); font-style: italic; }
+.notes-modal-backdrop {
+  position: fixed; inset: 0; background: rgba(10,11,15,0.6); backdrop-filter: blur(6px);
+  z-index: 299; opacity: 0; pointer-events: none; transition: opacity 0.35s ease;
+}
+.notes-modal-backdrop.open { opacity: 1; pointer-events: all; }
+[data-theme="light"] .notes-modal-backdrop { background: rgba(242,239,233,0.65); }
+.notes-modal {
+  position: fixed; top: 50%; left: 50%; transform: translate(-50%,-48%) scale(0.97);
+  width: min(640px, calc(100vw - 2.5rem)); max-height: min(80vh, 700px);
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg, 20px);
+  padding: 2.5rem; z-index: 300; opacity: 0; pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.3s ease; overflow-y: auto;
+}
+.notes-modal.open { opacity: 1; pointer-events: all; transform: translate(-50%,-50%) scale(1); }
+.notes-modal-close {
+  position: absolute; top: 1.1rem; right: 1.1rem; background: none; border: 1px solid var(--border);
+  border-radius: 50%; width: 34px; height: 34px; cursor: pointer; color: var(--text-muted);
+  font-size: 1.1rem; line-height: 1; display: flex; align-items: center; justify-content: center;
+  transition: all var(--transition);
+}
+.notes-modal-close:hover { color: var(--seafoam); border-color: var(--border-hover); }
+.notes-modal-body h2 { font-family: var(--font-display); font-size: 1.6rem; font-weight: 400; margin-bottom: 1.25rem; }
+.notes-modal-body p { color: var(--text-secondary); font-size: 0.92rem; line-height: 1.85; margin-bottom: 1.1rem; }
+</style>
+
+<script>
+const LAB_NOTES = [{"id": "2026-07-14-becoming-more", "title": "Sentria Is Becoming More Than I Originally Planned", "html": "<p>I didn't originally set out to build an ecosystem.</p>\n<p>I built individual tools because I wanted them to exist.</p>\n<p>Some solved problems I had encountered myself.</p>\n<p>Others started as experiments that seemed interesting enough to try.</p>\n<p>Then the tools began connecting.</p>\n<p>One experiment suggested another.</p>\n<p>An old idea became useful in a completely different project.</p>\n<p>Something I built simply to explore one question turned out to be useful somewhere else.</p>\n<p>At some point I stopped being able to describe Sentria as just a collection of separate applications.</p>\n<p>It had started developing its own direction.</p>\n<p>I'm still not entirely sure what it will become.</p>\n<p>That's probably a good thing.</p>\n<p>If I knew the final shape already, there wouldn't be much left to explore.</p>"}];
+(function() {
+  const backdrop = document.getElementById('notes-modal-backdrop');
+  const modal    = document.getElementById('notes-modal');
+  const closeBtn = document.getElementById('notes-modal-close');
+  const body     = document.getElementById('notes-modal-body');
+  if (!modal) return;
+
+  function openNote(idx) {
+    const note = LAB_NOTES[idx];
+    if (!note) return;
+    body.innerHTML = '<h2>' + note.title + '</h2>' + note.html;
+    modal.classList.add('open');
+    backdrop.classList.add('open');
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeNote() {
+    modal.classList.remove('open');
+    backdrop.classList.remove('open');
+    modal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  }
+  document.querySelectorAll('.notes-item').forEach((btn, idx) => {
+    btn.addEventListener('click', () => openNote(idx));
+    btn.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openNote(idx); }
+    });
+  });
+  closeBtn.addEventListener('click', closeNote);
+  backdrop.addEventListener('click', closeNote);
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeNote(); });
+})();
+</script>
+
 
 <div class="lab-join-block">
   <p><strong>Join the Lab</strong></p>
