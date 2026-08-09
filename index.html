@@ -458,6 +458,11 @@ nav { display: flex; align-items: center; justify-content: space-between; gap: 1
 [data-theme="light"] .card-status.live {
   border-color: rgba(45,107,100,0.2);
 }
+.card-status.research {
+  color: #c9a96e;
+  border-color: rgba(201,169,110,0.25);
+  background: rgba(201,169,110,0.08);
+}
 
 .card-desc {
   font-size: 0.875rem; color: var(--text-secondary);
@@ -669,16 +674,6 @@ footer:hover .footer-manifesto-text { color: var(--text-secondary); }
         <div class="hero-node-label">Oneiro Web</div>
       </div>
 
-      <!-- Lucid Lab hidden — remove style="display:none" to show -->
-      <div class="hero-node" data-active="false" data-node="lucidlab"
-           style="top:72%;left:44%;display:none" tabindex="0" role="button" aria-label="Jump to Lucid Lab">
-        <div class="hero-node-dot-wrap">
-          <div class="hero-node-ring"></div>
-          <div class="hero-node-dot"></div>
-        </div>
-        <div class="hero-node-label">Lucid Lab</div>
-      </div>
-
       <div class="hero-node" data-active="true" data-node="limina"
            style="top:68%;left:10%" tabindex="0" role="button" aria-label="Jump to Limina">
         <div class="hero-node-dot-wrap">
@@ -695,6 +690,15 @@ footer:hover .footer-manifesto-text { color: var(--text-secondary); }
           <div class="hero-node-dot"></div>
         </div>
         <div class="hero-node-label">Conscious Flow</div>
+      </div>
+
+      <div class="hero-node" data-active="true" data-node="lab"
+           style="top:88%;left:78%" tabindex="0" role="button" aria-label="Jump to Sentria Lab">
+        <div class="hero-node-dot-wrap">
+          <div class="hero-node-ring"></div>
+          <div class="hero-node-dot"></div>
+        </div>
+        <div class="hero-node-label">Sentria Lab</div>
       </div>
 
       <!-- Loom hidden — remove style="display:none" to show -->
@@ -746,7 +750,7 @@ footer:hover .footer-manifesto-text { color: var(--text-secondary); }
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>
           </div>
           <div class="card-screenshot">
-            <img src="screenshots/journal.png" alt="Somnia">
+            <img src="screenshots/somnia.png" alt="Somnia" loading="lazy">
           </div>
         </div>
         <div class="card-body">
@@ -776,7 +780,7 @@ footer:hover .footer-manifesto-text { color: var(--text-secondary); }
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2c-4 5-4 15 0 20M12 2c4 5 4 15 0 20"/></svg>
           </div>
           <div class="card-screenshot">
-            <img src="screenshots/atlas.png" alt="Orbis">
+            <img src="screenshots/orbis.png" alt="Orbis" loading="lazy">
           </div>
         </div>
         <div class="card-body">
@@ -806,7 +810,7 @@ footer:hover .footer-manifesto-text { color: var(--text-secondary); }
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M17.5 6.5C19 8 20 10 20 12c0 4.4-3.6 8-8 8s-8-3.6-8-8c0-2 .7-3.8 2-5.2"/><path d="M12 2v4"/><circle cx="12" cy="12" r="3"/></svg>
           </div>
           <div class="card-screenshot">
-            <img src="screenshots/ai.png" alt="Oneiro">
+            <img src="screenshots/oneiro.png" alt="Oneiro" loading="lazy">
           </div>
         </div>
         <div class="card-body">
@@ -835,7 +839,7 @@ footer:hover .footer-manifesto-text { color: var(--text-secondary); }
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
           </div>
           <div class="card-screenshot">
-            <img src="screenshots/patterns.png" alt="Oneiro Web">
+            <img src="screenshots/oneiroweb.png" alt="Oneiro Web" loading="lazy">
           </div>
         </div>
         <div class="card-body">
@@ -857,35 +861,6 @@ footer:hover .footer-manifesto-text { color: var(--text-secondary); }
         </div>
       </div>
 
-      <!-- Lucid Lab — hidden until deployed, remove style="display:none" to reveal -->
-      <div class="app-card reveal" data-color="sage" style="display:none" aria-hidden="true">
-        <div class="card-visual" data-hint="" tabindex="0" role="button" aria-label="Preview Lucid Lab">
-          <div class="card-logo">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M12 2a7 7 0 0 1 7 7c0 4-3 6-4 9H9c-1-3-4-5-4-9a7 7 0 0 1 7-7z"/><path d="M9 21h6"/></svg>
-          </div>
-          <div class="card-screenshot">
-            <img src="screenshots/lucidlab.png" alt="Lucid Lab">
-          </div>
-        </div>
-        <div class="card-body">
-          <div class="card-header">
-            <div>
-              <div class="card-name" data-i18n="app5_name">Lucid Lab</div>
-              <div class="card-tagline" data-i18n="app5_tagline">Lucid dreaming practice</div>
-            </div>
-            <span class="card-status live" data-i18n="status_live">Live</span>
-          </div>
-          <p class="card-desc" data-i18n="app5_desc">
-            An experimental lucid dreaming dashboard combining dream journaling, custom analytics, and structured learning tools to support lucid dreaming practice and self-observation.
-          </p>
-          <div class="card-continuity" data-i18n="cont5">Longitudinal observation · shared symbolic memory</div>
-          <a href="http://127.0.0.1:5000" target="_blank" class="card-cta">
-            <span data-i18n="app5_cta">Open Lucid Lab</span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-          </a>
-        </div>
-      </div>
-
       <!-- Limina -->
       <div class="app-card reveal" data-color="lavender">
         <div class="card-visual" data-hint="" tabindex="0" role="button" aria-label="Preview Limina">
@@ -893,7 +868,7 @@ footer:hover .footer-manifesto-text { color: var(--text-secondary); }
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
           </div>
           <div class="card-screenshot">
-            <img src="screenshots/brain.png" alt="Limina">
+            <img src="screenshots/limina.png" alt="Limina" loading="lazy">
           </div>
         </div>
         <div class="card-body">
@@ -923,7 +898,7 @@ footer:hover .footer-manifesto-text { color: var(--text-secondary); }
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
           </div>
           <div class="card-screenshot">
-            <img src="screenshots/flow.png" alt="Conscious Flow">
+            <img src="screenshots/consciousflow.png" alt="Conscious Flow" loading="lazy">
           </div>
         </div>
         <div class="card-body">
@@ -945,6 +920,39 @@ footer:hover .footer-manifesto-text { color: var(--text-secondary); }
         </div>
       </div>
 
+      <!-- Sentria Lab — portal card to /lab.html -->
+      <div class="app-card reveal" data-color="amber">
+        <div class="card-visual" data-hint="" tabindex="0" role="button" aria-label="Preview Sentria Lab">
+          <div class="card-logo">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+              <path d="M9 2v6.5L3 20a1 1 0 0 0 1 1.5h16a1 1 0 0 0 1-1.5L15 8.5V2"/>
+              <path d="M9 2h6"/>
+              <path d="M8 15h8"/>
+            </svg>
+          </div>
+          <div class="card-screenshot">
+            <img src="screenshots/lab.png" alt="Sentria Lab" loading="lazy">
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="card-header">
+            <div>
+              <div class="card-name" data-i18n="applab_name">Sentria Lab</div>
+              <div class="card-tagline" data-i18n="applab_tagline">Where new ideas take shape</div>
+            </div>
+            <span class="card-status research" data-i18n="applab_status">Research</span>
+          </div>
+          <p class="card-desc" data-i18n="applab_desc">
+            Explore experimental tools, research prototypes, and emerging systems that are shaping the future of the Sentria ecosystem.
+          </p>
+          <div class="card-continuity" data-i18n="applab_continuity">Research laboratory · future ecosystem</div>
+          <a href="/lab.html" class="card-cta">
+            <span data-i18n="applab_cta">Explore the Lab</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+        </div>
+      </div>
+
       <!-- Loom — hidden until launch, remove style="display:none" to reveal -->
       <div class="app-card reveal" data-color="seafoam" style="display:none" aria-hidden="true">
         <div class="card-visual" data-hint="" tabindex="0" role="button" aria-label="Preview Loom">
@@ -952,7 +960,7 @@ footer:hover .footer-manifesto-text { color: var(--text-secondary); }
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
           </div>
           <div class="card-screenshot">
-            <img src="screenshots/continuity.png" alt="Loom">
+            <img src="screenshots/loom.png" alt="Loom" loading="lazy">
           </div>
         </div>
         <div class="card-body">
@@ -989,6 +997,7 @@ footer:hover .footer-manifesto-text { color: var(--text-secondary); }
       <div class="footer-logo">Sentria</div>
       <ul class="footer-links">
         <li><a href="about.html"   data-i18n="footer_about">About</a></li>
+        <li><a href="lab.html"     data-i18n="footer_lab">Lab</a></li>
         <li><a href="privacy.html" data-i18n="footer_privacy">Privacy</a></li>
         <li><a href="contact.html" data-i18n="footer_contact">Contact</a></li>
       </ul>
@@ -1018,7 +1027,6 @@ const TRANSLATIONS = {
     app2_name: "Orbis",        app2_tagline: "Visual dream mapping",            app2_desc: "A visual dream mapping system that transforms recurring dream locations into interconnected symbolic landscapes. Explore your inner world through evolving spatial continuity and dream geography.",                      app2_cta: "Open Orbis",
     app3_name: "Oneiro",       app3_tagline: "Dream journal & AI reflection",   app3_desc: "A lightweight dream journal focused on fast capture and reflective AI-assisted interpretation. Explore your dreams through psychological, Jungian, and symbolic perspectives directly in your browser.",               app3_cta: "Open Oneiro",
     app4_name: "Oneiro Web",   app4_tagline: "Dream symbolism gateway",         app4_desc: "An interactive gateway into dream symbolism featuring interpretations of common dream motifs and AI-assisted reflection tools. Designed for accessible and intuitive dream exploration.",                                app4_cta: "Open Oneiro Web",
-    app5_name: "Lucid Lab",    app5_tagline: "Lucid dreaming practice",         app5_desc: "An experimental lucid dreaming dashboard combining dream journaling, custom analytics, and structured learning tools to support lucid dreaming practice and self-observation.",                                         app5_cta: "Open Lucid Lab",
     app6_name: "Limina",       app6_tagline: "Sleep audio environment",         app6_desc: "An experimental audio environment focused on deep relaxation, hypnagogic drift, and lucid dreaming support through atmospheric sound design, binaural beats, and immersive sleep-oriented audio.",                     app6_cta: "Open Limina",
     app7_name: "Conscious Flow",app7_tagline: "Research & narrative",           app7_desc: "A reflective journal exploring dreams, lucid dreaming, symbolism, and consciousness through over twenty years of personal research. The philosophical and narrative foundation of the Sentria ecosystem.",             app7_cta: "Read on Substack",
     app8_name: "Loom",         app8_tagline: "Coming soon",                     app8_desc: "An evolving semantic memory system designed to connect dreams, symbols, locations, and recurring patterns across time — gradually building a living map of inner continuity.",
@@ -1038,7 +1046,8 @@ const TRANSLATIONS = {
     signup_submit: "Subscribe",
     signup_privacy: "No spam. Unsubscribe anytime. See our <a href=\"privacy.html\">privacy policy</a>.",
     signup_success: "Thank you — you're on the list.",
-    footer_about: "About", footer_privacy: "Privacy", footer_contact: "Contact", footer_copy: "© 2026 Sentria",
+    applab_name: "Sentria Lab", applab_tagline: "Where new ideas take shape", applab_status: "Research", applab_desc: "Explore experimental tools, research prototypes, and emerging systems that are shaping the future of the Sentria ecosystem.", applab_continuity: "Research laboratory · future ecosystem", applab_cta: "Explore the Lab",
+    footer_about: "About", footer_lab: "Lab", footer_privacy: "Privacy", footer_contact: "Contact", footer_copy: "© 2026 Sentria",
   },
   sl: {
     hero_tag:         "Sentria · Ekosistem kontinuitete sanj",
@@ -1055,7 +1064,6 @@ const TRANSLATIONS = {
     app2_name: "Orbis",         app2_tagline: "Vizualno kartiranje sanj",        app2_desc: "Vizualni sistem za kartiranje sanj, ki ponavljajoče se lokacije pretvori v med seboj povezane simbolne pokrajine. Raziščite notranji svet skozi prostorsko kontinuiteto in geografijo sanj.",                          app2_cta: "Odpri Orbis",
     app3_name: "Oneiro",        app3_tagline: "Dnevnik sanj in AI refleksija",   app3_desc: "Lahek dnevnik sanj s poudarkom na hitrem zapisovanju in reflektivni AI-interpretaciji. Raziščite sanje skozi psihološke, jungovske in simbolne perspektive neposredno v brskalniku.",                                  app3_cta: "Odpri Oneiro",
     app4_name: "Oneiro Web",    app4_tagline: "Prehod v simboliko sanj",         app4_desc: "Interaktivni vhod v simboliko sanj z interpretacijami pogostih motivov in orodji za AI-refleksijo. Zasnovan za dostopno in intuitivno raziskovanje sanj.",                                                              app4_cta: "Odpri Oneiro Web",
-    app5_name: "Lucid Lab",     app5_tagline: "Praksa lucidnega sanjanja",       app5_desc: "Eksperimentalna nadzorna plošča za lucidno sanjanje, ki združuje dnevnik sanj, analitiko po meri in strukturirana učna orodja za podporo praksi in samoopazovanju.",                                                   app5_cta: "Odpri Lucid Lab",
     app6_name: "Limina",        app6_tagline: "Zvočno okolje za spanje",         app6_desc: "Eksperimentalno zvočno okolje za globoko sprostitev, hipnagogično plavanje in podporo lucidnemu sanjanju — atmosferski zvočni design, binauralni utripi in poglobljene zvočne izkušnje.",                              app6_cta: "Odpri Limina",
     app7_name: "Conscious Flow", app7_tagline: "Raziskovanje in refleksija",     app7_desc: "Reflektivni dnevnik, ki skozi več kot dvajset let osebnih raziskav raziskuje sanje, lucidno sanjanje, simbolizem in zavest. Filozofska in narativna osnova ekosistema Sentria.",                                        app7_cta: "Beri na Substacku",
     app8_name: "Loom",          app8_tagline: "Kmalu",                           app8_desc: "Razvijajoči se semantični sistem spomina za povezovanje sanj, simbolov, lokacij in ponavljajočih se vzorcev skozi čas — postopoma gradi živo karto notranje kontinuitete.",
@@ -1075,7 +1083,8 @@ const TRANSLATIONS = {
     signup_submit: "Naroči se",
     signup_privacy: "Brez vsiljive pošte. Odjava kadarkoli. Glej našo <a href=\"privacy.html\">politiko zasebnosti</a>.",
     signup_success: "Hvala — na seznamu si.",
-    footer_about: "O nas", footer_privacy: "Zasebnost", footer_contact: "Kontakt", footer_copy: "© 2026 Sentria",
+    applab_name: "Sentria Lab", applab_tagline: "Kjer nastajajo nove ideje", applab_status: "Raziskave", applab_desc: "Razišči eksperimentalna orodja, raziskovalne prototipe in nastajajoče sisteme, ki oblikujejo prihodnost ekosistema Sentria.", applab_continuity: "Raziskovalni laboratorij · prihodnji ekosistem", applab_cta: "Razišči Lab",
+    footer_about: "O nas", footer_lab: "Lab", footer_privacy: "Zasebnost", footer_contact: "Kontakt", footer_copy: "© 2026 Sentria",
   }
 };
 
@@ -1148,9 +1157,10 @@ document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
   let W, H, animFrame;
 
   const CONNECTIONS = [
-    ['somnia','orbis'], ['somnia','consciousflow'], ['somnia','lucidlab'],
-    ['orbis','oneiro'], ['oneiro','oneiroweb'], ['oneiro','lucidlab'],
-    ['lucidlab','limina'], ['limina','consciousflow'],
+    ['somnia','orbis'], ['somnia','consciousflow'],
+    ['orbis','oneiro'], ['oneiro','oneiroweb'],
+    ['limina','consciousflow'],
+    ['consciousflow','lab'], ['somnia','lab'],
   ];
 
   // Cache node refs + drift params once — never re-queried per frame
@@ -1259,11 +1269,11 @@ document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
   setTimeout(init, 300);
 
   // Click or keyboard (Enter/Space) → scroll to card
-  const NODE_TO_APP = { somnia:1, orbis:2, oneiro:3, oneiroweb:4, lucidlab:5, limina:6, consciousflow:7, loom:8 };
+  const NODE_TO_APP = { somnia:"1", orbis:"2", oneiro:"3", oneiroweb:"4", limina:"6", consciousflow:"7", loom:"8", lab:"lab" };
   function jumpToCard(node) {
-    const idx = NODE_TO_APP[node.dataset.node];
-    if (!idx) return;
-    const card = document.querySelector(`[data-i18n="app${idx}_name"]`);
+    const suffix = NODE_TO_APP[node.dataset.node];
+    if (!suffix) return;
+    const card = document.querySelector(`[data-i18n="app${suffix}_name"]`);
     if (card) card.closest('.app-card').scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
   wrap.querySelectorAll('.hero-node').forEach(node => {
