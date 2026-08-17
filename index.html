@@ -458,10 +458,25 @@ nav { display: flex; align-items: center; justify-content: space-between; gap: 1
 [data-theme="light"] .card-status.live {
   border-color: rgba(45,107,100,0.2);
 }
-.card-status.research {
+.card-status.beta {
+  color: var(--seafoam);
+  border-color: rgba(126,207,196,0.2);
+  background: var(--seafoam-soft);
+}
+.card-status.experimental {
   color: #c9a96e;
   border-color: rgba(201,169,110,0.25);
   background: rgba(201,169,110,0.08);
+}
+.card-status.research {
+  color: #c47e8a;
+  border-color: rgba(196,126,138,0.25);
+  background: rgba(196,126,138,0.08);
+}
+.card-status.coming-soon {
+  color: var(--text-muted);
+  border-color: var(--border);
+  background: transparent;
 }
 
 .card-desc {
@@ -638,7 +653,7 @@ footer:hover .footer-manifesto-text { color: var(--text-secondary); }
       <canvas id="hero-canvas"></canvas>
 
       <!-- Node positions within the hero visual box -->
-      <div class="hero-node" data-active="true" data-node="somnia"
+            <div class="hero-node" data-active="true" data-node="somnia"
            style="top:8%;left:12%" tabindex="0" role="button" aria-label="Jump to Somnia">
         <div class="hero-node-dot-wrap">
           <div class="hero-node-ring"></div>
@@ -701,15 +716,6 @@ footer:hover .footer-manifesto-text { color: var(--text-secondary); }
         <div class="hero-node-label">Sentria Lab</div>
       </div>
 
-      <!-- Loom hidden — remove style="display:none" to show -->
-      <div class="hero-node" data-active="false" data-node="loom"
-           style="top:40%;left:38%;display:none" tabindex="0" role="button" aria-label="Jump to Loom">
-        <div class="hero-node-dot-wrap">
-          <div class="hero-node-ring"></div>
-          <div class="hero-node-dot"></div>
-        </div>
-        <div class="hero-node-label">Loom</div>
-      </div>
     </div>
 
   </div>
@@ -743,9 +749,8 @@ footer:hover .footer-manifesto-text { color: var(--text-secondary); }
     -->
     <div class="cards-grid">
 
-      <!-- Somnia -->
-      <div class="app-card reveal" data-color="seafoam">
-        <div class="card-visual" data-hint="" tabindex="0" role="button" aria-label="Preview Somnia">
+            <div class="app-card reveal" data-color="seafoam" data-app-id="somnia">
+        <div class="card-visual" tabindex="0" role="button" aria-label="Preview Somnia">
           <div class="card-logo">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>
           </div>
@@ -756,26 +761,24 @@ footer:hover .footer-manifesto-text { color: var(--text-secondary); }
         <div class="card-body">
           <div class="card-header">
             <div>
-              <div class="card-name" data-i18n="app1_name">Somnia</div>
-              <div class="card-tagline" data-i18n="app1_tagline">Dream archive &amp; analytics</div>
+              <div class="card-name" data-i18n="app_somnia_name">Somnia</div>
+              <div class="card-tagline" data-i18n="app_somnia_role">Dream archive & analytics</div>
             </div>
-            <span class="card-status live" data-i18n="status_live">Live</span>
+            <span class="card-status live" data-i18n="status_live">🟢 Core</span>
           </div>
-          <p class="card-desc" data-i18n="app1_desc">
+          <p class="card-desc" data-i18n="app_somnia_description">
             A local-first dream journaling system designed for long-term dream tracking, detailed analytics, and personal symbolic exploration. Built around privacy, continuity, and full ownership of your dream archive.
           </p>
-          <div class="card-continuity" data-i18n="cont1">Primary archive · connects with Orbis and Loom</div>
-          <a href="https://somnia-weld.vercel.app/"
-             target="_blank" class="card-cta">
-            <span data-i18n="app1_cta">Open Somnia</span>
+          <div class="card-continuity" data-i18n="app_somnia_ecosystem_role">Primary archive · connects with Orbis and Loom</div>
+          <a href="https://somnia-weld.vercel.app/" target="_blank" class="card-cta">
+            <span data-i18n="app_somnia_cta_label">Open Somnia</span>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           </a>
         </div>
       </div>
 
-      <!-- Orbis -->
-      <div class="app-card reveal" data-color="amber">
-        <div class="card-visual" data-hint="" tabindex="0" role="button" aria-label="Preview Orbis">
+      <div class="app-card reveal" data-color="amber" data-app-id="orbis">
+        <div class="card-visual" tabindex="0" role="button" aria-label="Preview Orbis">
           <div class="card-logo">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2c-4 5-4 15 0 20M12 2c4 5 4 15 0 20"/></svg>
           </div>
@@ -786,26 +789,24 @@ footer:hover .footer-manifesto-text { color: var(--text-secondary); }
         <div class="card-body">
           <div class="card-header">
             <div>
-              <div class="card-name" data-i18n="app2_name">Orbis</div>
-              <div class="card-tagline" data-i18n="app2_tagline">Visual dream mapping</div>
+              <div class="card-name" data-i18n="app_orbis_name">Orbis</div>
+              <div class="card-tagline" data-i18n="app_orbis_role">Visual dream mapping</div>
             </div>
-            <span class="card-status live" data-i18n="status_live">Live</span>
+            <span class="card-status live" data-i18n="status_live">🟢 Core</span>
           </div>
-          <p class="card-desc" data-i18n="app2_desc">
+          <p class="card-desc" data-i18n="app_orbis_description">
             A visual dream mapping system that transforms recurring dream locations into interconnected symbolic landscapes. Explore your inner world through evolving spatial continuity and dream geography.
           </p>
-          <div class="card-continuity" data-i18n="cont2">Spatial memory · draws from Somnia archive</div>
-          <a href="https://orbis-brown.vercel.app/"
-             target="_blank" class="card-cta">
-            <span data-i18n="app2_cta">Open Orbis</span>
+          <div class="card-continuity" data-i18n="app_orbis_ecosystem_role">Spatial memory · draws from Somnia archive</div>
+          <a href="https://orbis-brown.vercel.app/" target="_blank" class="card-cta">
+            <span data-i18n="app_orbis_cta_label">Open Orbis</span>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           </a>
         </div>
       </div>
 
-      <!-- Oneiro -->
-      <div class="app-card reveal" data-color="rose">
-        <div class="card-visual" data-hint="" tabindex="0" role="button" aria-label="Preview Oneiro">
+      <div class="app-card reveal" data-color="rose" data-app-id="oneiro">
+        <div class="card-visual" tabindex="0" role="button" aria-label="Preview Oneiro">
           <div class="card-logo">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M17.5 6.5C19 8 20 10 20 12c0 4.4-3.6 8-8 8s-8-3.6-8-8c0-2 .7-3.8 2-5.2"/><path d="M12 2v4"/><circle cx="12" cy="12" r="3"/></svg>
           </div>
@@ -816,25 +817,24 @@ footer:hover .footer-manifesto-text { color: var(--text-secondary); }
         <div class="card-body">
           <div class="card-header">
             <div>
-              <div class="card-name" data-i18n="app3_name">Oneiro</div>
-              <div class="card-tagline" data-i18n="app3_tagline">Dream journal &amp; AI reflection</div>
+              <div class="card-name" data-i18n="app_oneiro_name">Oneiro</div>
+              <div class="card-tagline" data-i18n="app_oneiro_role">Dream journal & AI reflection</div>
             </div>
-            <span class="card-status live" data-i18n="status_live">Live</span>
+            <span class="card-status live" data-i18n="status_live">🟢 Core</span>
           </div>
-          <p class="card-desc" data-i18n="app3_desc">
+          <p class="card-desc" data-i18n="app_oneiro_description">
             A lightweight dream journal focused on fast capture and reflective AI-assisted interpretation. Explore your dreams through psychological, Jungian, and symbolic perspectives directly in your browser.
           </p>
-          <div class="card-continuity" data-i18n="cont3">AI-assisted reflection · part of the continuity layer</div>
+          <div class="card-continuity" data-i18n="app_oneiro_ecosystem_role">AI-assisted reflection · part of the continuity layer</div>
           <a href="https://oneiro-delta.vercel.app/" target="_blank" class="card-cta">
-            <span data-i18n="app3_cta">Open Oneiro</span>
+            <span data-i18n="app_oneiro_cta_label">Open Oneiro</span>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           </a>
         </div>
       </div>
 
-      <!-- Oneiro Web -->
-      <div class="app-card reveal" data-color="slate">
-        <div class="card-visual" data-hint="" tabindex="0" role="button" aria-label="Preview Oneiro Web">
+      <div class="app-card reveal" data-color="slate" data-app-id="oneiroweb">
+        <div class="card-visual" tabindex="0" role="button" aria-label="Preview Oneiro Web">
           <div class="card-logo">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
           </div>
@@ -845,25 +845,24 @@ footer:hover .footer-manifesto-text { color: var(--text-secondary); }
         <div class="card-body">
           <div class="card-header">
             <div>
-              <div class="card-name" data-i18n="app4_name">Oneiro Web</div>
-              <div class="card-tagline" data-i18n="app4_tagline">Dream symbolism gateway</div>
+              <div class="card-name" data-i18n="app_oneiroweb_name">Oneiro Web</div>
+              <div class="card-tagline" data-i18n="app_oneiroweb_role">Dream symbolism gateway</div>
             </div>
-            <span class="card-status live" data-i18n="status_live">Live</span>
+            <span class="card-status live" data-i18n="status_live">🟢 Core</span>
           </div>
-          <p class="card-desc" data-i18n="app4_desc">
+          <p class="card-desc" data-i18n="app_oneiroweb_description">
             An interactive gateway into dream symbolism featuring interpretations of common dream motifs and AI-assisted reflection tools. Designed for accessible and intuitive dream exploration.
           </p>
-          <div class="card-continuity" data-i18n="cont4">Entry point into the ecosystem</div>
+          <div class="card-continuity" data-i18n="app_oneiroweb_ecosystem_role">Entry point into the ecosystem</div>
           <a href="https://oneiro-landing.vercel.app/" target="_blank" class="card-cta">
-            <span data-i18n="app4_cta">Open Oneiro Web</span>
+            <span data-i18n="app_oneiroweb_cta_label">Open Oneiro Web</span>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           </a>
         </div>
       </div>
 
-      <!-- Limina -->
-      <div class="app-card reveal" data-color="lavender">
-        <div class="card-visual" data-hint="" tabindex="0" role="button" aria-label="Preview Limina">
+      <div class="app-card reveal" data-color="lavender" data-app-id="limina">
+        <div class="card-visual" tabindex="0" role="button" aria-label="Preview Limina">
           <div class="card-logo">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
           </div>
@@ -874,26 +873,24 @@ footer:hover .footer-manifesto-text { color: var(--text-secondary); }
         <div class="card-body">
           <div class="card-header">
             <div>
-              <div class="card-name" data-i18n="app6_name">Limina</div>
-              <div class="card-tagline" data-i18n="app6_tagline">Sleep audio environment</div>
+              <div class="card-name" data-i18n="app_limina_name">Limina</div>
+              <div class="card-tagline" data-i18n="app_limina_role">Sleep audio environment</div>
             </div>
-            <span class="card-status live" data-i18n="status_live">Live</span>
+            <span class="card-status live" data-i18n="status_live">🟢 Core</span>
           </div>
-          <p class="card-desc" data-i18n="app6_desc">
+          <p class="card-desc" data-i18n="app_limina_description">
             An experimental audio environment focused on deep relaxation, hypnagogic drift, and lucid dreaming support through atmospheric sound design, binaural beats, and immersive sleep-oriented audio.
           </p>
-          <div class="card-continuity" data-i18n="cont6">Threshold environment · supports lucid entry</div>
-          <a href="https://limina-pulse.vercel.app/"
-             target="_blank" class="card-cta">
-            <span data-i18n="app6_cta">Open Limina</span>
+          <div class="card-continuity" data-i18n="app_limina_ecosystem_role">Threshold environment · supports lucid entry</div>
+          <a href="https://limina-pulse.vercel.app/" target="_blank" class="card-cta">
+            <span data-i18n="app_limina_cta_label">Open Limina</span>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           </a>
         </div>
       </div>
 
-      <!-- Conscious Flow -->
-      <div class="app-card reveal" data-color="gold">
-        <div class="card-visual" data-hint="" tabindex="0" role="button" aria-label="Preview Conscious Flow">
+      <div class="app-card reveal" data-color="gold" data-app-id="consciousflow">
+        <div class="card-visual" tabindex="0" role="button" aria-label="Preview Conscious Flow">
           <div class="card-logo">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
           </div>
@@ -904,31 +901,26 @@ footer:hover .footer-manifesto-text { color: var(--text-secondary); }
         <div class="card-body">
           <div class="card-header">
             <div>
-              <div class="card-name" data-i18n="app7_name">Conscious Flow</div>
-              <div class="card-tagline" data-i18n="app7_tagline">Research &amp; narrative</div>
+              <div class="card-name" data-i18n="app_consciousflow_name">Conscious Flow</div>
+              <div class="card-tagline" data-i18n="app_consciousflow_role">Research & narrative</div>
             </div>
-            <span class="card-status live" data-i18n="status_live">Live</span>
+            <span class="card-status live" data-i18n="status_live">🟢 Core</span>
           </div>
-          <p class="card-desc" data-i18n="app7_desc">
+          <p class="card-desc" data-i18n="app_consciousflow_description">
             A reflective journal exploring dreams, lucid dreaming, symbolism, and consciousness through over twenty years of personal research. The philosophical and narrative foundation of the Sentria ecosystem.
           </p>
-          <div class="card-continuity" data-i18n="cont7">Philosophical foundation · narrative continuity</div>
+          <div class="card-continuity" data-i18n="app_consciousflow_ecosystem_role">Philosophical foundation · narrative continuity</div>
           <a href="https://consciousflow.substack.com/" target="_blank" class="card-cta">
-            <span data-i18n="app7_cta">Read on Substack</span>
+            <span data-i18n="app_consciousflow_cta_label">Read on Substack</span>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           </a>
         </div>
       </div>
 
-      <!-- Sentria Lab — portal card to /lab.html -->
-      <div class="app-card reveal" data-color="amber">
-        <div class="card-visual" data-hint="" tabindex="0" role="button" aria-label="Preview Sentria Lab">
+      <div class="app-card reveal" data-color="amber" data-app-id="lab">
+        <div class="card-visual" tabindex="0" role="button" aria-label="Preview Sentria Lab">
           <div class="card-logo">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
-              <path d="M9 2v6.5L3 20a1 1 0 0 0 1 1.5h16a1 1 0 0 0 1-1.5L15 8.5V2"/>
-              <path d="M9 2h6"/>
-              <path d="M8 15h8"/>
-            </svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M9 2v6.5L3 20a1 1 0 0 0 1 1.5h16a1 1 0 0 0 1-1.5L15 8.5V2"/><path d="M9 2h6"/><path d="M8 15h8"/></svg>
           </div>
           <div class="card-screenshot">
             <img src="screenshots/lab.png" alt="Sentria Lab" loading="lazy">
@@ -937,48 +929,22 @@ footer:hover .footer-manifesto-text { color: var(--text-secondary); }
         <div class="card-body">
           <div class="card-header">
             <div>
-              <div class="card-name" data-i18n="applab_name">Sentria Lab</div>
-              <div class="card-tagline" data-i18n="applab_tagline">Where new ideas take shape</div>
+              <div class="card-name" data-i18n="app_lab_name">Sentria Lab</div>
+              <div class="card-tagline" data-i18n="app_lab_role">Where new ideas take shape</div>
             </div>
-            <span class="card-status research" data-i18n="applab_status">Research</span>
+            <span class="card-status research" data-i18n="status_research">🔴 Research</span>
           </div>
-          <p class="card-desc" data-i18n="applab_desc">
+          <p class="card-desc" data-i18n="app_lab_description">
             Explore experimental tools, research prototypes, and emerging systems that are shaping the future of the Sentria ecosystem.
           </p>
-          <div class="card-continuity" data-i18n="applab_continuity">Research laboratory · future ecosystem</div>
+          <div class="card-continuity" data-i18n="app_lab_ecosystem_role">Research laboratory · future ecosystem</div>
           <a href="/lab.html" class="card-cta">
-            <span data-i18n="applab_cta">Explore the Lab</span>
+            <span data-i18n="app_lab_cta_label">Explore the Lab</span>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           </a>
         </div>
       </div>
 
-      <!-- Loom — hidden until launch, remove style="display:none" to reveal -->
-      <div class="app-card reveal" data-color="seafoam" style="display:none" aria-hidden="true">
-        <div class="card-visual" data-hint="" tabindex="0" role="button" aria-label="Preview Loom">
-          <div class="card-logo">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
-          </div>
-          <div class="card-screenshot">
-            <img src="screenshots/loom.png" alt="Loom" loading="lazy">
-          </div>
-        </div>
-        <div class="card-body">
-          <div class="card-header">
-            <div>
-              <div class="card-name" data-i18n="app8_name">Loom</div>
-              <div class="card-tagline" data-i18n="app8_tagline">Coming soon</div>
-            </div>
-            <span class="card-status" data-i18n="app8_tagline">Soon</span>
-          </div>
-          <p class="card-desc" data-i18n="app8_desc">
-            An evolving semantic memory system designed to connect dreams, symbols, locations, and recurring patterns across time — gradually building a living map of inner continuity.
-          </p>
-          <div class="card-cta--nolink" data-i18n="app8_tagline">Coming soon</div>
-        </div>
-      </div>
-
-      <!-- ✏️ ADD NEW CARD: copy any block above -->
 
     </div><!-- /cards-grid -->
   </div>
@@ -1011,82 +977,7 @@ footer:hover .footer-manifesto-text { color: var(--text-secondary); }
      ============================================================ -->
 <script>
 /* ── i18n ─────────────────────────────────────────────────── */
-const TRANSLATIONS = {
-  en: {
-    hero_tag:         "Sentria · Dream Continuity Ecosystem",
-    hero_h1_line1:    "Places return.",
-    hero_h1_line2:    "Symbols evolve.",
-    hero_sub:         "Dreams are not isolated entries. Sentria is a modular ecosystem for long-term dream exploration — built around recurring structures, symbolic continuity, and the gradual emergence of inner cartography across time.",
-    hero_cta:         "Enter the ecosystem",
-    scroll_hint:      "Scroll",
-    section_label:    "The Ecosystem",
-    section_h2_line1: "Independent systems,",
-    section_h2_line2: "shared continuity",
-    status_live:      "Live",
-    app1_name: "Somnia",       app1_tagline: "Dream archive & analytics",      app1_desc: "A local-first dream journaling system designed for long-term dream tracking, detailed analytics, and personal symbolic exploration. Built around privacy, continuity, and full ownership of your dream archive.",        app1_cta: "Open Somnia",
-    app2_name: "Orbis",        app2_tagline: "Visual dream mapping",            app2_desc: "A visual dream mapping system that transforms recurring dream locations into interconnected symbolic landscapes. Explore your inner world through evolving spatial continuity and dream geography.",                      app2_cta: "Open Orbis",
-    app3_name: "Oneiro",       app3_tagline: "Dream journal & AI reflection",   app3_desc: "A lightweight dream journal focused on fast capture and reflective AI-assisted interpretation. Explore your dreams through psychological, Jungian, and symbolic perspectives directly in your browser.",               app3_cta: "Open Oneiro",
-    app4_name: "Oneiro Web",   app4_tagline: "Dream symbolism gateway",         app4_desc: "An interactive gateway into dream symbolism featuring interpretations of common dream motifs and AI-assisted reflection tools. Designed for accessible and intuitive dream exploration.",                                app4_cta: "Open Oneiro Web",
-    app6_name: "Limina",       app6_tagline: "Sleep audio environment",         app6_desc: "An experimental audio environment focused on deep relaxation, hypnagogic drift, and lucid dreaming support through atmospheric sound design, binaural beats, and immersive sleep-oriented audio.",                     app6_cta: "Open Limina",
-    app7_name: "Conscious Flow",app7_tagline: "Research & narrative",           app7_desc: "A reflective journal exploring dreams, lucid dreaming, symbolism, and consciousness through over twenty years of personal research. The philosophical and narrative foundation of the Sentria ecosystem.",             app7_cta: "Read on Substack",
-    app8_name: "Loom",         app8_tagline: "Coming soon",                     app8_desc: "An evolving semantic memory system designed to connect dreams, symbols, locations, and recurring patterns across time — gradually building a living map of inner continuity.",
-    cont1: "Primary archive · connects with Orbis and Loom",
-    cont2: "Spatial memory · draws from Somnia archive",
-    cont3: "AI-assisted reflection · part of the continuity layer",
-    cont4: "Entry point into the ecosystem",
-    cont5: "Longitudinal observation · shared symbolic memory",
-    cont6: "Threshold environment · supports lucid entry",
-    cont7: "Philosophical foundation · narrative continuity",
-    footer_manifesto: "Dreams are not isolated entries — they are evolving structures of continuity across time.<br>Sentria is built to explore that continuity.",
-    signup_trigger: "Stay connected",
-    signup_label: "Stay connected",
-    signup_title: "Follow the ecosystem<br>as it unfolds.",
-    signup_desc: "Occasional notes on new modules, early access, and the gradual emergence of continuity across Sentria.",
-    signup_placeholder: "your@email.com",
-    signup_submit: "Subscribe",
-    signup_privacy: "No spam. Unsubscribe anytime. See our <a href=\"privacy.html\">privacy policy</a>.",
-    signup_success: "Thank you — you're on the list.",
-    applab_name: "Sentria Lab", applab_tagline: "Where new ideas take shape", applab_status: "Research", applab_desc: "Explore experimental tools, research prototypes, and emerging systems that are shaping the future of the Sentria ecosystem.", applab_continuity: "Research laboratory · future ecosystem", applab_cta: "Explore the Lab",
-    footer_about: "About", footer_lab: "Lab", footer_privacy: "Privacy", footer_contact: "Contact", footer_copy: "© 2026 Sentria",
-  },
-  sl: {
-    hero_tag:         "Sentria · Ekosistem kontinuitete sanj",
-    hero_h1_line1:    "Kraji se vračajo.",
-    hero_h1_line2:    "Simboli se razvijajo.",
-    hero_sub:         "Sanje niso izolirani zapisi. Sentria je modularni ekosistem za dolgoročno raziskovanje sanj — zgrajen okoli ponavljajočih se struktur, simbolne kontinuitete in postopnega nastajanja notranje kartografije skozi čas.",
-    hero_cta:         "Vstopi v ekosistem",
-    scroll_hint:      "Pobrskaj",
-    section_label:    "Ekosistem",
-    section_h2_line1: "Neodvisni sistemi,",
-    section_h2_line2: "skupna kontinuiteta",
-    status_live:      "Aktivno",
-    app1_name: "Somnia",        app1_tagline: "Arhiv sanj in analitika",         app1_desc: "Lokalni sistem za vodenje dnevnika sanj, zasnovan za dolgoročno sledenje, podrobno analitiko in osebno simbolno raziskovanje. Zgrajen z mislijo na zasebnost, kontinuiteto in popolno lastništvo arhiva sanj.",      app1_cta: "Odpri Somnia",
-    app2_name: "Orbis",         app2_tagline: "Vizualno kartiranje sanj",        app2_desc: "Vizualni sistem za kartiranje sanj, ki ponavljajoče se lokacije pretvori v med seboj povezane simbolne pokrajine. Raziščite notranji svet skozi prostorsko kontinuiteto in geografijo sanj.",                          app2_cta: "Odpri Orbis",
-    app3_name: "Oneiro",        app3_tagline: "Dnevnik sanj in AI refleksija",   app3_desc: "Lahek dnevnik sanj s poudarkom na hitrem zapisovanju in reflektivni AI-interpretaciji. Raziščite sanje skozi psihološke, jungovske in simbolne perspektive neposredno v brskalniku.",                                  app3_cta: "Odpri Oneiro",
-    app4_name: "Oneiro Web",    app4_tagline: "Prehod v simboliko sanj",         app4_desc: "Interaktivni vhod v simboliko sanj z interpretacijami pogostih motivov in orodji za AI-refleksijo. Zasnovan za dostopno in intuitivno raziskovanje sanj.",                                                              app4_cta: "Odpri Oneiro Web",
-    app6_name: "Limina",        app6_tagline: "Zvočno okolje za spanje",         app6_desc: "Eksperimentalno zvočno okolje za globoko sprostitev, hipnagogično plavanje in podporo lucidnemu sanjanju — atmosferski zvočni design, binauralni utripi in poglobljene zvočne izkušnje.",                              app6_cta: "Odpri Limina",
-    app7_name: "Conscious Flow", app7_tagline: "Raziskovanje in refleksija",     app7_desc: "Reflektivni dnevnik, ki skozi več kot dvajset let osebnih raziskav raziskuje sanje, lucidno sanjanje, simbolizem in zavest. Filozofska in narativna osnova ekosistema Sentria.",                                        app7_cta: "Beri na Substacku",
-    app8_name: "Loom",          app8_tagline: "Kmalu",                           app8_desc: "Razvijajoči se semantični sistem spomina za povezovanje sanj, simbolov, lokacij in ponavljajočih se vzorcev skozi čas — postopoma gradi živo karto notranje kontinuitete.",
-    cont1: "Primarni arhiv · povezan z Orbisom in Loomom",
-    cont2: "Prostorski spomin · črpa iz arhiva Somnia",
-    cont3: "AI-refleksija · del kontinuitetnega sloja",
-    cont4: "Vstopna točka v ekosistem",
-    cont5: "Longitudinalno opazovanje · skupni simbolni spomin",
-    cont6: "Mejno okolje · podpira lucidni vstop",
-    cont7: "Filozofska osnova · narativna kontinuiteta",
-    footer_manifesto: "Sanje niso izolirani zapisi — so razvijajoče se strukture kontinuitete skozi čas.<br>Sentria je zgrajena za raziskovanje te kontinuitete.",
-    signup_trigger: "Ostani povezan",
-    signup_label: "Ostani povezan",
-    signup_title: "Spremljaj ekosistem,<br>ko se razvija.",
-    signup_desc: "Občasna obvestila o novih modulih, zgodnjem dostopu in postopnem nastajanju kontinuitete v Sentria.",
-    signup_placeholder: "tvoj@email.com",
-    signup_submit: "Naroči se",
-    signup_privacy: "Brez vsiljive pošte. Odjava kadarkoli. Glej našo <a href=\"privacy.html\">politiko zasebnosti</a>.",
-    signup_success: "Hvala — na seznamu si.",
-    applab_name: "Sentria Lab", applab_tagline: "Kjer nastajajo nove ideje", applab_status: "Raziskave", applab_desc: "Razišči eksperimentalna orodja, raziskovalne prototipe in nastajajoče sisteme, ki oblikujejo prihodnost ekosistema Sentria.", applab_continuity: "Raziskovalni laboratorij · prihodnji ekosistem", applab_cta: "Razišči Lab",
-    footer_about: "O nas", footer_lab: "Lab", footer_privacy: "Zasebnost", footer_contact: "Kontakt", footer_copy: "© 2026 Sentria",
-  }
-};
+const TRANSLATIONS = {"en": {"section_label": "The Ecosystem", "app_lab_description": "Explore experimental tools, research prototypes, and emerging systems that are shaping the future of the Sentria ecosystem.", "footer_about": "About", "app_consciousflow_role": "Research & narrative", "app_oneiroweb_role": "Dream symbolism gateway", "signup_success": "Thank you — you're on the list.", "app_orbis_role": "Visual dream mapping", "app_oneiroweb_name": "Oneiro Web", "app_limina_role": "Sleep audio environment", "app_limina_ecosystem_role": "Threshold environment · supports lucid entry", "signup_privacy": "No spam. Unsubscribe anytime. See our <a href=\"privacy.html\">privacy policy</a>.", "app_oneiroweb_description": "An interactive gateway into dream symbolism featuring interpretations of common dream motifs and AI-assisted reflection tools. Designed for accessible and intuitive dream exploration.", "hero_h1_line2": "Symbols evolve.", "app_oneiroweb_cta_label": "Open Oneiro Web", "app_orbis_description": "A visual dream mapping system that transforms recurring dream locations into interconnected symbolic landscapes. Explore your inner world through evolving spatial continuity and dream geography.", "app_oneiro_role": "Dream journal & AI reflection", "app_oneiro_cta_label": "Open Oneiro", "section_h2_line1": "Independent systems,", "app_consciousflow_description": "A reflective journal exploring dreams, lucid dreaming, symbolism, and consciousness through over twenty years of personal research. The philosophical and narrative foundation of the Sentria ecosystem.", "scroll_hint": "Scroll", "status_live": "🟢 Core", "app_consciousflow_cta_label": "Read on Substack", "app_somnia_role": "Dream archive & analytics", "app_orbis_name": "Orbis", "app_orbis_ecosystem_role": "Spatial memory · draws from Somnia archive", "signup_submit": "Subscribe", "app_lab_role": "Where new ideas take shape", "footer_copy": "© {YEAR} Sentria", "app_limina_name": "Limina", "app_limina_cta_label": "Open Limina", "app_oneiro_ecosystem_role": "AI-assisted reflection · part of the continuity layer", "app_consciousflow_name": "Conscious Flow", "signup_desc": "Occasional notes on new modules, early access, and the gradual emergence of continuity across Sentria.", "app_oneiroweb_ecosystem_role": "Entry point into the ecosystem", "app_lab_name": "Sentria Lab", "signup_title": "Follow the ecosystem<br>as it unfolds.", "status_research": "🔴 Research", "hero_tag": "Sentria · Dream Continuity Ecosystem", "hero_h1_line1": "Places return.", "app_lab_cta_label": "Explore the Lab", "footer_privacy": "Privacy", "app_somnia_name": "Somnia", "signup_label": "Stay connected", "app_oneiro_name": "Oneiro", "app_oneiro_description": "A lightweight dream journal focused on fast capture and reflective AI-assisted interpretation. Explore your dreams through psychological, Jungian, and symbolic perspectives directly in your browser.", "hero_cta": "Enter the ecosystem", "footer_contact": "Contact", "section_h2_line2": "shared continuity", "app_orbis_cta_label": "Open Orbis", "footer_lab": "Lab", "footer_manifesto": "Dreams are not isolated entries — they are evolving structures of continuity across time.<br>Sentria is built to explore that continuity.", "app_consciousflow_ecosystem_role": "Philosophical foundation · narrative continuity", "hero_sub": "Dreams are not isolated entries. Sentria is a modular ecosystem for long-term dream exploration — built around recurring structures, symbolic continuity, and the gradual emergence of inner cartography across time.", "signup_trigger": "Stay connected", "app_limina_description": "An experimental audio environment focused on deep relaxation, hypnagogic drift, and lucid dreaming support through atmospheric sound design, binaural beats, and immersive sleep-oriented audio.", "app_somnia_description": "A local-first dream journaling system designed for long-term dream tracking, detailed analytics, and personal symbolic exploration. Built around privacy, continuity, and full ownership of your dream archive.", "signup_placeholder": "your@email.com", "app_somnia_cta_label": "Open Somnia", "app_somnia_ecosystem_role": "Primary archive · connects with Orbis and Loom", "app_lab_ecosystem_role": "Research laboratory · future ecosystem"}, "sl": {"section_label": "Ekosistem", "app_lab_description": "Razišči eksperimentalna orodja, raziskovalne prototipe in nastajajoče sisteme, ki oblikujejo prihodnost ekosistema Sentria.", "footer_about": "O nas", "app_consciousflow_role": "Raziskovanje in refleksija", "app_oneiroweb_role": "Prehod v simboliko sanj", "signup_success": "Hvala — na seznamu si.", "app_orbis_role": "Vizualno kartiranje sanj", "app_oneiroweb_name": "Oneiro Web", "app_limina_role": "Zvočno okolje za spanje", "app_limina_ecosystem_role": "Mejno okolje · podpira lucidni vstop", "signup_privacy": "Brez vsiljive pošte. Odjava kadarkoli. Glej našo <a href=\"privacy.html\">politiko zasebnosti</a>.", "app_oneiroweb_description": "Interaktivni vhod v simboliko sanj z interpretacijami pogostih motivov in orodji za AI-refleksijo. Zasnovan za dostopno in intuitivno raziskovanje sanj.", "hero_h1_line2": "Simboli se razvijajo.", "app_oneiroweb_cta_label": "Odpri Oneiro Web", "app_orbis_description": "Vizualni sistem za kartiranje sanj, ki ponavljajoče se lokacije pretvori v med seboj povezane simbolne pokrajine. Raziščite notranji svet skozi prostorsko kontinuiteto in geografijo sanj.", "app_oneiro_role": "Dnevnik sanj in AI refleksija", "app_oneiro_cta_label": "Odpri Oneiro", "section_h2_line1": "Neodvisni sistemi,", "app_consciousflow_description": "Reflektivni dnevnik, ki skozi več kot dvajset let osebnih raziskav raziskuje sanje, lucidno sanjanje, simbolizem in zavest. Filozofska in narativna osnova ekosistema Sentria.", "scroll_hint": "Pobrskaj", "status_live": "🟢 Jedro", "app_consciousflow_cta_label": "Beri na Substacku", "app_somnia_role": "Arhiv sanj in analitika", "app_orbis_name": "Orbis", "app_orbis_ecosystem_role": "Prostorski spomin · črpa iz arhiva Somnia", "signup_submit": "Naroči se", "app_lab_role": "Kjer nastajajo nove ideje", "footer_copy": "© {YEAR} Sentria", "app_limina_name": "Limina", "app_limina_cta_label": "Odpri Limina", "app_oneiro_ecosystem_role": "AI-refleksija · del kontinuitetnega sloja", "app_consciousflow_name": "Conscious Flow", "signup_desc": "Občasna obvestila o novih modulih, zgodnjem dostopu in postopnem nastajanju kontinuitete v Sentria.", "app_oneiroweb_ecosystem_role": "Vstopna točka v ekosistem", "app_lab_name": "Sentria Lab", "signup_title": "Spremljaj ekosistem,<br>ko se razvija.", "status_research": "🔴 Raziskovalno", "hero_tag": "Sentria · Ekosistem kontinuitete sanj", "hero_h1_line1": "Kraji se vračajo.", "app_lab_cta_label": "Razišči Lab", "footer_privacy": "Zasebnost", "app_somnia_name": "Somnia", "signup_label": "Ostani povezan", "app_oneiro_name": "Oneiro", "app_oneiro_description": "Lahek dnevnik sanj s poudarkom na hitrem zapisovanju in reflektivni AI-interpretaciji. Raziščite sanje skozi psihološke, jungovske in simbolne perspektive neposredno v brskalniku.", "hero_cta": "Vstopi v ekosistem", "footer_contact": "Kontakt", "section_h2_line2": "skupna kontinuiteta", "app_orbis_cta_label": "Odpri Orbis", "footer_lab": "Lab", "footer_manifesto": "Sanje niso izolirani zapisi — so razvijajoče se strukture kontinuitete skozi čas.<br>Sentria je zgrajena za raziskovanje te kontinuitete.", "app_consciousflow_ecosystem_role": "Filozofska osnova · narativna kontinuiteta", "hero_sub": "Sanje niso izolirani zapisi. Sentria je modularni ekosistem za dolgoročno raziskovanje sanj — zgrajen okoli ponavljajočih se struktur, simbolne kontinuitete in postopnega nastajanja notranje kartografije skozi čas.", "signup_trigger": "Ostani povezan", "app_limina_description": "Eksperimentalno zvočno okolje za globoko sprostitev, hipnagogično plavanje in podporo lucidnemu sanjanju — atmosferski zvočni design, binauralni utripi in poglobljene zvočne izkušnje.", "app_somnia_description": "Lokalni sistem za vodenje dnevnika sanj, zasnovan za dolgoročno sledenje, podrobno analitiko in osebno simbolno raziskovanje. Zgrajen z mislijo na zasebnost, kontinuiteto in popolno lastništvo arhiva sanj.", "signup_placeholder": "tvoj@email.com", "app_somnia_cta_label": "Odpri Somnia", "app_somnia_ecosystem_role": "Primarni arhiv · povezan z Orbisom in Loomom", "app_lab_ecosystem_role": "Raziskovalni laboratorij · prihodnji ekosistem"}};
 
 const LANG_NAMES = { en: "EN", sl: "SL" };
 function getLang() { return localStorage.getItem("sentria-lang") || (navigator.language.startsWith("sl") ? "sl" : "en"); }
@@ -1269,12 +1160,10 @@ document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
   setTimeout(init, 300);
 
   // Click or keyboard (Enter/Space) → scroll to card
-  const NODE_TO_APP = { somnia:"1", orbis:"2", oneiro:"3", oneiroweb:"4", limina:"6", consciousflow:"7", loom:"8", lab:"lab" };
   function jumpToCard(node) {
-    const suffix = NODE_TO_APP[node.dataset.node];
-    if (!suffix) return;
-    const card = document.querySelector(`[data-i18n="app${suffix}_name"]`);
-    if (card) card.closest('.app-card').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    const id = node.dataset.node;
+    const card = document.querySelector(`.app-card[data-app-id="${id}"]`);
+    if (card) card.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
   wrap.querySelectorAll('.hero-node').forEach(node => {
     node.addEventListener('click', () => jumpToCard(node));
@@ -1297,9 +1186,7 @@ document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
   const hintText = isTouch ? 'tap to preview' : 'hover to preview';
 
   document.querySelectorAll('.card-visual').forEach(visual => {
-    // Loom card intentionally has no screenshot yet — skip the hint
-    const isLoom = visual.getAttribute('aria-label') === 'Preview Loom';
-    if (!isLoom) visual.setAttribute('data-hint', hintText);
+    visual.setAttribute('data-hint', hintText);
 
     function toggle() {
       const wasRevealed = visual.classList.contains('revealed');
@@ -1392,7 +1279,7 @@ document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
   </p>
 
   <!-- ✏️ Replace with your Formspree (or other) form endpoint -->
-  <form class="signup-form" id="signup-form" action="https://formspree.io/f/YOUR_SIGNUP_FORM_ID" method="POST">
+  <form class="signup-form" id="signup-form" action="https://formspree.io/f/xnpajkdn" method="POST">
     <input type="email" name="email" placeholder="your@email.com" data-i18n-placeholder="signup_placeholder" required>
     <button type="submit" class="signup-submit" data-i18n="signup_submit">Subscribe</button>
   </form>

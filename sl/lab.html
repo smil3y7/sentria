@@ -249,6 +249,30 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
   flex-grow: 1;
 }
 
+.lab-card-continuity {
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  padding: 0.4rem 0.7rem;
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  width: fit-content;
+  margin-bottom: 0.9rem;
+}
+.lab-card-continuity::before {
+  content: '';
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  background: var(--seafoam);
+  opacity: 0.45;
+  flex-shrink: 0;
+}
+
 .lab-card-meta {
   display: flex;
   gap: 1.5rem;
@@ -334,7 +358,6 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
 <p>Sentria Lab je prostor, kjer se raziskujejo novi pristopi h kontinuiteti sanj, simbolni analizi in reflektivnim orodjem — preden postanejo del širšega ekosistema, včasih pa tudi namesto tega.</p>
 
 <div class="lab-cards-grid">
-
   <div class="lab-card">
     <div class="lab-card-visual">
       <img src="screenshots/loom.png" alt="Loom" loading="lazy">
@@ -342,10 +365,11 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
     <div class="lab-card-body">
       <div class="lab-card-top">
         <span class="lab-card-name">Loom</span>
-        <span class="status-badge experimental">Eksperimentalno</span>
+        <span class="status-badge experimental">🟡 Eksperimentalno</span>
       </div>
       <div class="lab-card-role">Sistem semantične kontinuitete</div>
       <p>Raziskuje ponavljajoče se simbole, lokacije in čustvene vzorce znotraj dolgoročnih arhivov sanj — izpostavlja povezave, namesto da bi vsiljeval pomen.</p>
+      <div class="lab-card-continuity">Povezuje Somnio, Orbis in širši arhiv</div>
       <div class="lab-card-meta">
         <span><strong>Podatki</strong> · Lokalno</span>
         <span><strong>Zahteva</strong> · Arhiv sanj</span>
@@ -363,17 +387,15 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
     <div class="lab-card-body">
       <div class="lab-card-top">
         <span class="lab-card-name">Echo</span>
-        <span class="status-badge beta">Beta</span>
+        <span class="status-badge beta">🟢 Beta</span>
       </div>
       <div class="lab-card-role">Glasovni zajem in AI-transkripcija</div>
       <p>Zabeleži sanje naravno, z glasom, in jih pretvori v strukturirane, iskljive zapise — za trenutke, ko tipkanje ni pravo orodje.</p>
+      <div class="lab-card-continuity">Sloj hitrega zajema · napaja širši arhiv</div>
       <div class="lab-card-meta">
         <span><strong>Podatki</strong> · AI v oblaku</span>
         <span><strong>Zahteva</strong> · Samostojno</span>
       </div>
-      <!-- ✏️ Echo ima živ URL (https://echo-ten-phi.vercel.app/), a ostaja
-           vizualno zaklenjen kot ostali Lab, dokler ni pravega gatinga
-           članstva — glej enak komentar v EN verziji. -->
       <div class="lab-locked-tag">
         🔒 Na voljo članom Laba
       </div>
@@ -387,10 +409,11 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
     <div class="lab-card-body">
       <div class="lab-card-top">
         <span class="lab-card-name">AfterImage</span>
-        <span class="status-badge research">Raziskovalno</span>
+        <span class="status-badge research">🔴 Raziskovalno</span>
       </div>
       <div class="lab-card-role">Raziskovanje arhiva sanj</div>
       <p>Lokalno raziskovalno orodje za odkrivanje skritih struktur, časovnic in ponavljajočih se tem znotraj osebne zbirke sanj.</p>
+      <div class="lab-card-continuity">Analitični sloj · deluje nad arhivom sanj</div>
       <div class="lab-card-meta">
         <span><strong>Podatki</strong> · Lokalno</span>
         <span><strong>Zahteva</strong> · Arhiv sanj</span>
@@ -408,10 +431,11 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
     <div class="lab-card-body">
       <div class="lab-card-top">
         <span class="lab-card-name">Brainwave Generator</span>
-        <span class="status-badge research">Raziskovalno</span>
+        <span class="status-badge research">🔴 Raziskovalno</span>
       </div>
       <div class="lab-card-role">Eksperiment s frekvencami in zvokom</div>
       <p>Zgodnja, surova raziskava generiranja binauralnih in izohroničnih tonov — predhodni eksperiment, iz katerega je kasneje nastala Limina.</p>
+      <div class="lab-card-continuity">Predhodni eksperiment · razvil se je v Limino</div>
       <div class="lab-card-meta">
         <span><strong>Podatki</strong> · Lokalno</span>
         <span><strong>Zahteva</strong> · Samostojno</span>
@@ -424,15 +448,16 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
 
   <div class="lab-card">
     <div class="lab-card-visual">
-      <img src="screenshots/lucidlab.png" alt="Lucid Lab" loading="lazy">
+      <img src="screenshots/praxis.png" alt="Praxis" loading="lazy">
     </div>
     <div class="lab-card-body">
       <div class="lab-card-top">
-        <span class="lab-card-name">Lucid Lab</span>
-        <span class="status-badge experimental">Eksperimentalno</span>
+        <span class="lab-card-name">Praxis</span>
+        <span class="status-badge experimental">🟡 Eksperimentalno</span>
       </div>
       <div class="lab-card-role">Praksa in urjenje lucidnega sanjanja</div>
       <p>Eksperimentalna nadzorna plošča, ki združuje dnevnik sanj, analitiko po meri in strukturirana učna orodja za podporo praksi lucidnega sanjanja in samoopazovanju.</p>
+      <div class="lab-card-continuity">Sloj prakse · deluje nad arhivom sanj</div>
       <div class="lab-card-meta">
         <span><strong>Podatki</strong> · Lokalno</span>
         <span><strong>Zahteva</strong> · Arhiv sanj</span>
@@ -565,6 +590,53 @@ const savedTheme = localStorage.getItem('sentria-theme');
 if (savedTheme) setTheme(savedTheme);
 const mainHeader = document.getElementById('main-header');
 window.addEventListener('scroll', () => { mainHeader.classList.toggle('scrolled', window.scrollY > 40); }, { passive: true });
+</script>
+
+<!-- Back to top -->
+<button id="back-to-top" aria-label="Nazaj na vrh">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+</button>
+
+<style>
+#back-to-top {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 150;
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0;
+  transform: translateY(8px);
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+#back-to-top svg { width: 14px; height: 14px; }
+#back-to-top.visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: all;
+}
+#back-to-top:hover {
+  color: var(--seafoam);
+  border-color: var(--border-hover);
+}
+</style>
+
+<script>
+(function() {
+  const btn = document.getElementById('back-to-top');
+  window.addEventListener('scroll', () => {
+    btn.classList.toggle('visible', window.scrollY > 400);
+  }, { passive: true });
+  btn.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+})();
 </script>
 
 </body>

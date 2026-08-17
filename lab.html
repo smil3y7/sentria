@@ -249,6 +249,30 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
   flex-grow: 1;
 }
 
+.lab-card-continuity {
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  padding: 0.4rem 0.7rem;
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  width: fit-content;
+  margin-bottom: 0.9rem;
+}
+.lab-card-continuity::before {
+  content: '';
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  background: var(--seafoam);
+  opacity: 0.45;
+  flex-shrink: 0;
+}
+
 .lab-card-meta {
   display: flex;
   gap: 1.5rem;
@@ -334,7 +358,6 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
 <p>The Sentria Lab is where new approaches to dream continuity, symbolic analysis, and reflective tools are explored — before they become part of the wider ecosystem, and sometimes instead of it.</p>
 
 <div class="lab-cards-grid">
-
   <div class="lab-card">
     <div class="lab-card-visual">
       <img src="screenshots/loom.png" alt="Loom" loading="lazy">
@@ -342,10 +365,11 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
     <div class="lab-card-body">
       <div class="lab-card-top">
         <span class="lab-card-name">Loom</span>
-        <span class="status-badge experimental">Experimental</span>
+        <span class="status-badge experimental">🟡 Experimental</span>
       </div>
       <div class="lab-card-role">Semantic continuity engine</div>
-      <p>Explores recurring symbols, locations, and emotional patterns across long-term dream archives — surfacing connections rather than imposing meaning.</p>
+      <p>An evolving semantic memory system designed to connect dreams, symbols, locations, and recurring patterns across time — gradually building a living map of inner continuity.</p>
+      <div class="lab-card-continuity">Connects Somnia, Orbis, and the wider archive</div>
       <div class="lab-card-meta">
         <span><strong>Data</strong> · Local-first</span>
         <span><strong>Requires</strong> · A dream archive</span>
@@ -363,20 +387,15 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
     <div class="lab-card-body">
       <div class="lab-card-top">
         <span class="lab-card-name">Echo</span>
-        <span class="status-badge beta">Beta</span>
+        <span class="status-badge beta">🟢 Beta</span>
       </div>
-      <div class="lab-card-role">Voice capture &amp; AI transcription</div>
+      <div class="lab-card-role">Voice capture & AI transcription</div>
       <p>Capture dreams naturally by voice and transform them into structured, searchable reflections — for the moments when typing isn't the right tool.</p>
+      <div class="lab-card-continuity">Fast capture layer · feeds the wider archive</div>
       <div class="lab-card-meta">
         <span><strong>Data</strong> · Cloud AI</span>
         <span><strong>Requires</strong> · Standalone</span>
       </div>
-      <!-- ✏️ Echo has a live URL (https://echo-ten-phi.vercel.app/) but stays
-           visually locked like the rest of the Lab until real membership
-           gating exists — otherwise it would be the only "locked" card that
-           actually isn't, which undercuts the others. Swap the div below
-           for a real <a href="https://echo-ten-phi.vercel.app/" target="_blank" class="card-cta">
-           once Stripe/membership is wired up. -->
       <div class="lab-locked-tag">
         🔒 Available to Lab members
       </div>
@@ -390,10 +409,11 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
     <div class="lab-card-body">
       <div class="lab-card-top">
         <span class="lab-card-name">AfterImage</span>
-        <span class="status-badge research">Research</span>
+        <span class="status-badge research">🔴 Research</span>
       </div>
       <div class="lab-card-role">Dream archive exploration</div>
       <p>A local research tool for surfacing hidden structures, timelines, and recurring themes inside a personal dream collection.</p>
+      <div class="lab-card-continuity">Analytical layer · works on top of a dream archive</div>
       <div class="lab-card-meta">
         <span><strong>Data</strong> · Local-first</span>
         <span><strong>Requires</strong> · A dream archive</span>
@@ -411,10 +431,11 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
     <div class="lab-card-body">
       <div class="lab-card-top">
         <span class="lab-card-name">Brainwave Generator</span>
-        <span class="status-badge research">Research</span>
+        <span class="status-badge research">🔴 Research</span>
       </div>
-      <div class="lab-card-role">Frequency &amp; sound experiment</div>
+      <div class="lab-card-role">Frequency & sound experiment</div>
       <p>An early, raw exploration of binaural and isochronic tone generation — the predecessor experiment behind what later became Limina.</p>
+      <div class="lab-card-continuity">Predecessor experiment · evolved into Limina</div>
       <div class="lab-card-meta">
         <span><strong>Data</strong> · Local-first</span>
         <span><strong>Requires</strong> · Standalone</span>
@@ -427,15 +448,16 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
 
   <div class="lab-card">
     <div class="lab-card-visual">
-      <img src="screenshots/lucidlab.png" alt="Lucid Lab" loading="lazy">
+      <img src="screenshots/praxis.png" alt="Praxis" loading="lazy">
     </div>
     <div class="lab-card-body">
       <div class="lab-card-top">
-        <span class="lab-card-name">Lucid Lab</span>
-        <span class="status-badge experimental">Experimental</span>
+        <span class="lab-card-name">Praxis</span>
+        <span class="status-badge experimental">🟡 Experimental</span>
       </div>
-      <div class="lab-card-role">Lucid dreaming practice &amp; training</div>
+      <div class="lab-card-role">Lucid dreaming practice & training</div>
       <p>An experimental dashboard combining dream journaling, custom analytics, and structured learning tools to support lucid dreaming practice and self-observation.</p>
+      <div class="lab-card-continuity">Practice layer · works on top of a dream archive</div>
       <div class="lab-card-meta">
         <span><strong>Data</strong> · Local-first</span>
         <span><strong>Requires</strong> · A dream archive</span>
@@ -568,6 +590,53 @@ const savedTheme = localStorage.getItem('sentria-theme');
 if (savedTheme) setTheme(savedTheme);
 const mainHeader = document.getElementById('main-header');
 window.addEventListener('scroll', () => { mainHeader.classList.toggle('scrolled', window.scrollY > 40); }, { passive: true });
+</script>
+
+<!-- Back to top -->
+<button id="back-to-top" aria-label="Back to top">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+</button>
+
+<style>
+#back-to-top {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 150;
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0;
+  transform: translateY(8px);
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+#back-to-top svg { width: 14px; height: 14px; }
+#back-to-top.visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: all;
+}
+#back-to-top:hover {
+  color: var(--seafoam);
+  border-color: var(--border-hover);
+}
+</style>
+
+<script>
+(function() {
+  const btn = document.getElementById('back-to-top');
+  window.addEventListener('scroll', () => {
+    btn.classList.toggle('visible', window.scrollY > 400);
+  }, { passive: true });
+  btn.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+})();
 </script>
 
 </body>
