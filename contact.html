@@ -400,8 +400,8 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
       </a>
       <div class="nav-right">
         <div id="lang-switcher">
-          <a href="/contact.html" class="lang-btn active">EN</a>
-          <a href="https://sentria-navy.vercel.app/sl/contact.html" class="lang-btn">SL</a>
+          <a href="/contact.html" class="lang-btn active" data-set-lang="en">EN</a>
+          <a href="https://sentria-navy.vercel.app/sl/contact.html" class="lang-btn" data-set-lang="sl">SL</a>
         </div>
         <button class="theme-btn" id="theme-toggle" aria-label="Toggle theme">
           <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
@@ -497,6 +497,9 @@ const savedTheme = localStorage.getItem('sentria-theme');
 if (savedTheme) setTheme(savedTheme);
 const mainHeader = document.getElementById('main-header');
 window.addEventListener('scroll', () => { mainHeader.classList.toggle('scrolled', window.scrollY > 40); }, { passive: true });
+document.querySelectorAll('.lang-btn[data-set-lang]').forEach(a => {
+  a.addEventListener('click', () => localStorage.setItem('sentria-lang', a.dataset.setLang));
+});
 </script>
 
 <!-- Back to top -->
