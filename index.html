@@ -65,48 +65,6 @@
 }
 
 /* ============================================================
-   BASE
-   ============================================================ */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
-
-body {
-  background: var(--bg);
-  color: var(--text-primary);
-  font-family: var(--font-body);
-  font-weight: 300;
-  overflow-x: hidden;
-  min-height: 100vh;
-  transition: background var(--transition), color var(--transition);
-}
-
-body::before {
-  content: '';
-  position: fixed; inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.014'/%3E%3C/svg%3E");
-  pointer-events: none; z-index: 0;
-}
-
-/* Global keyboard focus state — visible, consistent, matches the palette.
-   Only shows for keyboard navigation (:focus-visible), not mouse clicks. */
-a:focus-visible,
-button:focus-visible,
-.hero-node:focus-visible,
-.card-visual:focus-visible,
-input:focus-visible {
-  outline: 2px solid var(--seafoam);
-  outline-offset: 3px;
-  border-radius: 4px;
-}
-
-.container {
-  max-width: 1140px;
-  margin: 0 auto;
-  padding: 0 2rem;
-  position: relative; z-index: 1;
-}
-
-/* ============================================================
    NAV
    ============================================================ */
 header {
@@ -159,6 +117,100 @@ nav { display: flex; align-items: center; justify-content: space-between; gap: 1
 [data-theme="light"] .icon-moon { display: none; }
 
 /* ============================================================
+   SHARED COMPONENTS
+   ============================================================ */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--seafoam);
+  color: var(--obsidian);
+  text-decoration: none;
+  padding: 0.8rem 1.9rem;
+  border-radius: 100px;
+  font-size: 0.88rem;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  transition: all var(--transition);
+  border: none;
+  cursor: pointer;
+}
+.btn-primary:hover { background: var(--seafoam-dim); transform: translateY(-2px); }
+.btn-primary svg { width: 14px; height: 14px; }
+
+#back-to-top {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 150;
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0;
+  transform: translateY(8px);
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+#back-to-top svg { width: 14px; height: 14px; }
+#back-to-top.visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: all;
+}
+#back-to-top:hover {
+  color: var(--seafoam);
+  border-color: var(--border-hover);
+}
+
+
+/* ============================================================
+   BASE (page-specific — landing page: no forced line-height,
+   wider container than the prose pages)
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-weight: 300;
+  overflow-x: hidden;
+  min-height: 100vh;
+  transition: background var(--transition), color var(--transition);
+}
+
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.014'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 0;
+}
+
+/* Global keyboard focus state — visible, consistent, matches the palette.
+   Only shows for keyboard navigation (:focus-visible), not mouse clicks. */
+a:focus-visible,
+button:focus-visible,
+.hero-node:focus-visible,
+.card-visual:focus-visible,
+input:focus-visible {
+  outline: 2px solid var(--seafoam);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.container {
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  position: relative; z-index: 1;
+}
+
+/* ============================================================
    HERO — full screen with mini constellation
    ============================================================ */
 .hero {
@@ -204,16 +256,6 @@ nav { display: flex; align-items: center; justify-content: space-between; gap: 1
   display: flex; gap: 0.75rem; flex-wrap: wrap;
   animation: fadeUp 0.8s 0.3s ease both;
 }
-
-.btn-primary {
-  display: inline-flex; align-items: center; gap: 0.5rem;
-  background: var(--seafoam); color: var(--obsidian);
-  text-decoration: none; padding: 0.8rem 1.8rem;
-  border-radius: 100px; font-size: 0.88rem; font-weight: 400;
-  transition: all var(--transition); border: none; cursor: pointer;
-}
-.btn-primary:hover { background: var(--seafoam-dim); transform: translateY(-2px); }
-.btn-primary svg { width: 14px; height: 14px; }
 
 /* Mini constellation — right side of hero */
 .hero-visual {
@@ -977,7 +1019,7 @@ footer:hover .footer-manifesto-text { color: var(--text-secondary); }
      ============================================================ -->
 <script>
 /* ── i18n ─────────────────────────────────────────────────── */
-const TRANSLATIONS = {"en": {"signup_privacy": "No spam. Unsubscribe anytime. See our <a href=\"/privacy.html\">privacy policy</a>.", "hero_cta": "Enter the ecosystem", "footer_privacy": "Privacy", "signup_desc": "Occasional notes on new modules, early access, and the gradual emergence of continuity across Sentria.", "footer_about": "About", "app_oneiroweb_name": "Oneiro Web", "app_oneiro_description": "A lightweight dream journal focused on fast capture and reflective AI-assisted interpretation. Explore your dreams through psychological, Jungian, and symbolic perspectives directly in your browser.", "footer_lab": "Lab", "signup_success": "Thank you — you're on the list.", "app_somnia_cta_label": "Open Somnia", "app_oneiroweb_description": "An interactive gateway into dream symbolism featuring interpretations of common dream motifs and AI-assisted reflection tools. Designed for accessible and intuitive dream exploration.", "app_limina_role": "Sleep audio environment", "app_somnia_name": "Somnia", "app_limina_ecosystem_role": "Threshold environment · supports lucid entry", "hero_h1_line2": "Symbols evolve.", "scroll_hint": "Scroll", "app_orbis_description": "A visual dream mapping system that transforms recurring dream locations into interconnected symbolic landscapes. Explore your inner world through evolving spatial continuity and dream geography.", "app_limina_name": "Limina", "signup_submit": "Subscribe", "app_lab_ecosystem_role": "Research laboratory · future ecosystem", "section_h2_line1": "Independent systems,", "app_lab_cta_label": "Explore the Lab", "app_lab_name": "Sentria Lab", "app_orbis_role": "Visual dream mapping", "app_oneiro_name": "Oneiro", "footer_copy": "© 2026 Sentria", "app_lab_description": "Explore experimental tools, research prototypes, and emerging systems that are shaping the future of the Sentria ecosystem.", "app_consciousflow_description": "A reflective journal exploring dreams, lucid dreaming, symbolism, and consciousness through over twenty years of personal research. The philosophical and narrative foundation of the Sentria ecosystem.", "section_label": "The Ecosystem", "app_oneiro_role": "Dream journal & AI reflection", "app_oneiro_cta_label": "Open Oneiro", "app_consciousflow_ecosystem_role": "Philosophical foundation · narrative continuity", "app_consciousflow_role": "Research & narrative", "signup_placeholder": "your@email.com", "app_oneiroweb_ecosystem_role": "Entry point into the ecosystem", "signup_label": "Stay connected", "app_consciousflow_cta_label": "Read on Substack", "hero_h1_line1": "Places return.", "footer_manifesto": "Dreams are not isolated entries — they are evolving structures of continuity across time.<br>Sentria is built to explore that continuity.", "status_live": "🟢 Core", "app_limina_description": "An experimental audio environment focused on deep relaxation, hypnagogic drift, and lucid dreaming support through atmospheric sound design, binaural beats, and immersive sleep-oriented audio.", "signup_title": "Follow the ecosystem<br>as it unfolds.", "app_somnia_description": "A local-first dream journaling system designed for long-term dream tracking, detailed analytics, and personal symbolic exploration. Built around privacy, continuity, and full ownership of your dream archive.", "app_consciousflow_name": "Conscious Flow", "status_research": "🔴 Research", "signup_trigger": "Stay connected", "app_orbis_name": "Orbis", "app_oneiro_ecosystem_role": "AI-assisted reflection · part of the continuity layer", "app_lab_role": "Where new ideas take shape", "hero_tag": "Sentria · Dream Continuity Ecosystem", "section_h2_line2": "shared continuity", "app_somnia_ecosystem_role": "Primary archive · connects with Orbis and Loom", "app_orbis_cta_label": "Open Orbis", "app_oneiroweb_role": "Dream symbolism gateway", "hero_sub": "Dreams are not isolated entries. Sentria is a modular ecosystem for long-term dream exploration — built around recurring structures, symbolic continuity, and the gradual emergence of inner cartography across time.", "app_limina_cta_label": "Open Limina", "app_somnia_role": "Dream archive & analytics", "app_orbis_ecosystem_role": "Spatial memory · draws from Somnia archive", "footer_contact": "Contact", "app_oneiroweb_cta_label": "Open Oneiro Web", "about_href": "/about.html", "lab_href": "/lab.html", "privacy_href": "/privacy.html", "contact_href": "/contact.html"}, "sl": {"signup_privacy": "Brez vsiljive pošte. Odjava kadarkoli. Glej našo <a href=\"/sl/privacy.html\">politiko zasebnosti</a>.", "hero_cta": "Vstopi v ekosistem", "footer_privacy": "Zasebnost", "signup_desc": "Občasna obvestila o novih modulih, zgodnjem dostopu in postopnem nastajanju kontinuitete v Sentria.", "footer_about": "O nas", "app_oneiroweb_name": "Oneiro Web", "app_oneiro_description": "Lahek dnevnik sanj s poudarkom na hitrem zapisovanju in reflektivni AI-interpretaciji. Raziščite sanje skozi psihološke, jungovske in simbolne perspektive neposredno v brskalniku.", "footer_lab": "Lab", "signup_success": "Hvala — na seznamu si.", "app_somnia_cta_label": "Odpri Somnia", "app_oneiroweb_description": "Interaktivni vhod v simboliko sanj z interpretacijami pogostih motivov in orodji za AI-refleksijo. Zasnovan za dostopno in intuitivno raziskovanje sanj.", "app_limina_role": "Zvočno okolje za spanje", "app_somnia_name": "Somnia", "app_limina_ecosystem_role": "Mejno okolje · podpira lucidni vstop", "hero_h1_line2": "Simboli se razvijajo.", "scroll_hint": "Pobrskaj", "app_orbis_description": "Vizualni sistem za kartiranje sanj, ki ponavljajoče se lokacije pretvori v med seboj povezane simbolne pokrajine. Raziščite notranji svet skozi prostorsko kontinuiteto in geografijo sanj.", "app_limina_name": "Limina", "signup_submit": "Naroči se", "app_lab_ecosystem_role": "Raziskovalni laboratorij · prihodnji ekosistem", "section_h2_line1": "Neodvisni sistemi,", "app_lab_cta_label": "Razišči Lab", "app_lab_name": "Sentria Lab", "app_orbis_role": "Vizualno kartiranje sanj", "app_oneiro_name": "Oneiro", "footer_copy": "© 2026 Sentria", "app_lab_description": "Razišči eksperimentalna orodja, raziskovalne prototipe in nastajajoče sisteme, ki oblikujejo prihodnost ekosistema Sentria.", "app_consciousflow_description": "Reflektivni dnevnik, ki skozi več kot dvajset let osebnih raziskav raziskuje sanje, lucidno sanjanje, simbolizem in zavest. Filozofska in narativna osnova ekosistema Sentria.", "section_label": "Ekosistem", "app_oneiro_role": "Dnevnik sanj in AI refleksija", "app_oneiro_cta_label": "Odpri Oneiro", "app_consciousflow_ecosystem_role": "Filozofska osnova · narativna kontinuiteta", "app_consciousflow_role": "Raziskovanje in refleksija", "signup_placeholder": "tvoj@email.com", "app_oneiroweb_ecosystem_role": "Vstopna točka v ekosistem", "signup_label": "Ostani povezan", "app_consciousflow_cta_label": "Beri na Substacku", "hero_h1_line1": "Kraji se vračajo.", "footer_manifesto": "Sanje niso izolirani zapisi — so razvijajoče se strukture kontinuitete skozi čas.<br>Sentria je zgrajena za raziskovanje te kontinuitete.", "status_live": "🟢 Jedro", "app_limina_description": "Eksperimentalno zvočno okolje za globoko sprostitev, hipnagogično plavanje in podporo lucidnemu sanjanju — atmosferski zvočni design, binauralni utripi in poglobljene zvočne izkušnje.", "signup_title": "Spremljaj ekosistem,<br>ko se razvija.", "app_somnia_description": "Lokalni sistem za vodenje dnevnika sanj, zasnovan za dolgoročno sledenje, podrobno analitiko in osebno simbolno raziskovanje. Zgrajen z mislijo na zasebnost, kontinuiteto in popolno lastništvo arhiva sanj.", "app_consciousflow_name": "Conscious Flow", "status_research": "🔴 Raziskovalno", "signup_trigger": "Ostani povezan", "app_orbis_name": "Orbis", "app_oneiro_ecosystem_role": "AI-refleksija · del kontinuitetnega sloja", "app_lab_role": "Kjer nastajajo nove ideje", "hero_tag": "Sentria · Ekosistem kontinuitete sanj", "section_h2_line2": "skupna kontinuiteta", "app_somnia_ecosystem_role": "Primarni arhiv · povezan z Orbisom in Loomom", "app_orbis_cta_label": "Odpri Orbis", "app_oneiroweb_role": "Prehod v simboliko sanj", "hero_sub": "Sanje niso izolirani zapisi. Sentria je modularni ekosistem za dolgoročno raziskovanje sanj — zgrajen okoli ponavljajočih se struktur, simbolne kontinuitete in postopnega nastajanja notranje kartografije skozi čas.", "app_limina_cta_label": "Odpri Limina", "app_somnia_role": "Arhiv sanj in analitika", "app_orbis_ecosystem_role": "Prostorski spomin · črpa iz arhiva Somnia", "footer_contact": "Kontakt", "app_oneiroweb_cta_label": "Odpri Oneiro Web", "about_href": "/sl/about.html", "lab_href": "/sl/lab.html", "privacy_href": "/sl/privacy.html", "contact_href": "/sl/contact.html"}};
+const TRANSLATIONS = {"en": {"hero_sub": "Dreams are not isolated entries. Sentria is a modular ecosystem for long-term dream exploration — built around recurring structures, symbolic continuity, and the gradual emergence of inner cartography across time.", "app_consciousflow_role": "Research & narrative", "app_somnia_cta_label": "Open Somnia", "app_limina_name": "Limina", "footer_about": "About", "hero_h1_line1": "Places return.", "signup_desc": "Occasional notes on new modules, early access, and the gradual emergence of continuity across Sentria.", "app_oneiro_role": "Dream journal & AI reflection", "app_lab_name": "Sentria Lab", "app_somnia_name": "Somnia", "hero_tag": "Sentria · Dream Continuity Ecosystem", "signup_placeholder": "your@email.com", "app_limina_cta_label": "Open Limina", "footer_lab": "Lab", "app_oneiro_ecosystem_role": "AI-assisted reflection · part of the continuity layer", "section_h2_line2": "shared continuity", "app_limina_ecosystem_role": "Threshold environment · supports lucid entry", "app_oneiro_name": "Oneiro", "app_orbis_cta_label": "Open Orbis", "signup_title": "Follow the ecosystem<br>as it unfolds.", "footer_privacy": "Privacy", "app_consciousflow_description": "A reflective journal exploring dreams, lucid dreaming, symbolism, and consciousness through over twenty years of personal research. The philosophical and narrative foundation of the Sentria ecosystem.", "signup_submit": "Subscribe", "app_lab_role": "Where new ideas take shape", "signup_trigger": "Stay connected", "app_somnia_ecosystem_role": "Primary archive · connects with Orbis and Loom", "signup_success": "Thank you — you're on the list.", "app_oneiroweb_role": "Dream symbolism gateway", "status_research": "🔴 Research", "app_oneiroweb_cta_label": "Open Oneiro Web", "section_label": "The Ecosystem", "hero_cta": "Enter the ecosystem", "app_orbis_role": "Visual dream mapping", "footer_manifesto": "Dreams are not isolated entries — they are evolving structures of continuity across time.<br>Sentria is built to explore that continuity.", "app_consciousflow_ecosystem_role": "Philosophical foundation · narrative continuity", "app_oneiroweb_description": "An interactive gateway into dream symbolism featuring interpretations of common dream motifs and AI-assisted reflection tools. Designed for accessible and intuitive dream exploration.", "signup_label": "Stay connected", "scroll_hint": "Scroll", "app_oneiro_description": "A lightweight dream journal focused on fast capture and reflective AI-assisted interpretation. Explore your dreams through psychological, Jungian, and symbolic perspectives directly in your browser.", "app_somnia_role": "Dream archive & analytics", "app_lab_description": "Explore experimental tools, research prototypes, and emerging systems that are shaping the future of the Sentria ecosystem.", "app_limina_description": "An experimental audio environment focused on deep relaxation, hypnagogic drift, and lucid dreaming support through atmospheric sound design, binaural beats, and immersive sleep-oriented audio.", "footer_copy": "© 2026 Sentria", "section_h2_line1": "Independent systems,", "app_oneiro_cta_label": "Open Oneiro", "footer_contact": "Contact", "app_limina_role": "Sleep audio environment", "app_lab_ecosystem_role": "Research laboratory · future ecosystem", "app_orbis_description": "A visual dream mapping system that transforms recurring dream locations into interconnected symbolic landscapes. Explore your inner world through evolving spatial continuity and dream geography.", "app_oneiroweb_name": "Oneiro Web", "app_consciousflow_cta_label": "Read on Substack", "app_orbis_name": "Orbis", "app_lab_cta_label": "Explore the Lab", "app_oneiroweb_ecosystem_role": "Entry point into the ecosystem", "signup_privacy": "No spam. Unsubscribe anytime. See our <a href=\"/privacy.html\">privacy policy</a>.", "status_live": "🟢 Core", "app_consciousflow_name": "Conscious Flow", "hero_h1_line2": "Symbols evolve.", "app_somnia_description": "A local-first dream journaling system designed for long-term dream tracking, detailed analytics, and personal symbolic exploration. Built around privacy, continuity, and full ownership of your dream archive.", "app_orbis_ecosystem_role": "Spatial memory · draws from Somnia archive", "about_href": "/about.html", "lab_href": "/lab.html", "privacy_href": "/privacy.html", "contact_href": "/contact.html"}, "sl": {"hero_sub": "Sanje niso izolirani zapisi. Sentria je modularni ekosistem za dolgoročno raziskovanje sanj — zgrajen okoli ponavljajočih se struktur, simbolne kontinuitete in postopnega nastajanja notranje kartografije skozi čas.", "app_consciousflow_role": "Raziskovanje in refleksija", "app_somnia_cta_label": "Odpri Somnia", "app_limina_name": "Limina", "footer_about": "O nas", "hero_h1_line1": "Kraji se vračajo.", "signup_desc": "Občasna obvestila o novih modulih, zgodnjem dostopu in postopnem nastajanju kontinuitete v Sentria.", "app_oneiro_role": "Dnevnik sanj in AI refleksija", "app_lab_name": "Sentria Lab", "app_somnia_name": "Somnia", "hero_tag": "Sentria · Ekosistem kontinuitete sanj", "signup_placeholder": "tvoj@email.com", "app_limina_cta_label": "Odpri Limina", "footer_lab": "Lab", "app_oneiro_ecosystem_role": "AI-refleksija · del kontinuitetnega sloja", "section_h2_line2": "skupna kontinuiteta", "app_limina_ecosystem_role": "Mejno okolje · podpira lucidni vstop", "app_oneiro_name": "Oneiro", "app_orbis_cta_label": "Odpri Orbis", "signup_title": "Spremljaj ekosistem,<br>ko se razvija.", "footer_privacy": "Zasebnost", "app_consciousflow_description": "Reflektivni dnevnik, ki skozi več kot dvajset let osebnih raziskav raziskuje sanje, lucidno sanjanje, simbolizem in zavest. Filozofska in narativna osnova ekosistema Sentria.", "signup_submit": "Naroči se", "app_lab_role": "Kjer nastajajo nove ideje", "signup_trigger": "Ostani povezan", "app_somnia_ecosystem_role": "Primarni arhiv · povezan z Orbisom in Loomom", "signup_success": "Hvala — na seznamu si.", "app_oneiroweb_role": "Prehod v simboliko sanj", "status_research": "🔴 Raziskovalno", "app_oneiroweb_cta_label": "Odpri Oneiro Web", "section_label": "Ekosistem", "hero_cta": "Vstopi v ekosistem", "app_orbis_role": "Vizualno kartiranje sanj", "footer_manifesto": "Sanje niso izolirani zapisi — so razvijajoče se strukture kontinuitete skozi čas.<br>Sentria je zgrajena za raziskovanje te kontinuitete.", "app_consciousflow_ecosystem_role": "Filozofska osnova · narativna kontinuiteta", "app_oneiroweb_description": "Interaktivni vhod v simboliko sanj z interpretacijami pogostih motivov in orodji za AI-refleksijo. Zasnovan za dostopno in intuitivno raziskovanje sanj.", "signup_label": "Ostani povezan", "scroll_hint": "Pobrskaj", "app_oneiro_description": "Lahek dnevnik sanj s poudarkom na hitrem zapisovanju in reflektivni AI-interpretaciji. Raziščite sanje skozi psihološke, jungovske in simbolne perspektive neposredno v brskalniku.", "app_somnia_role": "Arhiv sanj in analitika", "app_lab_description": "Razišči eksperimentalna orodja, raziskovalne prototipe in nastajajoče sisteme, ki oblikujejo prihodnost ekosistema Sentria.", "app_limina_description": "Eksperimentalno zvočno okolje za globoko sprostitev, hipnagogično plavanje in podporo lucidnemu sanjanju — atmosferski zvočni design, binauralni utripi in poglobljene zvočne izkušnje.", "footer_copy": "© 2026 Sentria", "section_h2_line1": "Neodvisni sistemi,", "app_oneiro_cta_label": "Odpri Oneiro", "footer_contact": "Kontakt", "app_limina_role": "Zvočno okolje za spanje", "app_lab_ecosystem_role": "Raziskovalni laboratorij · prihodnji ekosistem", "app_orbis_description": "Vizualni sistem za kartiranje sanj, ki ponavljajoče se lokacije pretvori v med seboj povezane simbolne pokrajine. Raziščite notranji svet skozi prostorsko kontinuiteto in geografijo sanj.", "app_oneiroweb_name": "Oneiro Web", "app_consciousflow_cta_label": "Beri na Substacku", "app_orbis_name": "Orbis", "app_lab_cta_label": "Razišči Lab", "app_oneiroweb_ecosystem_role": "Vstopna točka v ekosistem", "signup_privacy": "Brez vsiljive pošte. Odjava kadarkoli. Glej našo <a href=\"/sl/privacy.html\">politiko zasebnosti</a>.", "status_live": "🟢 Jedro", "app_consciousflow_name": "Conscious Flow", "hero_h1_line2": "Simboli se razvijajo.", "app_somnia_description": "Lokalni sistem za vodenje dnevnika sanj, zasnovan za dolgoročno sledenje, podrobno analitiko in osebno simbolno raziskovanje. Zgrajen z mislijo na zasebnost, kontinuiteto in popolno lastništvo arhiva sanj.", "app_orbis_ecosystem_role": "Prostorski spomin · črpa iz arhiva Somnia", "about_href": "/sl/about.html", "lab_href": "/sl/lab.html", "privacy_href": "/sl/privacy.html", "contact_href": "/sl/contact.html"}};
 
 const LANG_NAMES = { en: "EN", sl: "SL" };
 function getLang() { return localStorage.getItem("sentria-lang") || (navigator.language.startsWith("sl") ? "sl" : "en"); }
@@ -1218,36 +1260,6 @@ document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
 <button id="back-to-top" aria-label="Back to top">
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
 </button>
-
-<style>
-#back-to-top {
-  position: fixed;
-  bottom: 2rem;
-  right: 2rem;
-  z-index: 150;
-  width: 40px; height: 40px;
-  border-radius: 50%;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  color: var(--text-muted);
-  cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  opacity: 0;
-  transform: translateY(8px);
-  pointer-events: none;
-  transition: opacity 0.3s ease, transform 0.3s ease, border-color 0.3s ease, color 0.3s ease;
-}
-#back-to-top svg { width: 14px; height: 14px; }
-#back-to-top.visible {
-  opacity: 1;
-  transform: translateY(0);
-  pointer-events: all;
-}
-#back-to-top:hover {
-  color: var(--seafoam);
-  border-color: var(--border-hover);
-}
-</style>
 
 <script>
 (function() {
