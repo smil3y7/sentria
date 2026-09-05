@@ -202,6 +202,8 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
 .footer-links { display: flex; gap: 2rem; list-style: none; }
 .footer-links a { font-size: 0.78rem; color: var(--text-muted); text-decoration: none; font-family: var(--font-mono); letter-spacing: 0.08em; transition: color var(--transition); }
 .footer-links a:hover { color: var(--seafoam); }
+.footer-support a { opacity: 0.6; }
+.footer-support a:hover { opacity: 1; }
 .footer-copy { font-size: 0.72rem; color: var(--text-muted); font-family: var(--font-mono); }
 
 .section-label { font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--seafoam); margin-bottom: 0.85rem; display: block; }
@@ -376,11 +378,11 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 2rem;
-  margin-top: 3rem;
+  margin: 1.5rem 0 3rem;
   text-align: center;
 }
 .lab-join-block p { margin-bottom: 1rem; }
-.lab-join-block p:last-child { margin-bottom: 0; }
+.lab-join-block .btn-primary { margin-top: 0.25rem; }
 
 @media (max-width: 768px) {
   .container { padding: 0 1.25rem; }
@@ -429,6 +431,12 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
 <p>Not every idea becomes a product. Some remain experiments. Some evolve into core Sentria systems.</p>
 
 <p>The Sentria Lab is where new approaches to dream continuity, symbolic analysis, and reflective tools are explored — before they become part of the wider ecosystem, and sometimes instead of it.</p>
+
+<div class="lab-join-block">
+  <p><strong>Lab membership opens soon</strong></p>
+  <p>Lab membership supports independent research and long-term development of the Sentria ecosystem. It isn't open yet — sign up below to hear the moment it launches.</p>
+  <a class="btn-primary" href="/#signup">Notify me</a>
+</div>
 
 <div class="lab-cards-grid">
   <div class="lab-card">
@@ -608,11 +616,6 @@ const LAB_NOTES = [{"id": "2026-08-13-building-for-the-archive-i-already-have", 
 </script>
 
 
-<div class="lab-join-block">
-  <p><strong>Join the Lab</strong></p>
-  <p>The Lab supports independent research and long-term development of the Sentria ecosystem. Membership isn't open yet — sign up on the <a href="/">homepage</a> to hear when it launches.</p>
-</div>
-
     </div>
   </div>
 </main>
@@ -626,6 +629,7 @@ const LAB_NOTES = [{"id": "2026-08-13-building-for-the-archive-i-already-have", 
         <li><a href="/lab.html">Lab</a></li>
         <li><a href="/privacy.html">Privacy</a></li>
         <li><a href="/contact.html">Contact</a></li>
+        <li class="footer-support"><a href="https://ko-fi.com/smiley7" target="_blank" rel="noopener">☕ Support Sentria</a></li>
       </ul>
       <div class="footer-copy">© 2026 Sentria</div>
     </div>

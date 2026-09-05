@@ -202,6 +202,8 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
 .footer-links { display: flex; gap: 2rem; list-style: none; }
 .footer-links a { font-size: 0.78rem; color: var(--text-muted); text-decoration: none; font-family: var(--font-mono); letter-spacing: 0.08em; transition: color var(--transition); }
 .footer-links a:hover { color: var(--seafoam); }
+.footer-support a { opacity: 0.6; }
+.footer-support a:hover { opacity: 1; }
 .footer-copy { font-size: 0.72rem; color: var(--text-muted); font-family: var(--font-mono); }
 
 .section-label { font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--seafoam); margin-bottom: 0.85rem; display: block; }
@@ -376,11 +378,11 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 2rem;
-  margin-top: 3rem;
+  margin: 1.5rem 0 3rem;
   text-align: center;
 }
 .lab-join-block p { margin-bottom: 1rem; }
-.lab-join-block p:last-child { margin-bottom: 0; }
+.lab-join-block .btn-primary { margin-top: 0.25rem; }
 
 @media (max-width: 768px) {
   .container { padding: 0 1.25rem; }
@@ -429,6 +431,12 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
 <p>Ne postane vsaka ideja produkt. Nekatere ostanejo eksperiment. Druge se razvijejo v temeljne sisteme Sentrie.</p>
 
 <p>Sentria Lab je prostor, kjer se raziskujejo novi pristopi h kontinuiteti sanj, simbolni analizi in reflektivnim orodjem — preden postanejo del širšega ekosistema, včasih pa tudi namesto tega.</p>
+
+<div class="lab-join-block">
+  <p><strong>Članstvo v Labu se odpira kmalu</strong></p>
+  <p>Članstvo v Labu podpira neodvisno raziskovanje in dolgoročen razvoj ekosistema Sentria. Še ni odprto — prijavi se spodaj, da izveš, takoj ko bo na voljo.</p>
+  <a class="btn-primary" href="/#signup">Obveščaj me</a>
+</div>
 
 <div class="lab-cards-grid">
   <div class="lab-card">
@@ -608,11 +616,6 @@ const LAB_NOTES = [];
 </script>
 
 
-<div class="lab-join-block">
-  <p><strong>Pridruži se Labu</strong></p>
-  <p>Lab podpira neodvisno raziskovanje in dolgoročen razvoj ekosistema Sentria. Članstvo še ni odprto — prijavi se na <a href="/">glavni strani</a>, da izveš, ko bo na voljo.</p>
-</div>
-
     </div>
   </div>
 </main>
@@ -626,6 +629,7 @@ const LAB_NOTES = [];
         <li><a href="/sl/lab.html">Lab</a></li>
         <li><a href="/sl/privacy.html">Zasebnost</a></li>
         <li><a href="/sl/contact.html">Kontakt</a></li>
+        <li class="footer-support"><a href="https://ko-fi.com/smiley7" target="_blank" rel="noopener">☕ Podpri Sentrio</a></li>
       </ul>
       <div class="footer-copy">© 2026 Sentria</div>
     </div>
