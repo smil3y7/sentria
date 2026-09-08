@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>About — Sentria</title>
 <meta name="description" content="Sentria is a modular ecosystem for dream exploration, lucid dreaming, symbolic continuity, and reflective consciousness research.">
+
 <link rel="canonical" href="https://sentria-navy.vercel.app/about.html">
 <link rel="alternate" hreflang="sl" href="https://sentria-navy.vercel.app/sl/about.html">
 <link rel="alternate" hreflang="x-default" href="https://sentria-navy.vercel.app/about.html">
@@ -384,6 +385,31 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
 .lab-join-block p { margin-bottom: 1rem; }
 .lab-join-block .btn-primary { margin-top: 0.25rem; }
 
+.lab-notify-form {
+  display: flex; gap: 0.75rem; max-width: 420px; margin: 0 auto;
+}
+.lab-notify-form input {
+  flex: 1; min-width: 0;
+  background: var(--bg, var(--obsidian));
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  padding: 0.8rem 1.25rem;
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 0.88rem; font-weight: 300;
+  outline: none;
+  transition: border-color var(--transition);
+}
+.lab-notify-form input:focus { border-color: var(--seafoam); }
+.lab-notify-form input::placeholder { color: var(--text-muted); }
+.lab-notify-form .btn-primary { flex-shrink: 0; margin-top: 0; }
+.lab-notify-privacy { font-size: 0.78rem; color: var(--text-muted); margin-top: 0.9rem; margin-bottom: 0; }
+.lab-notify-privacy a { color: var(--text-muted); text-decoration: underline; }
+
+@media (max-width: 480px) {
+  .lab-notify-form { flex-direction: column; }
+}
+
 @media (max-width: 768px) {
   .container { padding: 0 1.25rem; }
   .footer-inner { flex-direction: column; text-align: center; }
@@ -557,7 +583,7 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
         <li><a href="/lab.html">Lab</a></li>
         <li><a href="/privacy.html">Privacy</a></li>
         <li><a href="/contact.html">Contact</a></li>
-        <li class="footer-support"><a href="https://ko-fi.com/smiley7" target="_blank" rel="noopener">☕ Support Sentria</a></li>
+        <li class="footer-support"><a href="https://ko-fi.com/smiley7" target="_blank" rel="noopener">Support Sentria</a></li>
       </ul>
       <div class="footer-copy">© 2026 Sentria</div>
     </div>
