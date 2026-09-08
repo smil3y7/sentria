@@ -688,6 +688,36 @@ document.querySelectorAll('.lang-btn[data-set-lang]').forEach(a => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
 })();
+
+// Redirect to our own thank-you page after a Formspree submission,
+// without depending on Formspree's server-side "Thank You redirect"
+// setting — that feature is Personal/Professional/Business-plan only
+// (help.formspree.io/articles/form-and-project-settings/thank-you-redirect),
+// so a hidden _next field alone isn't reliable on the Free plan. Instead,
+// submit via fetch and navigate client-side ourselves on completion.
+// Any form without a "_next" field (there aren't any today, but if one's
+// added later without it) is left completely alone and submits normally.
+(function() {
+  document.querySelectorAll('form').forEach(form => {
+    const nextInput = form.querySelector('input[name="_next"]');
+    if (!nextInput) return;
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const data = new FormData(form);
+      try {
+        await fetch(form.action, {
+          method: 'POST',
+          body: data,
+          headers: { 'Accept': 'application/json' }
+        });
+      } catch (err) {
+        // Network error — still proceed to the thank-you page;
+        // Formspree handles validation server-side regardless.
+      }
+      window.location.href = nextInput.value;
+    });
+  });
+})();
 </script>
 
 </body>
