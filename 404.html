@@ -226,6 +226,10 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
         <img src="/logo-mark.png" alt="Sentria logo">
       </a>
       <div class="nav-right">
+        <div id="lang-switcher">
+          <button class="lang-btn" data-lang="en" onclick="setLang('en')">EN</button>
+          <button class="lang-btn" data-lang="sl" onclick="setLang('sl')">SL</button>
+        </div>
         <button class="theme-btn" id="theme-toggle" aria-label="Toggle light/dark theme">
           <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
           <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
@@ -274,10 +278,11 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
    404.html for static sites — a separate /sl/404.html would need extra
    routing config), so language is resolved client-side from the same
    stored preference the homepage uses, same as any other page's text. */
-const TRANSLATIONS = {"en": {"footer_support": "Support Sentria", "notfound_cta": "Back to homepage", "notfound_message": "The page you're looking for doesn't exist — it may have moved, or the link was mistyped.", "footer_about": "About", "footer_copy": "© 2026 Sentria", "footer_lab": "Lab", "footer_privacy": "Privacy", "notfound_eyebrow": "Error", "footer_contact": "Contact", "notfound_title": "This page drifted <em>out of continuity</em>.", "about_href": "/about.html", "lab_href": "/lab.html", "privacy_href": "/privacy.html", "contact_href": "/contact.html"}, "sl": {"footer_support": "Podpri Sentrio", "notfound_cta": "Domov", "notfound_message": "Strani, ki jo iščeš, ni bilo mogoče najti — morda je bila premaknjena, ali pa je povezava napačna.", "footer_about": "O nas", "footer_copy": "© 2026 Sentria", "footer_lab": "Lab", "footer_privacy": "Zasebnost", "notfound_eyebrow": "Napaka", "footer_contact": "Kontakt", "notfound_title": "Ta stran je zdrsnila <em>iz kontinuitete</em>.", "about_href": "/sl/about.html", "lab_href": "/sl/lab.html", "privacy_href": "/sl/privacy.html", "contact_href": "/sl/contact.html"}};
+const TRANSLATIONS = {"en": {"footer_lab": "Lab", "notfound_eyebrow": "Error", "footer_copy": "© 2026 Sentria", "notfound_cta": "Back to homepage", "notfound_message": "The page you're looking for doesn't exist — it may have moved, or the link was mistyped.", "footer_about": "About", "footer_privacy": "Privacy", "footer_support": "Support Sentria", "notfound_title": "This page drifted <em>out of continuity</em>.", "footer_contact": "Contact", "about_href": "/about.html", "lab_href": "/lab.html", "privacy_href": "/privacy.html", "contact_href": "/contact.html"}, "sl": {"footer_lab": "Lab", "notfound_eyebrow": "Napaka", "footer_copy": "© 2026 Sentria", "notfound_cta": "Domov", "notfound_message": "Strani, ki jo iščeš, ni bilo mogoče najti — morda je bila premaknjena, ali pa je povezava napačna.", "footer_about": "O nas", "footer_privacy": "Zasebnost", "footer_support": "Podpri Sentrio", "notfound_title": "Ta stran je zdrsnila <em>iz kontinuitete</em>.", "footer_contact": "Kontakt", "about_href": "/sl/about.html", "lab_href": "/sl/lab.html", "privacy_href": "/sl/privacy.html", "contact_href": "/sl/contact.html"}};
 function getLang() { return localStorage.getItem("sentria-lang") || (navigator.language.startsWith("sl") ? "sl" : "en"); }
 function setLang(lang) {
   if (!TRANSLATIONS[lang]) return;
+  localStorage.setItem("sentria-lang", lang);
   document.documentElement.setAttribute("lang", lang);
   document.querySelectorAll("[data-i18n]").forEach(el => {
     const v = TRANSLATIONS[lang][el.getAttribute("data-i18n")];
@@ -287,6 +292,7 @@ function setLang(lang) {
     const v = TRANSLATIONS[lang][el.getAttribute("data-i18n-href")];
     if (v !== undefined) el.setAttribute("href", v);
   });
+  document.querySelectorAll(".lang-btn").forEach(b => b.classList.toggle("active", b.dataset.lang === lang));
 }
 setLang(getLang());
 
