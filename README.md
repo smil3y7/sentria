@@ -4,8 +4,8 @@ Central hub for the Sentria ecosystem: a modular set of tools for dream
 exploration, lucid dreaming, symbolic continuity, and reflective
 consciousness research.
 
-**Live:** https://sentria-navy.vercel.app/ *(placeholder — update once the
-final domain is live)*
+**Live:** https://sentria-hub.vercel.app/ *(update once a custom domain is
+live — see the SITE_URL constant in sentria-build/build.py)*
 
 ---
 

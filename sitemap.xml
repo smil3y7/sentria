@@ -1,47 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://sentria-navy.vercel.app/</loc>
+    <loc>https://sentria-hub.vercel.app/</loc>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://sentria-navy.vercel.app/about.html</loc>
+    <loc>https://sentria-hub.vercel.app/about.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://sentria-navy.vercel.app/sl/about.html</loc>
+    <loc>https://sentria-hub.vercel.app/sl/about.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://sentria-navy.vercel.app/privacy.html</loc>
+    <loc>https://sentria-hub.vercel.app/privacy.html</loc>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://sentria-navy.vercel.app/sl/privacy.html</loc>
+    <loc>https://sentria-hub.vercel.app/sl/privacy.html</loc>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://sentria-navy.vercel.app/lab.html</loc>
+    <loc>https://sentria-hub.vercel.app/lab.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://sentria-navy.vercel.app/sl/lab.html</loc>
+    <loc>https://sentria-hub.vercel.app/sl/lab.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://sentria-navy.vercel.app/contact.html</loc>
+    <loc>https://sentria-hub.vercel.app/contact.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://sentria-navy.vercel.app/sl/contact.html</loc>
+    <loc>https://sentria-hub.vercel.app/sl/contact.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
