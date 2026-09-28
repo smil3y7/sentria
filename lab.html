@@ -434,6 +434,10 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
   border-radius: var(--radius);
   padding: 1.25rem;
   background: var(--surface);
+  /* column flex + margin-top:auto on the button pins every card's button to
+     the bottom, whatever the note text length (grid items are already equal height) */
+  display: flex;
+  flex-direction: column;
 }
 .lab-tier-badge {
   font-family: var(--font-mono);
@@ -460,7 +464,7 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
   color: var(--text-secondary);
   margin-bottom: 1rem;
 }
-.lab-tier .btn-primary { width: 100%; justify-content: center; margin-top: 0; }
+.lab-join-block .lab-tier .btn-primary { width: 100%; justify-content: center; text-align: center; margin-top: auto; padding-left: 1rem; padding-right: 1rem; }
 .lab-join-status {
   font-size: 0.85rem;
   color: var(--seafoam);
@@ -475,8 +479,16 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
   border-radius: var(--radius);
   padding: 1rem 1.25rem;
   color: var(--seafoam);
-  margin: 0.75rem 0 1rem;
+  margin: 0.75rem 0 1.25rem;
 }
+.lab-claim-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+}
+/* breathing room between the claim buttons and the "back to homepage" link */
+[data-thanks="lab"] { margin-bottom: 2.5rem; }
 
 @media (max-width: 480px) {
   .lab-notify-form { flex-direction: column; }
@@ -614,7 +626,7 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
     fetch(API_BASE + '/api/lab-access/checkout', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ priceKey: priceKey })
+      body: JSON.stringify({ priceKey: priceKey, lang: 'en' })
     })
       .then(function(r) { return r.json().then(function(data) { return { ok: r.ok, status: r.status, data: data }; }); })
       .then(function(result) {
