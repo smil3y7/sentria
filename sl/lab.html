@@ -422,6 +422,62 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
 .lab-notify-privacy { font-size: 0.78rem; color: var(--text-muted); margin-top: 0.9rem; margin-bottom: 0; }
 .lab-notify-privacy a { color: var(--text-muted); text-decoration: underline; }
 
+.lab-tier-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
+  text-align: left;
+}
+.lab-tier {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  background: var(--surface);
+}
+.lab-tier-badge {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--seafoam);
+  margin-bottom: 0.5rem;
+}
+.lab-tier-price {
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  color: var(--text-primary);
+  margin-bottom: 0.4rem;
+}
+.lab-tier-price span {
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-left: 0.3rem;
+}
+.lab-tier-note {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+}
+.lab-tier .btn-primary { width: 100%; justify-content: center; margin-top: 0; }
+.lab-join-status {
+  font-size: 0.85rem;
+  color: var(--seafoam);
+  margin-top: 1rem;
+}
+.lab-claim-key {
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  word-break: break-all;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem 1.25rem;
+  color: var(--seafoam);
+  margin: 0.75rem 0 1rem;
+}
+
 @media (max-width: 480px) {
   .lab-notify-form { flex-direction: column; }
 }
@@ -475,15 +531,119 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
 <p>Sentria Lab je prostor, kjer se raziskujejo novi pristopi h kontinuiteti sanj, simbolni analizi in reflektivnim orodjem — preden postanejo del širšega ekosistema, včasih pa tudi namesto tega.</p>
 
 <div class="lab-join-block">
-  <p><strong>Dostop do Laba se odpira kmalu</strong></p>
-  <p>Dostop do Laba podpira neodvisno raziskovanje in dolgoročen razvoj ekosistema Sentria. Še ni odprt — prijavi se spodaj, da izveš, takoj ko bo na voljo.</p>
-  <form class="lab-notify-form" action="https://formspree.io/f/xnpajkdn" method="POST">
-    <input type="hidden" name="_next" value="https://sentria-hub.vercel.app/sl/thank-you.html?from=signup">
-    <input type="email" name="email" placeholder="tvoj@email.com" required>
-    <button type="submit" class="btn-primary">Obveščaj me</button>
-  </form>
-  <p class="lab-notify-privacy">Brez neželene pošte. Odjava kadarkoli. Preberi <a href="privacy.html">politiko zasebnosti</a>.</p>
+  <p><strong>Pridruži se Labu</strong></p>
+  <p>Dostop do Laba odklene vse eksperimentalne aplikacije zgoraj — obstoječe in prihodnje, dokler ostajajo v Labu — z enim samim ključem. Brez računa, brez emaila.</p>
+
+  <div class="lab-tier-grid" id="lab-tier-grid">
+    <div class="lab-tier" data-tier="founding">
+      <div class="lab-tier-badge">Founding member</div>
+      <div class="lab-tier-price">49€<span>enkratno</span></div>
+      <p class="lab-tier-note">Omejeno število mest. Trajni dostop.</p>
+      <button class="btn-primary" data-checkout="founding">Postani founding member</button>
+    </div>
+    <div class="lab-tier" data-tier="standard" style="display:none">
+      <div class="lab-tier-badge">Member</div>
+      <div class="lab-tier-price">89€<span>enkratno</span></div>
+      <p class="lab-tier-note">Trajni dostop.</p>
+      <button class="btn-primary" data-checkout="standard">Pridobi trajni dostop</button>
+    </div>
+    <div class="lab-tier" data-tier="subscription">
+      <div class="lab-tier-badge">Naročnina</div>
+      <div class="lab-tier-price">9€<span>/ mesec</span></div>
+      <p class="lab-tier-note">Prekliči kadarkoli. Kasneje nadgradi na trajni dostop.</p>
+      <button class="btn-primary" data-checkout="subscription">Naroči se mesečno</button>
+    </div>
+  </div>
+
+  <p class="lab-join-status" id="lab-join-status" style="display:none"></p>
+  <p class="lab-notify-privacy">Preberi <a href="privacy.html">politiko zasebnosti</a>.</p>
 </div>
+
+<script>
+(function() {
+  // <<< pred lansiranjem preklopi na -testnet domeno za testiranje, nato nazaj
+  var API_BASE = 'https://sentria-services.vercel.app';
+
+  // false (privzeto): vse tri kartice so vedno prikazane, ne glede na
+  // razpoložljivost founding mest — omogoča preizkus vsakega checkout
+  // toka (founding, standard, subscription) brez potrebe po 100 pravih/
+  // testnih nakupih.
+  // true: obnašanje ob dejanskem launchu — prikazan je SAMO founding,
+  // dokler so mesta na voljo; standard in subscription se odpreta skupaj,
+  // ko founding pošlje.
+  // To preklopi na true, ko Lab dejansko odpreš za javnost.
+  var LAUNCH_MODE = false;
+
+  var grid = document.getElementById('lab-tier-grid');
+  var foundingEl = grid.querySelector('[data-tier="founding"]');
+  var standardEl = grid.querySelector('[data-tier="standard"]');
+  var subscriptionEl = grid.querySelector('[data-tier="subscription"]');
+  var statusEl = document.getElementById('lab-join-status');
+
+  if (LAUNCH_MODE) {
+    fetch(API_BASE + '/api/lab-access/availability')
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        if (data.foundingAvailable) {
+          standardEl.style.display = 'none';
+          subscriptionEl.style.display = 'none';
+        } else {
+          foundingEl.style.display = 'none';
+          standardEl.style.display = '';
+          subscriptionEl.style.display = '';
+        }
+      })
+      .catch(function() { /* ob napaki pusti vse tri vidne — varneje kot skriti vse */ });
+  }
+  // LAUNCH_MODE false: pusti tri kartice natanko tako, kot jih je nastavil
+  // zgornji HTML (founding + subscription vidna, standard skrit) — brez
+  // klica availability, ker testiranje ne bi smelo biti odvisno od njega.
+
+  function showStatus(msg) {
+    statusEl.textContent = msg;
+    statusEl.style.display = '';
+  }
+
+  function startCheckout(priceKey, btn) {
+    var originalLabel = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = 'Preusmerjanje…';
+    statusEl.style.display = 'none';
+
+    fetch(API_BASE + '/api/lab-access/checkout', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ priceKey: priceKey })
+    })
+      .then(function(r) { return r.json().then(function(data) { return { ok: r.ok, status: r.status, data: data }; }); })
+      .then(function(result) {
+        if (result.ok && result.data.url) {
+          window.location.href = result.data.url;
+          return;
+        }
+        if (result.status === 409 && result.data.error === 'founding_sold_out') {
+          foundingEl.style.display = 'none';
+          standardEl.style.display = '';
+          subscriptionEl.style.display = '';
+          showStatus('Founding mesta so ravnokar pošla — prikazujemo preostale možnosti.');
+          btn.disabled = false;
+          btn.textContent = originalLabel;
+          return;
+        }
+        throw new Error((result.data && result.data.error) || 'Checkout ni uspel');
+      })
+      .catch(function(err) {
+        showStatus('Nekaj je šlo narobe (' + err.message + '). Poskusi znova, ali nas kontaktiraj, če se ponavlja.');
+        btn.disabled = false;
+        btn.textContent = originalLabel;
+      });
+  }
+
+  grid.querySelectorAll('[data-checkout]').forEach(function(btn) {
+    btn.addEventListener('click', function() { startCheckout(btn.dataset.checkout, btn); });
+  });
+})();
+</script>
 
 <div class="lab-cards-grid">
   <div class="lab-card">

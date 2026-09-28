@@ -422,6 +422,62 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
 .lab-notify-privacy { font-size: 0.78rem; color: var(--text-muted); margin-top: 0.9rem; margin-bottom: 0; }
 .lab-notify-privacy a { color: var(--text-muted); text-decoration: underline; }
 
+.lab-tier-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
+  text-align: left;
+}
+.lab-tier {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  background: var(--surface);
+}
+.lab-tier-badge {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--seafoam);
+  margin-bottom: 0.5rem;
+}
+.lab-tier-price {
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  color: var(--text-primary);
+  margin-bottom: 0.4rem;
+}
+.lab-tier-price span {
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-left: 0.3rem;
+}
+.lab-tier-note {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+}
+.lab-tier .btn-primary { width: 100%; justify-content: center; margin-top: 0; }
+.lab-join-status {
+  font-size: 0.85rem;
+  color: var(--seafoam);
+  margin-top: 1rem;
+}
+.lab-claim-key {
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  word-break: break-all;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem 1.25rem;
+  color: var(--seafoam);
+  margin: 0.75rem 0 1rem;
+}
+
 @media (max-width: 480px) {
   .lab-notify-form { flex-direction: column; }
 }
@@ -474,7 +530,75 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
 <p data-thanks="contact" style="display:none;">Your message has been received. We'll get back to you as soon as we can.</p>
 <p data-thanks="default">Your submission has been received.</p>
 
+<div data-thanks="lab" style="display:none;">
+  <p><strong>Payment received.</strong></p>
+  <p id="lab-claim-status">Setting up your Lab access…</p>
+  <div id="lab-claim-result" style="display:none;">
+    <p>Here's your Lab key — save it now, it won't be shown again:</p>
+    <p class="lab-claim-key" id="lab-claim-key"></p>
+    <button class="btn-primary" id="lab-claim-copy" type="button">Copy key</button>
+  </div>
+</div>
+
 <a class="btn-primary" href="/">Back to homepage</a>
+
+<script>
+(function() {
+  // <<< keep in sync with the API_BASE in lab.html
+  var API_BASE = 'https://sentria-services.vercel.app';
+  var POLL_INTERVAL_MS = 5000;
+  var MAX_ATTEMPTS = 30; // ~2.5 minutes
+
+  var sessionId = new URLSearchParams(window.location.search).get('session_id');
+  if (!sessionId) return; // not a Lab purchase redirect — the from= branch below handles the rest
+
+  document.querySelectorAll('[data-thanks]').forEach(function(el) { el.style.display = 'none'; });
+  document.querySelector('[data-thanks="lab"]').style.display = '';
+
+  var statusEl = document.getElementById('lab-claim-status');
+  var resultEl = document.getElementById('lab-claim-result');
+  var keyEl = document.getElementById('lab-claim-key');
+  var copyBtn = document.getElementById('lab-claim-copy');
+
+  var attempts = 0;
+  function poll() {
+    attempts++;
+    fetch(API_BASE + '/api/lab-access/claim?session_id=' + encodeURIComponent(sessionId))
+      .then(function(r) {
+        if (r.status === 404) {
+          if (attempts >= MAX_ATTEMPTS) {
+            statusEl.textContent = "This is taking longer than expected. If you were charged, your key is safe — refresh this page in a minute, or contact us with your payment confirmation.";
+            return;
+          }
+          setTimeout(poll, POLL_INTERVAL_MS);
+          return;
+        }
+        if (!r.ok) throw new Error('status ' + r.status);
+        return r.json().then(function(data) {
+          statusEl.textContent = "";
+          keyEl.textContent = data.labKey;
+          resultEl.style.display = '';
+        });
+      })
+      .catch(function() {
+        if (attempts >= MAX_ATTEMPTS) {
+          statusEl.textContent = "Something went wrong retrieving your key. If you were charged, contact us with your payment confirmation and we'll sort it out.";
+          return;
+        }
+        setTimeout(poll, POLL_INTERVAL_MS);
+      });
+  }
+  poll();
+
+  copyBtn.addEventListener('click', function() {
+    navigator.clipboard.writeText(keyEl.textContent).then(function() {
+      var original = copyBtn.textContent;
+      copyBtn.textContent = 'Copied!';
+      setTimeout(function() { copyBtn.textContent = original; }, 2000);
+    });
+  });
+})();
+</script>
 
 <script>
 (function() {
