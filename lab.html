@@ -561,8 +561,8 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
 
 <script>
 (function() {
-  // <<< swap to the -testnet domain while testing, back to this for launch
-  var API_BASE = 'https://sentria-services.vercel.app';
+  // <<< TESTING: -testnet domain. Before launch swap to https://sentria-services.vercel.app (and in thank-you.html too)
+  var API_BASE = 'https://sentria-services-testnet.vercel.app';
 
   // false (default): all three tiers always shown, regardless of founding
   // availability — lets you exercise every checkout workflow (founding,
@@ -579,23 +579,26 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
   var statusEl = document.getElementById('lab-join-status');
 
   if (LAUNCH_MODE) {
+    // Founding only until proven otherwise: a failed availability call must
+    // never leave standard/subscription buyable before founding sells out.
+    standardEl.style.display = 'none';
+    subscriptionEl.style.display = 'none';
     fetch(API_BASE + '/api/lab-access/availability')
       .then(function(r) { return r.json(); })
       .then(function(data) {
-        if (data.foundingAvailable) {
-          standardEl.style.display = 'none';
-          subscriptionEl.style.display = 'none';
-        } else {
+        if (!data.foundingAvailable) {
           foundingEl.style.display = 'none';
           standardEl.style.display = '';
           subscriptionEl.style.display = '';
         }
       })
-      .catch(function() { /* leave all three visible on failure — safer than hiding everything */ });
+      .catch(function() { /* stay founding-only on failure */ });
+  } else {
+    // Testing: all three tiers visible, no availability call at all, so every
+    // checkout workflow can be exercised independently.
+    standardEl.style.display = '';
+    subscriptionEl.style.display = '';
   }
-  // LAUNCH_MODE false: leave the three tiers exactly as the HTML above set
-  // them (founding + subscription visible, standard hidden) — no
-  // availability call at all, since testing shouldn't depend on it.
 
   function showStatus(msg) {
     statusEl.textContent = msg;

@@ -561,8 +561,8 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
 
 <script>
 (function() {
-  // <<< pred lansiranjem preklopi na -testnet domeno za testiranje, nato nazaj
-  var API_BASE = 'https://sentria-services.vercel.app';
+  // <<< TESTIRANJE: -testnet domena. Pred launchom zamenjaj z https://sentria-services.vercel.app (tudi v thank-you.html)
+  var API_BASE = 'https://sentria-services-testnet.vercel.app';
 
   // false (privzeto): vse tri kartice so vedno prikazane, ne glede na
   // razpoložljivost founding mest — omogoča preizkus vsakega checkout
@@ -581,23 +581,26 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
   var statusEl = document.getElementById('lab-join-status');
 
   if (LAUNCH_MODE) {
+    // Samo founding, dokler ni dokazano drugače: neuspel klic availability
+    // nikoli ne sme pustiti standard/subscription na voljo pred razprodajo founding.
+    standardEl.style.display = 'none';
+    subscriptionEl.style.display = 'none';
     fetch(API_BASE + '/api/lab-access/availability')
       .then(function(r) { return r.json(); })
       .then(function(data) {
-        if (data.foundingAvailable) {
-          standardEl.style.display = 'none';
-          subscriptionEl.style.display = 'none';
-        } else {
+        if (!data.foundingAvailable) {
           foundingEl.style.display = 'none';
           standardEl.style.display = '';
           subscriptionEl.style.display = '';
         }
       })
-      .catch(function() { /* ob napaki pusti vse tri vidne — varneje kot skriti vse */ });
+      .catch(function() { /* ob napaki ostane samo founding */ });
+  } else {
+    // Testiranje: vse tri kartice vidne, brez klica availability, da lahko
+    // vsak checkout tok preizkusiš neodvisno.
+    standardEl.style.display = '';
+    subscriptionEl.style.display = '';
   }
-  // LAUNCH_MODE false: pusti tri kartice natanko tako, kot jih je nastavil
-  // zgornji HTML (founding + subscription vidna, standard skrit) — brez
-  // klica availability, ker testiranje ne bi smelo biti odvisno od njega.
 
   function showStatus(msg) {
     statusEl.textContent = msg;
