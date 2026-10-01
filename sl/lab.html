@@ -391,6 +391,66 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
   margin-top: 0.9rem;
 }
 
+.lab-unlock-slot .lab-card-cta {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  color: var(--seafoam);
+  text-decoration: none; font-size: 0.82rem;
+  margin-top: 0.9rem; padding-top: 0.9rem; border-top: 1px solid var(--border);
+}
+.lab-unlock-slot .lab-card-pending {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-top: 0.9rem; padding-top: 0.9rem; border-top: 1px solid var(--border);
+}
+.lab-unlock-slot .lab-card-instructions {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  margin-top: 0.5rem;
+  white-space: pre-line;
+}
+
+.lab-key-entry {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin: 1.25rem 0;
+}
+.lab-key-entry input {
+  flex: 1 1 260px;
+  min-width: 0;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.7rem 0.9rem;
+  color: var(--text-primary);
+}
+.lab-key-entry input::placeholder { color: var(--text-muted); }
+.lab-key-entry .btn-primary { flex-shrink: 0; margin-top: 0; }
+.lab-key-entry input.lab-key-error { border-color: #e0b65c; color: #e0b65c; }
+.lab-key-entry input.lab-key-error::placeholder { color: #e0b65c; }
+
+.lab-status-block {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem 1.5rem;
+  margin: 1.5rem 0;
+}
+.lab-status-badge {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--seafoam);
+}
+.lab-status-detail {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-top: 0.4rem;
+}
+.lab-status-detail.lab-status-warning { color: #e0b65c; }
+
 .lab-join-block {
   border: 1px solid var(--border);
   border-radius: var(--radius);
@@ -542,7 +602,12 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
 
 <p>Sentria Lab je prostor, kjer se raziskujejo novi pristopi h kontinuiteti sanj, simbolni analizi in reflektivnim orodjem — preden postanejo del širšega ekosistema, včasih pa tudi namesto tega.</p>
 
-<div class="lab-join-block">
+<div class="lab-status-block" id="lab-status-block" style="display:none">
+  <div class="lab-status-badge" id="lab-status-badge"></div>
+  <p class="lab-status-detail" id="lab-status-detail"></p>
+</div>
+
+<div class="lab-join-block" id="lab-join-block">
   <p><strong>Pridruži se Labu</strong></p>
   <p>Dostop do Laba odklene vse eksperimentalne aplikacije zgoraj — obstoječe in prihodnje, dokler ostajajo v Labu — z enim samim ključem. Brez računa, brez emaila.</p>
 
@@ -569,6 +634,11 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
 
   <p class="lab-join-status" id="lab-join-status" style="display:none"></p>
   <p class="lab-notify-privacy">Preberi <a href="privacy.html">politiko zasebnosti</a>.</p>
+
+  <div class="lab-key-entry">
+    <input type="text" id="lab-key-input" placeholder="Že imaš Lab ključ? Prilepi ga sem" autocomplete="off" spellcheck="false">
+    <button class="btn-primary" id="lab-key-submit" type="button">Odkleni</button>
+  </div>
 </div>
 
 <script>
@@ -657,6 +727,124 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
   grid.querySelectorAll('[data-checkout]').forEach(function(btn) {
     btn.addEventListener('click', function() { startCheckout(btn.dataset.checkout, btn); });
   });
+
+  // ---------------------------------------------------------------------
+  // Pravi odklep. Nič spodaj ne razkriva vsebine s skrivanjem/prikazom
+  // oznak, ki jih je strežnik že poslal — vsaka povezava/navodilo pride
+  // izključno iz odgovora /unlock, ki jih vrne samo za veljavno, trenutno
+  // aktivno članstvo. Glej api/lab-access/unlock v Services.
+  // ---------------------------------------------------------------------
+  var STORAGE_KEY = 'sentria_lab_key';
+  var joinBlock = document.getElementById('lab-join-block');
+  var statusBlock = document.getElementById('lab-status-block');
+  var statusBadge = document.getElementById('lab-status-badge');
+  var statusDetail = document.getElementById('lab-status-detail');
+  var keyInput = document.getElementById('lab-key-input');
+  var keySubmit = document.getElementById('lab-key-submit');
+
+  function formatDate(iso) {
+    try { return new Date(iso).toLocaleDateString('sl-SI', { year: 'numeric', month: 'long', day: 'numeric' }); }
+    catch (e) { return iso; }
+  }
+
+  function renderStatus(access) {
+    var badgeLabel = access.badge === 'founding_member' ? 'Founding member' : 'Member';
+    if (access.foundingSequence) badgeLabel += ' #' + access.foundingSequence;
+    statusBadge.textContent = badgeLabel;
+
+    if (!access.membershipUntil) {
+      statusDetail.textContent = 'Trajni dostop.';
+      statusDetail.classList.remove('lab-status-warning');
+    } else if (access.status === 'grace') {
+      var graceEnd = new Date(new Date(access.membershipUntil).getTime() + 7 * 24 * 60 * 60 * 1000);
+      statusDetail.textContent = 'Zadnje plačilo ni uspelo — obnovi do ' + formatDate(graceEnd) + ', da ohraniš dostop.';
+      statusDetail.classList.add('lab-status-warning');
+    } else if (access.status === 'expired') {
+      statusDetail.textContent = 'Tvoje članstvo je poteklo. Za obnovitev dostopa se znova naroči spodaj.';
+      statusDetail.classList.add('lab-status-warning');
+    } else {
+      statusDetail.textContent = 'Obnovi se okoli ' + formatDate(access.membershipUntil) + '.';
+      statusDetail.classList.remove('lab-status-warning');
+    }
+    statusBlock.style.display = '';
+  }
+
+  function applyContent(content) {
+    content.forEach(function(entry) {
+      var slot = document.querySelector('.lab-unlock-slot[data-app-id="' + entry.appId + '"]');
+      if (!slot) return; // aplikacija odstranjena/preimenovana po tem, ko je bila vsebina tega članstva dodeljena
+      var tag = document.querySelector('[data-lab-locked-tag="' + entry.appId + '"]');
+
+      if (entry.url) {
+        var a = document.createElement('a');
+        a.href = entry.url;
+        a.className = 'lab-card-cta';
+        a.textContent = 'Odpri';
+        if (entry.url.indexOf('http') === 0) a.target = '_blank';
+        slot.appendChild(a);
+      } else {
+        var p = document.createElement('p');
+        p.className = 'lab-card-pending';
+        p.textContent = 'V razvoju — dostop boš dobil tukaj samodejno.';
+        slot.appendChild(p);
+      }
+      if (entry.instructions) {
+        var instr = document.createElement('p');
+        instr.className = 'lab-card-instructions';
+        instr.textContent = entry.instructions;
+        slot.appendChild(instr);
+      }
+      slot.style.display = '';
+      if (tag) tag.style.display = 'none';
+    });
+  }
+
+  function unlock(labKey, opts) {
+    opts = opts || {};
+    return fetch(API_BASE + '/api/lab-access/unlock', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ labKey: labKey })
+    })
+      .then(function(r) { return r.json(); })
+      .then(function(access) {
+        if (!access.valid) {
+          if (!opts.silent) showKeyError('Ta ključ ne izgleda pravilno — preveri, ali je brez tipkarskih napak.');
+          return;
+        }
+        try { localStorage.setItem(STORAGE_KEY, labKey); } catch (e) { /* shramba ni na voljo — odklep deluje za ta obisk vseeno */ }
+        renderStatus(access);
+        if (access.active) {
+          joinBlock.style.display = 'none';
+          applyContent(access.content);
+        }
+      })
+      .catch(function() {
+        if (!opts.silent) showKeyError('Nekaj je šlo narobe — poskusi znova.');
+      });
+  }
+
+  function showKeyError(msg) {
+    keyInput.value = '';
+    keyInput.placeholder = msg;
+    keyInput.classList.add('lab-key-error');
+  }
+
+  keySubmit.addEventListener('click', function() {
+    var key = keyInput.value.trim();
+    if (!key) return;
+    keyInput.classList.remove('lab-key-error');
+    unlock(key, { silent: false });
+  });
+  keyInput.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') keySubmit.click();
+  });
+
+  (function autoUnlockFromStorage() {
+    var saved;
+    try { saved = localStorage.getItem(STORAGE_KEY); } catch (e) { return; }
+    if (saved) unlock(saved, { silent: true });
+  })();
 })();
 </script>
 
@@ -677,9 +865,10 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
         <span><strong>Podatki</strong> · Lokalno</span>
         <span><strong>Zahteva</strong> · Arhiv sanj</span>
       </div>
-      <div class="lab-locked-tag">
+      <div class="lab-locked-tag" data-lab-locked-tag="loom">
         🔒 Zahteva dostop do Laba
       </div>
+      <div class="lab-unlock-slot" data-app-id="loom" style="display:none"></div>
     </div>
   </div>
 
@@ -699,9 +888,10 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
         <span><strong>Podatki</strong> · AI v oblaku</span>
         <span><strong>Zahteva</strong> · Samostojno</span>
       </div>
-      <div class="lab-locked-tag">
+      <div class="lab-locked-tag" data-lab-locked-tag="echo">
         🔒 Zahteva dostop do Laba
       </div>
+      <div class="lab-unlock-slot" data-app-id="echo" style="display:none"></div>
     </div>
   </div>
 
@@ -721,9 +911,10 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
         <span><strong>Podatki</strong> · Lokalno</span>
         <span><strong>Zahteva</strong> · Arhiv sanj</span>
       </div>
-      <div class="lab-locked-tag">
+      <div class="lab-locked-tag" data-lab-locked-tag="afterimage">
         🔒 Zahteva dostop do Laba
       </div>
+      <div class="lab-unlock-slot" data-app-id="afterimage" style="display:none"></div>
     </div>
   </div>
 
@@ -743,9 +934,10 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
         <span><strong>Podatki</strong> · Lokalno</span>
         <span><strong>Zahteva</strong> · Samostojno</span>
       </div>
-      <div class="lab-locked-tag">
+      <div class="lab-locked-tag" data-lab-locked-tag="brainwave-generator">
         🔒 Zahteva dostop do Laba
       </div>
+      <div class="lab-unlock-slot" data-app-id="brainwave-generator" style="display:none"></div>
     </div>
   </div>
 

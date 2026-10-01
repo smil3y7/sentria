@@ -391,6 +391,66 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
   margin-top: 0.9rem;
 }
 
+.lab-unlock-slot .lab-card-cta {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  color: var(--seafoam);
+  text-decoration: none; font-size: 0.82rem;
+  margin-top: 0.9rem; padding-top: 0.9rem; border-top: 1px solid var(--border);
+}
+.lab-unlock-slot .lab-card-pending {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-top: 0.9rem; padding-top: 0.9rem; border-top: 1px solid var(--border);
+}
+.lab-unlock-slot .lab-card-instructions {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  margin-top: 0.5rem;
+  white-space: pre-line;
+}
+
+.lab-key-entry {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin: 1.25rem 0;
+}
+.lab-key-entry input {
+  flex: 1 1 260px;
+  min-width: 0;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.7rem 0.9rem;
+  color: var(--text-primary);
+}
+.lab-key-entry input::placeholder { color: var(--text-muted); }
+.lab-key-entry .btn-primary { flex-shrink: 0; margin-top: 0; }
+.lab-key-entry input.lab-key-error { border-color: #e0b65c; color: #e0b65c; }
+.lab-key-entry input.lab-key-error::placeholder { color: #e0b65c; }
+
+.lab-status-block {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem 1.5rem;
+  margin: 1.5rem 0;
+}
+.lab-status-badge {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--seafoam);
+}
+.lab-status-detail {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-top: 0.4rem;
+}
+.lab-status-detail.lab-status-warning { color: #e0b65c; }
+
 .lab-join-block {
   border: 1px solid var(--border);
   border-radius: var(--radius);
@@ -593,6 +653,7 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
         return r.json().then(function(data) {
           statusEl.textContent = "";
           keyEl.textContent = data.labKey;
+          try { localStorage.setItem('sentria_lab_key', data.labKey); } catch (e) { /* storage unavailable — key is still on screen/downloadable */ }
           resultEl.style.display = '';
         });
       })
