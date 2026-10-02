@@ -431,11 +431,18 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
 .lab-key-entry input.lab-key-error { border-color: #e0b65c; color: #e0b65c; }
 .lab-key-entry input.lab-key-error::placeholder { color: #e0b65c; }
 
-.lab-status-block {
+.lab-status-wrap { position: relative; }
+.lab-status-popup {
+  position: absolute;
+  top: calc(100% + 0.6rem);
+  right: 0;
+  z-index: 50;
+  width: 260px;
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 1.25rem 1.5rem;
-  margin: 1.5rem 0;
+  padding: 1.1rem 1.3rem;
+  background: var(--surface);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
 }
 .lab-status-badge {
   font-family: var(--font-mono);
@@ -579,6 +586,19 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
           <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
           <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
         </button>
+        <div class="lab-status-wrap">
+          <!-- Hidden until a page-specific script (currently only lab.html's)
+               confirms an active membership — see that script's unlock()
+               success path. Harmless, inert markup on every other page
+               using this template. -->
+          <button class="theme-btn" id="lab-status-toggle" aria-label="Lab membership" style="display:none">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="3.5"/><path d="M4.5 20c1.4-3.6 4.4-5.5 7.5-5.5s6.1 1.9 7.5 5.5"/></svg>
+          </button>
+          <div class="lab-status-popup" id="lab-status-popup" style="display:none">
+            <div class="lab-status-badge" id="lab-status-badge"></div>
+            <p class="lab-status-detail" id="lab-status-detail"></p>
+          </div>
+        </div>
       </div>
     </nav>
   </div>
@@ -602,12 +622,24 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
 
 <p>Sentria Lab je prostor, kjer se raziskujejo novi pristopi h kontinuiteti sanj, simbolni analizi in reflektivnim orodjem — preden postanejo del širšega ekosistema, včasih pa tudi namesto tega.</p>
 
-<div class="lab-status-block" id="lab-status-block" style="display:none">
-  <div class="lab-status-badge" id="lab-status-badge"></div>
-  <p class="lab-status-detail" id="lab-status-detail"></p>
-</div>
+<p class="lab-join-status" id="lab-checking" style="display:none">Preverjam tvoj dostop do Laba…</p>
 
 <div class="lab-join-block" id="lab-join-block">
+  <script>
+    // Teče sinhrono, med parsanjem, PREDEN se sploh parsajo otroci tega
+    // diva (cenovne kartice) — tako vračajoči se član s shranjenim ključem
+    // nikoli ne vidi utripa cenovnih kartic, preden jih to skrije. Pravi
+    // klic unlock() (na dnu te datoteke) je še vedno asinhron, ampak
+    // odločitev o vidnosti nanj ne čaka.
+    (function() {
+      var hasSavedKey;
+      try { hasSavedKey = !!localStorage.getItem('sentria_lab_key'); } catch (e) { hasSavedKey = false; }
+      if (hasSavedKey) {
+        document.getElementById('lab-join-block').style.display = 'none';
+        document.getElementById('lab-checking').style.display = '';
+      }
+    })();
+  </script>
   <p><strong>Pridruži se Labu</strong></p>
   <p>Dostop do Laba odklene vse eksperimentalne aplikacije zgoraj — obstoječe in prihodnje, dokler ostajajo v Labu — z enim samim ključem. Brez računa, brez emaila.</p>
 
@@ -736,7 +768,13 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
   // ---------------------------------------------------------------------
   var STORAGE_KEY = 'sentria_lab_key';
   var joinBlock = document.getElementById('lab-join-block');
-  var statusBlock = document.getElementById('lab-status-block');
+  var checkingMsg = document.getElementById('lab-checking');
+  // Ta tri živijo v skupni glavi (templates/page.html), ne v tem vsebinskem
+  // delu — ob izrisu je to isti dokument, zato deluje. Na vsaki strani, ki
+  // uporablja to predlogo, so privzeto skriti/neaktivni; ta skripta jih
+  // "prebudi", zaenkrat samo na lab.html.
+  var statusToggle = document.getElementById('lab-status-toggle');
+  var statusPopup = document.getElementById('lab-status-popup');
   var statusBadge = document.getElementById('lab-status-badge');
   var statusDetail = document.getElementById('lab-status-detail');
   var keyInput = document.getElementById('lab-key-input');
@@ -766,8 +804,21 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
       statusDetail.textContent = 'Obnovi se okoli ' + formatDate(access.membershipUntil) + '.';
       statusDetail.classList.remove('lab-status-warning');
     }
-    statusBlock.style.display = '';
+    statusToggle.style.display = '';
   }
+
+  function openPopup() { statusPopup.style.display = ''; }
+  function closePopup() { statusPopup.style.display = 'none'; }
+  statusToggle.addEventListener('click', function(e) {
+    e.stopPropagation();
+    if (statusPopup.style.display === 'none') openPopup(); else closePopup();
+  });
+  document.addEventListener('click', function(e) {
+    if (statusPopup.style.display !== 'none' && !statusPopup.contains(e.target)) closePopup();
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closePopup();
+  });
 
   function applyContent(content) {
     content.forEach(function(entry) {
@@ -808,7 +859,9 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
     })
       .then(function(r) { return r.json(); })
       .then(function(access) {
+        checkingMsg.style.display = 'none';
         if (!access.valid) {
+          joinBlock.style.display = ''; // povrni zgodnje sinhrono skrivanje, če je teklo
           if (!opts.silent) showKeyError('Ta ključ ne izgleda pravilno — preveri, ali je brez tipkarskih napak.');
           return;
         }
@@ -817,9 +870,15 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
         if (access.active) {
           joinBlock.style.display = 'none';
           applyContent(access.content);
+        } else {
+          // Veljaven ključ, poteklo članstvo: pusti, da znova vidijo
+          // cenovne kartice (za obnovitev), namesto da stran izgleda pokvarjena.
+          joinBlock.style.display = '';
         }
       })
       .catch(function() {
+        checkingMsg.style.display = 'none';
+        joinBlock.style.display = '';
         if (!opts.silent) showKeyError('Nekaj je šlo narobe — poskusi znova.');
       });
   }

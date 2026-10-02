@@ -431,11 +431,18 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
 .lab-key-entry input.lab-key-error { border-color: #e0b65c; color: #e0b65c; }
 .lab-key-entry input.lab-key-error::placeholder { color: #e0b65c; }
 
-.lab-status-block {
+.lab-status-wrap { position: relative; }
+.lab-status-popup {
+  position: absolute;
+  top: calc(100% + 0.6rem);
+  right: 0;
+  z-index: 50;
+  width: 260px;
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 1.25rem 1.5rem;
-  margin: 1.5rem 0;
+  padding: 1.1rem 1.3rem;
+  background: var(--surface);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
 }
 .lab-status-badge {
   font-family: var(--font-mono);
@@ -579,6 +586,19 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
           <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
           <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
         </button>
+        <div class="lab-status-wrap">
+          <!-- Hidden until a page-specific script (currently only lab.html's)
+               confirms an active membership — see that script's unlock()
+               success path. Harmless, inert markup on every other page
+               using this template. -->
+          <button class="theme-btn" id="lab-status-toggle" aria-label="Lab membership" style="display:none">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="3.5"/><path d="M4.5 20c1.4-3.6 4.4-5.5 7.5-5.5s6.1 1.9 7.5 5.5"/></svg>
+          </button>
+          <div class="lab-status-popup" id="lab-status-popup" style="display:none">
+            <div class="lab-status-badge" id="lab-status-badge"></div>
+            <p class="lab-status-detail" id="lab-status-detail"></p>
+          </div>
+        </div>
       </div>
     </nav>
   </div>
@@ -602,12 +622,24 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
 
 <p>The Sentria Lab is where new approaches to dream continuity, symbolic analysis, and reflective tools are explored — before they become part of the wider ecosystem, and sometimes instead of it.</p>
 
-<div class="lab-status-block" id="lab-status-block" style="display:none">
-  <div class="lab-status-badge" id="lab-status-badge"></div>
-  <p class="lab-status-detail" id="lab-status-detail"></p>
-</div>
+<p class="lab-join-status" id="lab-checking" style="display:none">Checking your Lab access…</p>
 
 <div class="lab-join-block" id="lab-join-block">
+  <script>
+    // Runs synchronously, in-stream, BEFORE the rest of this div's children
+    // (the pricing cards) are parsed — so a returning member with a saved
+    // key never sees a flash of pricing cards before this hides them. The
+    // real unlock() call (bottom of this file) still has to happen async,
+    // but the visibility DECISION doesn't wait for it.
+    (function() {
+      var hasSavedKey;
+      try { hasSavedKey = !!localStorage.getItem('sentria_lab_key'); } catch (e) { hasSavedKey = false; }
+      if (hasSavedKey) {
+        document.getElementById('lab-join-block').style.display = 'none';
+        document.getElementById('lab-checking').style.display = '';
+      }
+    })();
+  </script>
   <p><strong>Join the Lab</strong></p>
   <p>Lab access unlocks every experimental app above — current and future, for as long as each stays in the Lab — with a single key. No account, no email.</p>
 
@@ -737,7 +769,13 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
   // ---------------------------------------------------------------------
   var STORAGE_KEY = 'sentria_lab_key';
   var joinBlock = document.getElementById('lab-join-block');
-  var statusBlock = document.getElementById('lab-status-block');
+  var checkingMsg = document.getElementById('lab-checking');
+  // These three live in the shared header (templates/page.html), not in
+  // this content fragment — same document at render time, so this still
+  // works. They start hidden/inert on every page using that template;
+  // this script is what wakes them up, only on lab.html.
+  var statusToggle = document.getElementById('lab-status-toggle');
+  var statusPopup = document.getElementById('lab-status-popup');
   var statusBadge = document.getElementById('lab-status-badge');
   var statusDetail = document.getElementById('lab-status-detail');
   var keyInput = document.getElementById('lab-key-input');
@@ -767,8 +805,21 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
       statusDetail.textContent = 'Renews around ' + formatDate(access.membershipUntil) + '.';
       statusDetail.classList.remove('lab-status-warning');
     }
-    statusBlock.style.display = '';
+    statusToggle.style.display = '';
   }
+
+  function openPopup() { statusPopup.style.display = ''; }
+  function closePopup() { statusPopup.style.display = 'none'; }
+  statusToggle.addEventListener('click', function(e) {
+    e.stopPropagation();
+    if (statusPopup.style.display === 'none') openPopup(); else closePopup();
+  });
+  document.addEventListener('click', function(e) {
+    if (statusPopup.style.display !== 'none' && !statusPopup.contains(e.target)) closePopup();
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closePopup();
+  });
 
   function applyContent(content) {
     content.forEach(function(entry) {
@@ -809,7 +860,9 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
     })
       .then(function(r) { return r.json(); })
       .then(function(access) {
+        checkingMsg.style.display = 'none';
         if (!access.valid) {
+          joinBlock.style.display = ''; // undo the early synchronous hide, if it ran
           if (!opts.silent) showKeyError("That key doesn't look right — check for typos.");
           return;
         }
@@ -818,9 +871,15 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
         if (access.active) {
           joinBlock.style.display = 'none';
           applyContent(access.content);
+        } else {
+          // Valid key, lapsed membership: let them see pricing again (to
+          // resubscribe) rather than leaving the page looking broken.
+          joinBlock.style.display = '';
         }
       })
       .catch(function() {
+        checkingMsg.style.display = 'none';
+        joinBlock.style.display = '';
         if (!opts.silent) showKeyError('Something went wrong — please try again.');
       });
   }
