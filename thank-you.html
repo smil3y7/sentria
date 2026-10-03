@@ -639,7 +639,7 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
 
 <script>
 (function() {
-  // <<< TESTING: keep in sync with API_BASE in lab.html (-testnet now, production before launch)
+  // API_BASE is injected by build.py (SENTRIA_TARGET) — do not hardcode it here.
   var API_BASE = 'https://sentria-services-testnet.vercel.app';
   var POLL_INTERVAL_MS = 5000;
   var MAX_ATTEMPTS = 30; // ~2.5 minutes
@@ -656,6 +656,39 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
   var copyBtn = document.getElementById('lab-claim-copy');
   var downloadBtn = document.getElementById('lab-claim-download');
 
+  function showKey(key) {
+    statusEl.textContent = "";
+    keyEl.textContent = key;
+    resultEl.style.display = '';
+  }
+
+  // Tell the server we actually received the key, so it can drop its
+  // one-time copy. Until then the server keeps it (15 min), so a lost
+  // response or a reload simply fetches it again instead of losing it.
+  function ackClaim() {
+    try {
+      fetch(API_BASE + '/api/lab-access/claim-ack', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ session_id: sessionId }),
+        keepalive: true
+      }).catch(function() { /* best effort — the claim also expires on its own */ });
+    } catch (e) { /* ignore */ }
+  }
+
+  // Reload after a successful claim: the server copy is gone (acked), but
+  // this browser remembers which purchase the stored key belongs to.
+  try {
+    if (localStorage.getItem('sentria_lab_key_session') === sessionId) {
+      var savedKey = localStorage.getItem('sentria_lab_key');
+      if (savedKey) {
+        showKey(savedKey);
+        statusEl.textContent = "This browser already saved your key from this purchase:";
+        return;
+      }
+    }
+  } catch (e) { /* storage unavailable — fall through to the normal poll */ }
+
   var attempts = 0;
   function poll() {
     attempts++;
@@ -663,7 +696,7 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
       .then(function(r) {
         if (r.status === 404) {
           if (attempts >= MAX_ATTEMPTS) {
-            statusEl.textContent = "This is taking longer than expected. If you were charged, your key is safe — refresh this page in a minute, or contact us with your payment confirmation.";
+            statusEl.textContent = "This is taking longer than expected. Try refreshing this page in a minute. If your key still doesn't appear, contact us with your payment confirmation and we'll sort it out.";
             return;
           }
           setTimeout(poll, POLL_INTERVAL_MS);
@@ -671,10 +704,12 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
         }
         if (!r.ok) throw new Error('status ' + r.status);
         return r.json().then(function(data) {
-          statusEl.textContent = "";
-          keyEl.textContent = data.labKey;
-          try { localStorage.setItem('sentria_lab_key', data.labKey); } catch (e) { /* storage unavailable — key is still on screen/downloadable */ }
-          resultEl.style.display = '';
+          showKey(data.labKey);
+          try {
+            localStorage.setItem('sentria_lab_key', data.labKey);
+            localStorage.setItem('sentria_lab_key_session', sessionId);
+          } catch (e) { /* storage unavailable — key is still on screen/downloadable */ }
+          ackClaim(); // only AFTER the key is on screen
         });
       })
       .catch(function() {

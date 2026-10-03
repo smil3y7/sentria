@@ -675,7 +675,7 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
 
 <script>
 (function() {
-  // <<< TESTIRANJE: -testnet domena. Pred launchom zamenjaj z https://sentria-services.vercel.app (tudi v thank-you.html)
+  // API_BASE and LAUNCH_MODE are injected by build.py (SENTRIA_TARGET) — do not hardcode them here.
   var API_BASE = 'https://sentria-services-testnet.vercel.app';
 
   // false (privzeto): vse tri kartice so vedno prikazane, ne glede na
@@ -685,7 +685,7 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
   // true: obnašanje ob dejanskem launchu — prikazan je SAMO founding,
   // dokler so mesta na voljo; standard in subscription se odpreta skupaj,
   // ko founding pošlje.
-  // To preklopi na true, ko Lab dejansko odpreš za javnost.
+  // Nastavi se samodejno: true pri gradnji s SENTRIA_TARGET=production.
   var LAUNCH_MODE = false;
 
   var grid = document.getElementById('lab-tier-grid');
