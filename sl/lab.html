@@ -45,6 +45,7 @@
   --text-secondary: #8ba8a5;
   --text-muted:     #3d5452;
   --seafoam:        #7ecfc4;
+  --lavender:       #b9a3e6;   /* Lab: early supporter badge */
   --seafoam-dim:    #4a9e96;
   --seafoam-soft:   rgba(126,207,196,0.08);
   --seafoam-glow:   rgba(126,207,196,0.04);
@@ -68,6 +69,7 @@
   --text-secondary: #3d6b66;
   --text-muted:     #9ab0ac;
   --seafoam:        #2d6b64;
+  --lavender:       #6a4fb0;   /* Lab: early supporter badge (darker for light bg) */
   --seafoam-dim:    #4a9e96;
   --seafoam-soft:   rgba(45,107,100,0.07);
   --seafoam-glow:   rgba(45,107,100,0.03);
@@ -437,7 +439,7 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
   top: calc(100% + 0.6rem);
   right: 0;
   z-index: 50;
-  width: 260px;
+  width: 280px;
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 1.1rem 1.3rem;
@@ -457,6 +459,26 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
   margin-top: 0.4rem;
 }
 .lab-status-detail.lab-status-warning { color: #e0b65c; }
+.lab-status-actions { margin-top: 0.9rem; display: flex; flex-direction: column; gap: 0.5rem; }
+.lab-status-actions:empty { display: none; }
+.lab-status-action {
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  padding: 0.5rem 0.8rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: transparent;
+  color: var(--text-primary);
+  cursor: pointer;
+  text-align: center;
+  transition: border-color var(--transition), color var(--transition);
+}
+.lab-status-action:hover:not(:disabled) { border-color: var(--seafoam); color: var(--seafoam); }
+.lab-status-action:disabled { opacity: 0.55; cursor: default; }
+.lab-status-action.lab-status-danger:hover:not(:disabled) { border-color: #e0b65c; color: #e0b65c; }
+.lab-status-confirm { font-size: 0.8rem; color: var(--text-secondary); margin: 0; }
+.lab-status-message { font-size: 0.8rem; margin: 0.6rem 0 0; color: var(--text-secondary); }
+.lab-status-message:empty { display: none; }
 
 .lab-join-block {
   border: 1px solid var(--border);
@@ -514,6 +536,14 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
   color: var(--seafoam);
   margin-bottom: 0.5rem;
 }
+/* Badge colours per tier — shared by the pricing cards and the profile
+   window, so a member's badge looks the same everywhere. */
+.lab-tier[data-tier="earlySupporter"] .lab-tier-badge,
+.lab-status-badge.lab-badge-early { color: var(--lavender); }
+.lab-tier[data-tier="standard"] .lab-tier-badge,
+.lab-tier[data-tier="subscription"] .lab-tier-badge,
+.lab-status-badge.lab-badge-member { color: var(--text-secondary); }
+
 .lab-tier-price {
   font-family: var(--font-display);
   font-size: 1.8rem;
@@ -597,6 +627,10 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
           <div class="lab-status-popup" id="lab-status-popup" style="display:none">
             <div class="lab-status-badge" id="lab-status-badge"></div>
             <p class="lab-status-detail" id="lab-status-detail"></p>
+            <!-- Filled in by lab.html's script (localized there): cancel /
+                 upgrade controls, shown only to subscribers. -->
+            <div class="lab-status-actions" id="lab-status-actions"></div>
+            <p class="lab-status-message" id="lab-status-message" role="status"></p>
           </div>
         </div>
       </div>
@@ -644,19 +678,27 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
   <p>Dostop do Laba odklene vse eksperimentalne aplikacije zgoraj — obstoječe in prihodnje, dokler ostajajo v Labu — z enim samim ključem. Brez računa, brez emaila.</p>
 
   <div class="lab-tier-grid" id="lab-tier-grid">
-    <div class="lab-tier" data-tier="founding">
+    <!-- All four start hidden; the script shows exactly the ones the server
+         says are on sale right now (see /availability). -->
+    <div class="lab-tier" data-tier="founding" style="display:none">
       <div class="lab-tier-badge">Founding member</div>
       <div class="lab-tier-price">49€<span>enkratno</span></div>
       <p class="lab-tier-note">Omejeno število mest. Trajni dostop.</p>
       <button class="btn-primary" data-checkout="founding">Postani founding member</button>
     </div>
+    <div class="lab-tier" data-tier="earlySupporter" style="display:none">
+      <div class="lab-tier-badge">Early supporter</div>
+      <div class="lab-tier-price">69€<span>enkratno</span></div>
+      <p class="lab-tier-note">Omejeno število mest. Trajni dostop.</p>
+      <button class="btn-primary" data-checkout="earlySupporter">Postani early supporter</button>
+    </div>
     <div class="lab-tier" data-tier="standard" style="display:none">
       <div class="lab-tier-badge">Member</div>
-      <div class="lab-tier-price">89€<span>enkratno</span></div>
+      <div class="lab-tier-price">99€<span>enkratno</span></div>
       <p class="lab-tier-note">Trajni dostop.</p>
       <button class="btn-primary" data-checkout="standard">Pridobi trajni dostop</button>
     </div>
-    <div class="lab-tier" data-tier="subscription">
+    <div class="lab-tier" data-tier="subscription" style="display:none">
       <div class="lab-tier-badge">Naročnina</div>
       <div class="lab-tier-price">9€<span>/ mesec</span></div>
       <p class="lab-tier-note">Prekliči kadarkoli. Kasneje nadgradi na trajni dostop.</p>
@@ -675,62 +717,98 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
 
 <script>
 (function() {
-  // API_BASE and LAUNCH_MODE are injected by build.py (SENTRIA_TARGET) — do not hardcode them here.
+  // API_BASE is injected by build.py (SENTRIA_TARGET) — do not hardcode it here.
   var API_BASE = 'https://sentria-services-testnet.vercel.app';
-
-  // false (privzeto): vse tri kartice so vedno prikazane, ne glede na
-  // razpoložljivost founding mest — omogoča preizkus vsakega checkout
-  // toka (founding, standard, subscription) brez potrebe po 100 pravih/
-  // testnih nakupih.
-  // true: obnašanje ob dejanskem launchu — prikazan je SAMO founding,
-  // dokler so mesta na voljo; standard in subscription se odpreta skupaj,
-  // ko founding pošlje.
-  // Nastavi se samodejno: true pri gradnji s SENTRIA_TARGET=production.
-  var LAUNCH_MODE = false;
+  var LANG = 'sl';
+  var LOCALE = 'sl-SI';
+  var T = {
+    "badge": {
+      "founding_member": "Founding member",
+      "early_supporter": "Early supporter",
+      "member": "Member"
+    },
+    "lifetime": "Trajni dostop.",
+    "renews": "Obnovi se okoli {date}.",
+    "cancelledUntil": "Naročnina preklicana — dostop imaš do {date}.",
+    "grace": "Zadnje plačilo ni uspelo — obnovi do {date}, da ohraniš dostop.",
+    "lapsed": "Tvoje članstvo je poteklo. Če se spodaj znova pridružiš, dobiš nov Lab ključ.",
+    "ended": "Tvoja naročnina se je končala. Če se spodaj znova pridružiš, dobiš nov Lab ključ.",
+    "upgrade": "Nadgradi na trajni dostop",
+    "cancel": "Prekliči naročnino",
+    "cancelConfirm": "Želiš preklicati naročnino? Dostop obdržiš do {date}, potem se ne obnovi več.",
+    "cancelYes": "Da, prekliči",
+    "cancelNo": "Obdrži",
+    "cancelDone": "Naročnina preklicana. Dostop imaš do {date}.",
+    "cancelFailed": "Preklic ni uspel — poskusi znova ali nas kontaktiraj.",
+    "upgradeFailed": "Nadgradnje ni bilo mogoče začeti — poskusi znova ali nas kontaktiraj.",
+    "redirecting": "Preusmerjanje…",
+    "working": "Počakaj…",
+    "availabilityFailed": "Trenutnih možnosti ni bilo mogoče naložiti — osveži stran.",
+    "noneAvailable": "Članstva trenutno niso na voljo — poglej kmalu znova.",
+    "tierGone": "Ta možnost ni več na voljo — prikazujemo, kar je trenutno naprodaj.",
+    "testMode": "Testni način: prikazane so vse možnosti.",
+    "checkoutFailed": "Nekaj je šlo narobe ({err}). Poskusi znova, ali nas kontaktiraj, če se ponavlja.",
+    "keyBad": "Ta ključ ne izgleda pravilno — preveri, ali je brez tipkarskih napak.",
+    "keyErr": "Nekaj je šlo narobe — poskusi znova.",
+    "open": "Odpri",
+    "pending": "V razvoju — dostop boš dobil tukaj samodejno."
+  };
 
   var grid = document.getElementById('lab-tier-grid');
-  var foundingEl = grid.querySelector('[data-tier="founding"]');
-  var standardEl = grid.querySelector('[data-tier="standard"]');
-  var subscriptionEl = grid.querySelector('[data-tier="subscription"]');
+  var tierEls = {};
+  grid.querySelectorAll('[data-tier]').forEach(function(el) { tierEls[el.dataset.tier] = el; });
   var statusEl = document.getElementById('lab-join-status');
-
-  if (LAUNCH_MODE) {
-    // Samo founding, dokler ni dokazano drugače: neuspel klic availability
-    // nikoli ne sme pustiti standard/subscription na voljo pred razprodajo founding.
-    standardEl.style.display = 'none';
-    subscriptionEl.style.display = 'none';
-    fetch(API_BASE + '/api/lab-access/availability')
-      .then(function(r) { return r.json(); })
-      .then(function(data) {
-        if (!data.foundingAvailable) {
-          foundingEl.style.display = 'none';
-          standardEl.style.display = '';
-          subscriptionEl.style.display = '';
-        }
-      })
-      .catch(function() { /* ob napaki ostane samo founding */ });
-  } else {
-    // Testiranje: vse tri kartice vidne, brez klica availability, da lahko
-    // vsak checkout tok preizkusiš neodvisno.
-    standardEl.style.display = '';
-    subscriptionEl.style.display = '';
-  }
 
   function showStatus(msg) {
     statusEl.textContent = msg;
     statusEl.style.display = '';
   }
+  function hideStatus() { statusEl.style.display = 'none'; }
+
+  // ---------------------------------------------------------------------
+  // Which prices are on sale RIGHT NOW is decided by the server (launch
+  // phases: founding -> early supporter -> open). The cards below are only
+  // a convenience; /checkout enforces the same rule, so a stale page can
+  // never buy a tier that is closed. If availability can't be loaded we
+  // show NO prices rather than guess.
+  // ---------------------------------------------------------------------
+  function applyAvailability(data) {
+    var any = false;
+    Object.keys(tierEls).forEach(function(key) {
+      var on = !!(data.tiers && data.tiers[key]);
+      tierEls[key].style.display = on ? '' : 'none';
+      if (on) any = true;
+    });
+    grid.style.display = any ? '' : 'none';
+    if (data.testMode) showStatus(T.testMode);
+    else if (!any) showStatus(T.noneAvailable);
+    else hideStatus();
+  }
+
+  function loadAvailability() {
+    return fetch(API_BASE + '/api/lab-access/availability')
+      .then(function(r) {
+        if (!r.ok) throw new Error('availability ' + r.status);
+        return r.json();
+      })
+      .then(applyAvailability)
+      .catch(function() {
+        grid.style.display = 'none';
+        showStatus(T.availabilityFailed);
+      });
+  }
+  loadAvailability();
 
   function startCheckout(priceKey, btn) {
     var originalLabel = btn.textContent;
     btn.disabled = true;
-    btn.textContent = 'Preusmerjanje…';
-    statusEl.style.display = 'none';
+    btn.textContent = T.redirecting;
+    hideStatus();
 
     fetch(API_BASE + '/api/lab-access/checkout', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ priceKey: priceKey, lang: 'sl' })
+      body: JSON.stringify({ priceKey: priceKey, lang: LANG })
     })
       .then(function(r) { return r.json().then(function(data) { return { ok: r.ok, status: r.status, data: data }; }); })
       .then(function(result) {
@@ -738,19 +816,17 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
           window.location.href = result.data.url;
           return;
         }
-        if (result.status === 409 && result.data.error === 'founding_sold_out') {
-          foundingEl.style.display = 'none';
-          standardEl.style.display = '';
-          subscriptionEl.style.display = '';
-          showStatus('Founding mesta so ravnokar pošla — prikazujemo preostale možnosti.');
+        if (result.status === 409 && result.data.error === 'tier_not_available') {
+          // The phase moved on between page load and click (e.g. the last
+          // founding spot sold). Redraw from the server's current answer.
           btn.disabled = false;
           btn.textContent = originalLabel;
-          return;
+          return loadAvailability().then(function() { showStatus(T.tierGone); });
         }
-        throw new Error((result.data && result.data.error) || 'Checkout ni uspel');
+        throw new Error((result.data && result.data.error) || 'Checkout failed');
       })
       .catch(function(err) {
-        showStatus('Nekaj je šlo narobe (' + err.message + '). Poskusi znova, ali nas kontaktiraj, če se ponavlja.');
+        showStatus(T.checkoutFailed.replace('{err}', err.message));
         btn.disabled = false;
         btn.textContent = originalLabel;
       });
@@ -761,50 +837,158 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
   });
 
   // ---------------------------------------------------------------------
-  // Pravi odklep. Nič spodaj ne razkriva vsebine s skrivanjem/prikazom
-  // oznak, ki jih je strežnik že poslal — vsaka povezava/navodilo pride
-  // izključno iz odgovora /unlock, ki jih vrne samo za veljavno, trenutno
-  // aktivno članstvo. Glej api/lab-access/unlock v Services.
+  // Real unlock. Nothing below reveals content by hiding/showing markup
+  // the server already sent — every link/instruction comes from the
+  // /unlock response itself, which only includes them for a valid,
+  // currently-active membership. See api/lab-access/unlock on Services.
   // ---------------------------------------------------------------------
   var STORAGE_KEY = 'sentria_lab_key';
   var joinBlock = document.getElementById('lab-join-block');
   var checkingMsg = document.getElementById('lab-checking');
-  // Ta tri živijo v skupni glavi (templates/page.html), ne v tem vsebinskem
-  // delu — ob izrisu je to isti dokument, zato deluje. Na vsaki strani, ki
-  // uporablja to predlogo, so privzeto skriti/neaktivni; ta skripta jih
-  // "prebudi", zaenkrat samo na lab.html.
+  // These live in the shared header (templates/page.html), not in this
+  // content fragment — same document at render time, so this still works.
+  // They start hidden/inert on every page using that template; this script
+  // is what wakes them up, only on lab.html.
   var statusToggle = document.getElementById('lab-status-toggle');
   var statusPopup = document.getElementById('lab-status-popup');
   var statusBadge = document.getElementById('lab-status-badge');
   var statusDetail = document.getElementById('lab-status-detail');
+  var statusActions = document.getElementById('lab-status-actions');
+  var statusMessage = document.getElementById('lab-status-message');
   var keyInput = document.getElementById('lab-key-input');
   var keySubmit = document.getElementById('lab-key-submit');
 
+  var currentKey = null; // the key behind the profile window (for cancel / upgrade)
+
   function formatDate(iso) {
-    try { return new Date(iso).toLocaleDateString('sl-SI', { year: 'numeric', month: 'long', day: 'numeric' }); }
+    try { return new Date(iso).toLocaleDateString(LOCALE, { year: 'numeric', month: 'long', day: 'numeric' }); }
     catch (e) { return iso; }
   }
 
-  function renderStatus(access) {
-    var badgeLabel = access.badge === 'founding_member' ? 'Founding member' : 'Member';
-    if (access.foundingSequence) badgeLabel += ' #' + access.foundingSequence;
-    statusBadge.textContent = badgeLabel;
+  function setMessage(msg, warn) {
+    statusMessage.textContent = msg || '';
+    statusMessage.classList.toggle('lab-status-warning', !!warn);
+  }
 
-    if (!access.membershipUntil) {
-      statusDetail.textContent = 'Trajni dostop.';
-      statusDetail.classList.remove('lab-status-warning');
-    } else if (access.status === 'grace') {
-      var graceEnd = new Date(new Date(access.membershipUntil).getTime() + 7 * 24 * 60 * 60 * 1000);
-      statusDetail.textContent = 'Zadnje plačilo ni uspelo — obnovi do ' + formatDate(graceEnd) + ', da ohraniš dostop.';
-      statusDetail.classList.add('lab-status-warning');
-    } else if (access.status === 'expired') {
-      statusDetail.textContent = 'Tvoje članstvo je poteklo. Za obnovitev dostopa se znova naroči spodaj.';
-      statusDetail.classList.add('lab-status-warning');
-    } else {
-      statusDetail.textContent = 'Obnovi se okoli ' + formatDate(access.membershipUntil) + '.';
-      statusDetail.classList.remove('lab-status-warning');
+  // Buttons inside the popup are replaced while their own click handler is
+  // still running. Without stopPropagation the document-level "click
+  // outside closes the popup" listener would see a detached target and
+  // close the popup in the middle of the action.
+  function makeButton(label, extraClass, onClick) {
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'lab-status-action' + (extraClass ? ' ' + extraClass : '');
+    b.textContent = label;
+    b.addEventListener('click', function(e) {
+      e.stopPropagation();
+      onClick(b);
+    });
+    return b;
+  }
+
+  function badgeClass(badge) {
+    return badge === 'founding_member' ? 'lab-badge-founding'
+      : badge === 'early_supporter' ? 'lab-badge-early'
+      : 'lab-badge-member';
+  }
+
+  function renderStatus(access) {
+    var label = T.badge[access.badge] || T.badge.member;
+    // Only the limited editions carry a number.
+    if ((access.badge === 'founding_member' || access.badge === 'early_supporter') && access.sequence) {
+      label += ' #' + access.sequence;
     }
+    statusBadge.textContent = label;
+    statusBadge.className = 'lab-status-badge ' + badgeClass(access.badge);
+
+    // Cancel / upgrade only make sense for subscribers. A one-time
+    // (lifetime) member has neither to cancel nor anything to upgrade to.
+    var isSubscription = access.billingType === 'subscription' && !!access.membershipUntil;
+    var text;
+    var warn = false;
+    if (!isSubscription) {
+      text = T.lifetime;
+    } else if (access.status === 'expired') {
+      text = access.cancelRequested ? T.ended : T.lapsed;
+      warn = true;
+    } else if (access.status === 'grace') {
+      var graceEnd = access.graceEndsAt || new Date(new Date(access.membershipUntil).getTime() + 7 * 86400000).toISOString();
+      text = T.grace.replace('{date}', formatDate(graceEnd));
+      warn = true;
+    } else if (access.cancelRequested) {
+      text = T.cancelledUntil.replace('{date}', formatDate(access.membershipUntil));
+    } else {
+      text = T.renews.replace('{date}', formatDate(access.membershipUntil));
+    }
+    statusDetail.textContent = text;
+    statusDetail.classList.toggle('lab-status-warning', warn);
+
+    renderActions(access, isSubscription);
     statusToggle.style.display = '';
+  }
+
+  function renderActions(access, isSubscription) {
+    statusActions.textContent = '';
+    if (!isSubscription || access.status === 'expired') return;
+
+    statusActions.appendChild(makeButton(T.upgrade, '', function(btn) { startUpgrade(btn); }));
+    if (!access.cancelRequested) {
+      statusActions.appendChild(makeButton(T.cancel, 'lab-status-danger', function() { askCancel(access); }));
+    }
+  }
+
+  function startUpgrade(btn) {
+    btn.disabled = true;
+    setMessage(T.redirecting);
+    fetch(API_BASE + '/api/lab-access/upgrade-checkout', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ labKey: currentKey, lang: LANG })
+    })
+      .then(function(r) { return r.json().then(function(data) { return { ok: r.ok, data: data }; }); })
+      .then(function(result) {
+        if (result.ok && result.data.url) { window.location.href = result.data.url; return; }
+        throw new Error('upgrade');
+      })
+      .catch(function() {
+        btn.disabled = false;
+        setMessage(T.upgradeFailed, true);
+      });
+  }
+
+  // Cancelling is the one irreversible-feeling action here, so it asks
+  // first, inside the popup, and says exactly what the member keeps.
+  function askCancel(access) {
+    statusActions.textContent = '';
+    var q = document.createElement('p');
+    q.className = 'lab-status-confirm';
+    q.textContent = T.cancelConfirm.replace('{date}', formatDate(access.membershipUntil));
+    statusActions.appendChild(q);
+    statusActions.appendChild(makeButton(T.cancelYes, 'lab-status-danger', function(btn) { doCancel(btn, access); }));
+    statusActions.appendChild(makeButton(T.cancelNo, '', function() { renderActions(access, true); }));
+  }
+
+  function doCancel(btn, access) {
+    btn.disabled = true;
+    setMessage(T.working);
+    fetch(API_BASE + '/api/lab-access/cancel', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ labKey: currentKey })
+    })
+      .then(function(r) { return r.json().then(function(data) { return { ok: r.ok, data: data }; }); })
+      .then(function(result) {
+        if (!result.ok) throw new Error('cancel');
+        // Re-read the membership so the window shows the new state exactly
+        // as the server now reports it.
+        return unlock(currentKey, { silent: true }).then(function() {
+          setMessage(T.cancelDone.replace('{date}', formatDate(access.membershipUntil)));
+        });
+      })
+      .catch(function() {
+        renderActions(access, true);
+        setMessage(T.cancelFailed, true);
+      });
   }
 
   function openPopup() { statusPopup.style.display = ''; }
@@ -823,20 +1007,21 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
   function applyContent(content) {
     content.forEach(function(entry) {
       var slot = document.querySelector('.lab-unlock-slot[data-app-id="' + entry.appId + '"]');
-      if (!slot) return; // aplikacija odstranjena/preimenovana po tem, ko je bila vsebina tega članstva dodeljena
+      if (!slot) return; // app removed/renamed since this membership's content was granted
       var tag = document.querySelector('[data-lab-locked-tag="' + entry.appId + '"]');
+      slot.textContent = ''; // idempotent: unlock() can run again after a cancel
 
       if (entry.url) {
         var a = document.createElement('a');
         a.href = entry.url;
         a.className = 'lab-card-cta';
-        a.textContent = 'Odpri';
+        a.textContent = T.open;
         if (entry.url.indexOf('http') === 0) a.target = '_blank';
         slot.appendChild(a);
       } else {
         var p = document.createElement('p');
         p.className = 'lab-card-pending';
-        p.textContent = 'V razvoju — dostop boš dobil tukaj samodejno.';
+        p.textContent = T.pending;
         slot.appendChild(p);
       }
       if (entry.instructions) {
@@ -861,25 +1046,26 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
       .then(function(access) {
         checkingMsg.style.display = 'none';
         if (!access.valid) {
-          joinBlock.style.display = ''; // povrni zgodnje sinhrono skrivanje, če je teklo
-          if (!opts.silent) showKeyError('Ta ključ ne izgleda pravilno — preveri, ali je brez tipkarskih napak.');
+          joinBlock.style.display = ''; // undo the early synchronous hide, if it ran
+          if (!opts.silent) showKeyError(T.keyBad);
           return;
         }
-        try { localStorage.setItem(STORAGE_KEY, labKey); } catch (e) { /* shramba ni na voljo — odklep deluje za ta obisk vseeno */ }
+        currentKey = labKey;
+        try { localStorage.setItem(STORAGE_KEY, labKey); } catch (e) { /* storage unavailable — unlock still works for this visit */ }
         renderStatus(access);
         if (access.active) {
           joinBlock.style.display = 'none';
           applyContent(access.content);
         } else {
-          // Veljaven ključ, poteklo članstvo: pusti, da znova vidijo
-          // cenovne kartice (za obnovitev), namesto da stran izgleda pokvarjena.
+          // Valid key, lapsed membership: let them see pricing again (to
+          // join again) rather than leaving the page looking broken.
           joinBlock.style.display = '';
         }
       })
       .catch(function() {
         checkingMsg.style.display = 'none';
         joinBlock.style.display = '';
-        if (!opts.silent) showKeyError('Nekaj je šlo narobe — poskusi znova.');
+        if (!opts.silent) showKeyError(T.keyErr);
       });
   }
 
