@@ -1,13 +1,23 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="dark">
-<script>document.documentElement.setAttribute('data-theme', localStorage.getItem('sentria-theme') || 'dark');</script>
 <head>
 <meta charset="UTF-8">
+<script>
+// Browser storage can throw (blocked site data, some in-app browsers, certain
+// private modes). Every read/write of the theme and language goes through this
+// wrapper so a blocked storage degrades to "preferences are not remembered"
+// instead of a broken page.
+window.sentriaStore = {
+  get: function (k) { try { return sentriaStore.get(k); } catch (e) { return null; } },
+  set: function (k, v) { try { sentriaStore.set(k, v); } catch (e) { /* not remembered */ } }
+};
+document.documentElement.setAttribute('data-theme', window.sentriaStore.get('sentria-theme') || 'dark');
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Page not found — Sentria</title>
 <meta name="robots" content="noindex">
 <link rel="icon" type="image/png" href="/favicon.png">
-<link rel="apple-touch-icon" href="/logo.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <meta name="theme-color" content="#0a0b0f" media="(prefers-color-scheme: dark)">
 <meta name="theme-color" content="#f2efe9" media="(prefers-color-scheme: light)">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -232,7 +242,7 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
           <button class="lang-btn" data-lang="en" onclick="setLang('en')">EN</button>
           <button class="lang-btn" data-lang="sl" onclick="setLang('sl')">SL</button>
         </div>
-        <button class="theme-btn" id="theme-toggle" aria-label="Toggle light/dark theme">
+        <button class="theme-btn" id="theme-toggle" aria-label="Toggle theme" data-i18n-aria="theme_toggle_aria">
           <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
           <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
         </button>
@@ -280,12 +290,16 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
    404.html for static sites — a separate /sl/404.html would need extra
    routing config), so language is resolved client-side from the same
    stored preference the homepage uses, same as any other page's text. */
-const TRANSLATIONS = {"en": {"about_href": "/about.html", "contact_href": "/contact.html", "footer_about": "About", "footer_contact": "Contact", "footer_copy": "© 2026 Sentria", "footer_lab": "Lab", "footer_privacy": "Privacy", "footer_support": "Support Sentria", "lab_href": "/lab.html", "notfound_cta": "Back to homepage", "notfound_eyebrow": "Error", "notfound_message": "The page you're looking for doesn't exist — it may have moved, or the link was mistyped.", "notfound_title": "This page drifted <em>out of continuity</em>.", "privacy_href": "/privacy.html"}, "sl": {"about_href": "/sl/about.html", "contact_href": "/sl/contact.html", "footer_about": "O nas", "footer_contact": "Kontakt", "footer_copy": "© 2026 Sentria", "footer_lab": "Lab", "footer_privacy": "Zasebnost", "footer_support": "Podpri Sentrio", "lab_href": "/sl/lab.html", "notfound_cta": "Domov", "notfound_eyebrow": "Napaka", "notfound_message": "Strani, ki jo iščeš, ni bilo mogoče najti — morda je bila premaknjena, ali pa je povezava napačna.", "notfound_title": "Ta stran je zdrsnila <em>iz kontinuitete</em>.", "privacy_href": "/sl/privacy.html"}};
-function getLang() { return localStorage.getItem("sentria-lang") || (navigator.language.startsWith("sl") ? "sl" : "en"); }
+const TRANSLATIONS = {"en": {"about_href": "/about.html", "contact_href": "/contact.html", "footer_about": "About", "footer_contact": "Contact", "footer_copy": "© 2026 Sentria", "footer_lab": "Lab", "footer_privacy": "Privacy", "footer_support": "Support Sentria", "lab_href": "/lab.html", "notfound_cta": "Back to homepage", "notfound_eyebrow": "Error", "notfound_message": "The page you're looking for doesn't exist — it may have moved, or the link was mistyped.", "notfound_title": "This page drifted <em>out of continuity</em>.", "privacy_href": "/privacy.html", "theme_toggle_aria": "Toggle theme"}, "sl": {"about_href": "/sl/about.html", "contact_href": "/sl/contact.html", "footer_about": "O nas", "footer_contact": "Kontakt", "footer_copy": "© 2026 Sentria", "footer_lab": "Lab", "footer_privacy": "Zasebnost", "footer_support": "Podpri Sentrio", "lab_href": "/sl/lab.html", "notfound_cta": "Domov", "notfound_eyebrow": "Napaka", "notfound_message": "Strani, ki jo iščeš, ni bilo mogoče najti — morda je bila premaknjena, ali pa je povezava napačna.", "notfound_title": "Ta stran je zdrsnila <em>iz kontinuitete</em>.", "privacy_href": "/sl/privacy.html", "theme_toggle_aria": "Preklopi temo"}};
+function getLang() { return sentriaStore.get("sentria-lang") || (navigator.language.startsWith("sl") ? "sl" : "en"); }
 function setLang(lang) {
   if (!TRANSLATIONS[lang]) return;
-  localStorage.setItem("sentria-lang", lang);
+  sentriaStore.set("sentria-lang", lang);
   document.documentElement.setAttribute("lang", lang);
+  document.querySelectorAll("[data-i18n-aria]").forEach(el => {
+    const label = TRANSLATIONS[lang][el.getAttribute("data-i18n-aria")];
+    if (label !== undefined) el.setAttribute("aria-label", label);
+  });
   document.querySelectorAll("[data-i18n]").forEach(el => {
     const v = TRANSLATIONS[lang][el.getAttribute("data-i18n")];
     if (v !== undefined) el.innerHTML = v;
@@ -301,9 +315,9 @@ setLang(getLang());
 /* ── Theme ───────────────────────────────────────────────── */
 const themeBtn = document.getElementById('theme-toggle');
 const html = document.documentElement;
-function setTheme(t) { html.setAttribute('data-theme', t); localStorage.setItem('sentria-theme', t); }
+function setTheme(t) { html.setAttribute('data-theme', t); sentriaStore.set('sentria-theme', t); }
 themeBtn.addEventListener('click', () => setTheme(html.dataset.theme === 'dark' ? 'light' : 'dark'));
-const savedTheme = localStorage.getItem('sentria-theme');
+const savedTheme = sentriaStore.get('sentria-theme');
 if (savedTheme) setTheme(savedTheme);
 const mainHeader = document.getElementById('main-header');
 window.addEventListener('scroll', () => { mainHeader.classList.toggle('scrolled', window.scrollY > 40); }, { passive: true });

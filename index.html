@@ -1,21 +1,36 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="dark">
-<script>document.documentElement.setAttribute('data-theme', localStorage.getItem('sentria-theme') || 'dark');</script>
 <head>
 <meta charset="UTF-8">
+<script>
+// Browser storage can throw (blocked site data, some in-app browsers, certain
+// private modes). Every read/write of the theme and language goes through this
+// wrapper so a blocked storage degrades to "preferences are not remembered"
+// instead of a broken page.
+window.sentriaStore = {
+  get: function (k) { try { return sentriaStore.get(k); } catch (e) { return null; } },
+  set: function (k, v) { try { sentriaStore.set(k, v); } catch (e) { /* not remembered */ } }
+};
+document.documentElement.setAttribute('data-theme', window.sentriaStore.get('sentria-theme') || 'dark');
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sentria</title>
+<title>Sentria — Places return. Symbols evolve.</title>
 <meta name="description" content="Sentria — a modular ecosystem for dream exploration, lucid dreaming, and reflective consciousness research.">
-<link rel="icon" type="image/png" href="favicon.png">
+<link rel="canonical" href="https://sentria-hub.vercel.app/">
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://sentria-hub.vercel.app/">
 <meta property="og:title" content="Sentria — Places return. Symbols evolve.">
 <meta property="og:description" content="A modular ecosystem for dream exploration, symbolic continuity, and reflective consciousness research — connecting independent tools into an evolving inner cartography.">
-<meta property="og:image" content="https://sentria-hub.vercel.app/logo.png">
+<meta property="og:image" content="https://sentria-hub.vercel.app/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Sentria — a glowing green crystal emblem">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Sentria — Places return. Symbols evolve.">
 <meta name="twitter:description" content="A modular ecosystem for dream exploration, symbolic continuity, and reflective consciousness research.">
-<meta name="twitter:image" content="https://sentria-hub.vercel.app/logo.png">
+<meta name="twitter:image" content="https://sentria-hub.vercel.app/og-image.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Mono:wght@300;400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
@@ -664,7 +679,7 @@ footer:hover .footer-manifesto-text { color: var(--text-secondary); }
       </a>
       <div class="nav-right">
         <div id="lang-switcher"></div>
-        <button class="theme-btn" id="theme-toggle" aria-label="Toggle theme">
+        <button class="theme-btn" id="theme-toggle" aria-label="Toggle theme" data-i18n-aria="theme_toggle_aria">
           <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
           <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
         </button>
@@ -700,7 +715,7 @@ footer:hover .footer-manifesto-text { color: var(--text-secondary); }
 
       <!-- Node positions within the hero visual box -->
             <div class="hero-node" data-active="true" data-node="somnia"
-           style="top:8%;left:12%" tabindex="0" role="button" aria-label="Jump to Somnia">
+           style="top:8%;left:12%" tabindex="0" role="button" aria-label="Jump to Somnia" data-i18n-aria="aria_jump_to" data-name="Somnia">
         <div class="hero-node-dot-wrap">
           <div class="hero-node-ring"></div>
           <div class="hero-node-dot"></div>
@@ -709,7 +724,7 @@ footer:hover .footer-manifesto-text { color: var(--text-secondary); }
       </div>
 
       <div class="hero-node" data-active="true" data-node="orbis"
-           style="top:4%;left:55%" tabindex="0" role="button" aria-label="Jump to Orbis">
+           style="top:4%;left:55%" tabindex="0" role="button" aria-label="Jump to Orbis" data-i18n-aria="aria_jump_to" data-name="Orbis">
         <div class="hero-node-dot-wrap">
           <div class="hero-node-ring"></div>
           <div class="hero-node-dot"></div>
@@ -718,7 +733,7 @@ footer:hover .footer-manifesto-text { color: var(--text-secondary); }
       </div>
 
       <div class="hero-node" data-active="true" data-node="oneiro"
-           style="top:30%;left:75%" tabindex="0" role="button" aria-label="Jump to Oneiro">
+           style="top:30%;left:75%" tabindex="0" role="button" aria-label="Jump to Oneiro" data-i18n-aria="aria_jump_to" data-name="Oneiro">
         <div class="hero-node-dot-wrap">
           <div class="hero-node-ring"></div>
           <div class="hero-node-dot"></div>
@@ -727,7 +742,7 @@ footer:hover .footer-manifesto-text { color: var(--text-secondary); }
       </div>
 
       <div class="hero-node" data-active="true" data-node="oneiroweb"
-           style="top:55%;left:68%" tabindex="0" role="button" aria-label="Jump to Oneiro Web">
+           style="top:55%;left:68%" tabindex="0" role="button" aria-label="Jump to Oneiro Web" data-i18n-aria="aria_jump_to" data-name="Oneiro Web">
         <div class="hero-node-dot-wrap">
           <div class="hero-node-ring"></div>
           <div class="hero-node-dot"></div>
@@ -736,7 +751,7 @@ footer:hover .footer-manifesto-text { color: var(--text-secondary); }
       </div>
 
       <div class="hero-node" data-active="true" data-node="limina"
-           style="top:68%;left:10%" tabindex="0" role="button" aria-label="Jump to Limina">
+           style="top:68%;left:10%" tabindex="0" role="button" aria-label="Jump to Limina" data-i18n-aria="aria_jump_to" data-name="Limina">
         <div class="hero-node-dot-wrap">
           <div class="hero-node-ring"></div>
           <div class="hero-node-dot"></div>
@@ -745,7 +760,7 @@ footer:hover .footer-manifesto-text { color: var(--text-secondary); }
       </div>
 
       <div class="hero-node" data-active="true" data-node="consciousflow"
-           style="top:36%;left:4%" tabindex="0" role="button" aria-label="Jump to Conscious Flow">
+           style="top:36%;left:4%" tabindex="0" role="button" aria-label="Jump to Conscious Flow" data-i18n-aria="aria_jump_to" data-name="Conscious Flow">
         <div class="hero-node-dot-wrap">
           <div class="hero-node-ring"></div>
           <div class="hero-node-dot"></div>
@@ -754,7 +769,7 @@ footer:hover .footer-manifesto-text { color: var(--text-secondary); }
       </div>
 
       <div class="hero-node" data-active="true" data-node="lab"
-           style="top:88%;left:78%" tabindex="0" role="button" aria-label="Jump to Sentria Lab">
+           style="top:88%;left:78%" tabindex="0" role="button" aria-label="Jump to Sentria Lab" data-i18n-aria="aria_jump_to" data-name="Sentria Lab">
         <div class="hero-node-dot-wrap">
           <div class="hero-node-ring"></div>
           <div class="hero-node-dot"></div>
@@ -796,7 +811,7 @@ footer:hover .footer-manifesto-text { color: var(--text-secondary); }
     <div class="cards-grid">
 
             <div class="app-card reveal" data-color="seafoam" data-app-id="somnia">
-        <div class="card-visual" tabindex="0" role="button" aria-label="Preview Somnia">
+        <div class="card-visual" tabindex="0" role="button" aria-label="Preview Somnia" data-i18n-aria="aria_preview" data-name="Somnia">
           <div class="card-logo">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>
           </div>
@@ -824,7 +839,7 @@ footer:hover .footer-manifesto-text { color: var(--text-secondary); }
       </div>
 
       <div class="app-card reveal" data-color="amber" data-app-id="orbis">
-        <div class="card-visual" tabindex="0" role="button" aria-label="Preview Orbis">
+        <div class="card-visual" tabindex="0" role="button" aria-label="Preview Orbis" data-i18n-aria="aria_preview" data-name="Orbis">
           <div class="card-logo">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2c-4 5-4 15 0 20M12 2c4 5 4 15 0 20"/></svg>
           </div>
@@ -852,7 +867,7 @@ footer:hover .footer-manifesto-text { color: var(--text-secondary); }
       </div>
 
       <div class="app-card reveal" data-color="rose" data-app-id="oneiro">
-        <div class="card-visual" tabindex="0" role="button" aria-label="Preview Oneiro">
+        <div class="card-visual" tabindex="0" role="button" aria-label="Preview Oneiro" data-i18n-aria="aria_preview" data-name="Oneiro">
           <div class="card-logo">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M17.5 6.5C19 8 20 10 20 12c0 4.4-3.6 8-8 8s-8-3.6-8-8c0-2 .7-3.8 2-5.2"/><path d="M12 2v4"/><circle cx="12" cy="12" r="3"/></svg>
           </div>
@@ -880,7 +895,7 @@ footer:hover .footer-manifesto-text { color: var(--text-secondary); }
       </div>
 
       <div class="app-card reveal" data-color="slate" data-app-id="oneiroweb">
-        <div class="card-visual" tabindex="0" role="button" aria-label="Preview Oneiro Web">
+        <div class="card-visual" tabindex="0" role="button" aria-label="Preview Oneiro Web" data-i18n-aria="aria_preview" data-name="Oneiro Web">
           <div class="card-logo">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
           </div>
@@ -908,7 +923,7 @@ footer:hover .footer-manifesto-text { color: var(--text-secondary); }
       </div>
 
       <div class="app-card reveal" data-color="lavender" data-app-id="limina">
-        <div class="card-visual" tabindex="0" role="button" aria-label="Preview Limina">
+        <div class="card-visual" tabindex="0" role="button" aria-label="Preview Limina" data-i18n-aria="aria_preview" data-name="Limina">
           <div class="card-logo">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
           </div>
@@ -936,7 +951,7 @@ footer:hover .footer-manifesto-text { color: var(--text-secondary); }
       </div>
 
       <div class="app-card reveal" data-color="gold" data-app-id="consciousflow">
-        <div class="card-visual" tabindex="0" role="button" aria-label="Preview Conscious Flow">
+        <div class="card-visual" tabindex="0" role="button" aria-label="Preview Conscious Flow" data-i18n-aria="aria_preview" data-name="Conscious Flow">
           <div class="card-logo">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
           </div>
@@ -964,12 +979,12 @@ footer:hover .footer-manifesto-text { color: var(--text-secondary); }
       </div>
 
       <div class="app-card reveal" data-color="amber" data-app-id="lab">
-        <div class="card-visual" tabindex="0" role="button" aria-label="Preview Sentria Lab">
+        <div class="card-visual" tabindex="0" role="button" aria-label="Preview Sentria Lab" data-i18n-aria="aria_preview" data-name="Sentria Lab">
           <div class="card-logo">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M9 2v6.5L3 20a1 1 0 0 0 1 1.5h16a1 1 0 0 0 1-1.5L15 8.5V2"/><path d="M9 2h6"/><path d="M8 15h8"/></svg>
           </div>
           <div class="card-screenshot">
-            <img src="/screenshots/lab.png" alt="Sentria Lab" loading="lazy">
+            <img src="/screenshots/lab.jpg" alt="Sentria Lab" loading="lazy">
           </div>
         </div>
         <div class="card-body">
@@ -1024,14 +1039,24 @@ footer:hover .footer-manifesto-text { color: var(--text-secondary); }
      ============================================================ -->
 <script>
 /* ── i18n ─────────────────────────────────────────────────── */
-const TRANSLATIONS = {"en": {"about_href": "/about.html", "app_consciousflow_cta_label": "Read on Substack", "app_consciousflow_description": "A reflective journal exploring dreams, lucid dreaming, symbolism, and consciousness through over twenty years of personal research. The philosophical and narrative foundation of the Sentria ecosystem.", "app_consciousflow_ecosystem_role": "Philosophical foundation · narrative continuity", "app_consciousflow_name": "Conscious Flow", "app_consciousflow_role": "Research & narrative", "app_lab_cta_label": "Explore the Lab", "app_lab_description": "Explore experimental tools, research prototypes, and emerging systems that are shaping the future of the Sentria ecosystem.", "app_lab_ecosystem_role": "Research laboratory · future ecosystem", "app_lab_name": "Sentria Lab", "app_lab_role": "Where new ideas take shape", "app_limina_cta_label": "Open Limina", "app_limina_description": "An experimental audio environment focused on deep relaxation, hypnagogic drift, and lucid dreaming support through atmospheric sound design, binaural beats, and immersive sleep-oriented audio.", "app_limina_ecosystem_role": "Threshold environment · supports lucid entry", "app_limina_name": "Limina", "app_limina_role": "Sleep audio environment", "app_oneiro_cta_label": "Open Oneiro", "app_oneiro_description": "A lightweight dream journal focused on fast capture and reflective AI-assisted interpretation. Explore your dreams through psychological, Jungian, and symbolic perspectives directly in your browser.", "app_oneiro_ecosystem_role": "AI-assisted reflection · part of the continuity layer", "app_oneiro_name": "Oneiro", "app_oneiro_role": "Dream journal & AI reflection", "app_oneiroweb_cta_label": "Open Oneiro Web", "app_oneiroweb_description": "An interactive gateway into dream symbolism featuring interpretations of common dream motifs and AI-assisted reflection tools. Designed for accessible and intuitive dream exploration.", "app_oneiroweb_ecosystem_role": "Entry point into the ecosystem", "app_oneiroweb_name": "Oneiro Web", "app_oneiroweb_role": "Dream symbolism gateway", "app_orbis_cta_label": "Open Orbis", "app_orbis_description": "A visual dream mapping system that transforms recurring dream locations into interconnected symbolic landscapes. Explore your inner world through evolving spatial continuity and dream geography.", "app_orbis_ecosystem_role": "Spatial memory · draws from Somnia archive", "app_orbis_name": "Orbis", "app_orbis_role": "Visual dream mapping", "app_somnia_cta_label": "Open Somnia", "app_somnia_description": "A local-first dream journaling system designed for long-term dream tracking, detailed analytics, and personal symbolic exploration. Built around privacy, continuity, and full ownership of your dream archive.", "app_somnia_ecosystem_role": "Primary archive · connects with Orbis and Loom", "app_somnia_name": "Somnia", "app_somnia_role": "Dream archive & analytics", "contact_href": "/contact.html", "footer_about": "About", "footer_contact": "Contact", "footer_copy": "© 2026 Sentria", "footer_lab": "Lab", "footer_manifesto": "Dreams are not isolated entries — they are evolving structures of continuity across time.<br>Sentria is built to explore that continuity.", "footer_privacy": "Privacy", "footer_support": "Support Sentria", "hero_cta": "Enter the ecosystem", "hero_h1_line1": "Places return.", "hero_h1_line2": "Symbols evolve.", "hero_sub": "Dreams are not isolated entries. Sentria is a modular ecosystem for long-term dream exploration — built around recurring structures, symbolic continuity, and the gradual emergence of inner cartography across time.", "hero_tag": "Sentria · Dream Continuity Ecosystem", "lab_href": "/lab.html", "privacy_href": "/privacy.html", "scroll_hint": "Scroll", "section_h2_line1": "Independent systems,", "section_h2_line2": "shared continuity", "section_label": "The Ecosystem", "signup_desc": "Occasional notes on new modules, early access, and the gradual emergence of continuity across Sentria.", "signup_label": "Stay connected", "signup_placeholder": "your@email.com", "signup_privacy": "No spam. Unsubscribe anytime. See our <a href=\"/privacy.html\">privacy policy</a>.", "signup_submit": "Subscribe", "signup_success": "Thank you — you're on the list.", "signup_title": "Follow the ecosystem<br>as it unfolds.", "signup_trigger": "Stay connected", "status_live": "🟢 Core", "status_research": "🔴 Research"}, "sl": {"about_href": "/sl/about.html", "app_consciousflow_cta_label": "Beri na Substacku", "app_consciousflow_description": "Reflektivni dnevnik, ki skozi več kot dvajset let osebnih raziskav raziskuje sanje, lucidno sanjanje, simbolizem in zavest. Filozofska in narativna osnova ekosistema Sentria.", "app_consciousflow_ecosystem_role": "Filozofska osnova · narativna kontinuiteta", "app_consciousflow_name": "Conscious Flow", "app_consciousflow_role": "Raziskovanje in refleksija", "app_lab_cta_label": "Razišči Lab", "app_lab_description": "Razišči eksperimentalna orodja, raziskovalne prototipe in nastajajoče sisteme, ki oblikujejo prihodnost ekosistema Sentria.", "app_lab_ecosystem_role": "Raziskovalni laboratorij · prihodnji ekosistem", "app_lab_name": "Sentria Lab", "app_lab_role": "Kjer nastajajo nove ideje", "app_limina_cta_label": "Odpri Limina", "app_limina_description": "Eksperimentalno zvočno okolje za globoko sprostitev, hipnagogično plavanje in podporo lucidnemu sanjanju — atmosferski zvočni design, binauralni utripi in poglobljene zvočne izkušnje.", "app_limina_ecosystem_role": "Mejno okolje · podpira lucidni vstop", "app_limina_name": "Limina", "app_limina_role": "Zvočno okolje za spanje", "app_oneiro_cta_label": "Odpri Oneiro", "app_oneiro_description": "Lahek dnevnik sanj s poudarkom na hitrem zapisovanju in reflektivni AI-interpretaciji. Raziščite sanje skozi psihološke, jungovske in simbolne perspektive neposredno v brskalniku.", "app_oneiro_ecosystem_role": "AI-refleksija · del kontinuitetnega sloja", "app_oneiro_name": "Oneiro", "app_oneiro_role": "Dnevnik sanj in AI refleksija", "app_oneiroweb_cta_label": "Odpri Oneiro Web", "app_oneiroweb_description": "Interaktivni vhod v simboliko sanj z interpretacijami pogostih motivov in orodji za AI-refleksijo. Zasnovan za dostopno in intuitivno raziskovanje sanj.", "app_oneiroweb_ecosystem_role": "Vstopna točka v ekosistem", "app_oneiroweb_name": "Oneiro Web", "app_oneiroweb_role": "Prehod v simboliko sanj", "app_orbis_cta_label": "Odpri Orbis", "app_orbis_description": "Vizualni sistem za kartiranje sanj, ki ponavljajoče se lokacije pretvori v med seboj povezane simbolne pokrajine. Raziščite notranji svet skozi prostorsko kontinuiteto in geografijo sanj.", "app_orbis_ecosystem_role": "Prostorski spomin · črpa iz arhiva Somnia", "app_orbis_name": "Orbis", "app_orbis_role": "Vizualno kartiranje sanj", "app_somnia_cta_label": "Odpri Somnia", "app_somnia_description": "Lokalni sistem za vodenje dnevnika sanj, zasnovan za dolgoročno sledenje, podrobno analitiko in osebno simbolno raziskovanje. Zgrajen z mislijo na zasebnost, kontinuiteto in popolno lastništvo arhiva sanj.", "app_somnia_ecosystem_role": "Primarni arhiv · povezan z Orbisom in Loomom", "app_somnia_name": "Somnia", "app_somnia_role": "Arhiv sanj in analitika", "contact_href": "/sl/contact.html", "footer_about": "O nas", "footer_contact": "Kontakt", "footer_copy": "© 2026 Sentria", "footer_lab": "Lab", "footer_manifesto": "Sanje niso izolirani zapisi — so razvijajoče se strukture kontinuitete skozi čas.<br>Sentria je zgrajena za raziskovanje te kontinuitete.", "footer_privacy": "Zasebnost", "footer_support": "Podpri Sentrio", "hero_cta": "Vstopi v ekosistem", "hero_h1_line1": "Kraji se vračajo.", "hero_h1_line2": "Simboli se razvijajo.", "hero_sub": "Sanje niso izolirani zapisi. Sentria je modularni ekosistem za dolgoročno raziskovanje sanj — zgrajen okoli ponavljajočih se struktur, simbolne kontinuitete in postopnega nastajanja notranje kartografije skozi čas.", "hero_tag": "Sentria · Ekosistem kontinuitete sanj", "lab_href": "/sl/lab.html", "privacy_href": "/sl/privacy.html", "scroll_hint": "Pobrskaj", "section_h2_line1": "Neodvisni sistemi,", "section_h2_line2": "skupna kontinuiteta", "section_label": "Ekosistem", "signup_desc": "Občasna obvestila o novih modulih, zgodnjem dostopu in postopnem nastajanju kontinuitete v Sentria.", "signup_label": "Ostani povezan", "signup_placeholder": "tvoj@email.com", "signup_privacy": "Brez vsiljive pošte. Odjava kadarkoli. Glej našo <a href=\"/sl/privacy.html\">politiko zasebnosti</a>.", "signup_submit": "Naroči se", "signup_success": "Hvala — na seznamu si.", "signup_title": "Spremljaj ekosistem,<br>ko se razvija.", "signup_trigger": "Ostani povezan", "status_live": "🟢 Jedro", "status_research": "🔴 Raziskovalno"}};
+const TRANSLATIONS = {"en": {"about_href": "/about.html", "app_consciousflow_cta_label": "Read on Substack", "app_consciousflow_description": "A reflective journal exploring dreams, lucid dreaming, symbolism, and consciousness through over twenty years of personal research. The philosophical and narrative foundation of the Sentria ecosystem.", "app_consciousflow_ecosystem_role": "Philosophical foundation · narrative continuity", "app_consciousflow_name": "Conscious Flow", "app_consciousflow_role": "Research & narrative", "app_lab_cta_label": "Explore the Lab", "app_lab_description": "Explore experimental tools, research prototypes, and emerging systems that are shaping the future of the Sentria ecosystem.", "app_lab_ecosystem_role": "Research laboratory · future ecosystem", "app_lab_name": "Sentria Lab", "app_lab_role": "Where new ideas take shape", "app_limina_cta_label": "Open Limina", "app_limina_description": "An experimental audio environment focused on deep relaxation, hypnagogic drift, and lucid dreaming support through atmospheric sound design, binaural beats, and immersive sleep-oriented audio.", "app_limina_ecosystem_role": "Threshold environment · supports lucid entry", "app_limina_name": "Limina", "app_limina_role": "Sleep audio environment", "app_oneiro_cta_label": "Open Oneiro", "app_oneiro_description": "A lightweight dream journal focused on fast capture and reflective AI-assisted interpretation. Explore your dreams through psychological, Jungian, and symbolic perspectives directly in your browser.", "app_oneiro_ecosystem_role": "AI-assisted reflection · part of the continuity layer", "app_oneiro_name": "Oneiro", "app_oneiro_role": "Dream journal & AI reflection", "app_oneiroweb_cta_label": "Open Oneiro Web", "app_oneiroweb_description": "An interactive gateway into dream symbolism featuring interpretations of common dream motifs and AI-assisted reflection tools. Designed for accessible and intuitive dream exploration.", "app_oneiroweb_ecosystem_role": "Entry point into the ecosystem", "app_oneiroweb_name": "Oneiro Web", "app_oneiroweb_role": "Dream symbolism gateway", "app_orbis_cta_label": "Open Orbis", "app_orbis_description": "A visual dream mapping system that transforms recurring dream locations into interconnected symbolic landscapes. Explore your inner world through evolving spatial continuity and dream geography.", "app_orbis_ecosystem_role": "Spatial memory · draws from Somnia archive", "app_orbis_name": "Orbis", "app_orbis_role": "Visual dream mapping", "app_somnia_cta_label": "Open Somnia", "app_somnia_description": "A local-first dream journaling system designed for long-term dream tracking, detailed analytics, and personal symbolic exploration. Built around privacy, continuity, and full ownership of your dream archive.", "app_somnia_ecosystem_role": "Primary archive · connects with Orbis and Loom", "app_somnia_name": "Somnia", "app_somnia_role": "Dream archive & analytics", "aria_close": "Close", "aria_jump_to": "Jump to {name}", "aria_preview": "Preview {name}", "aria_stay_connected": "Stay connected", "back_to_top_aria": "Back to top", "contact_href": "/contact.html", "footer_about": "About", "footer_contact": "Contact", "footer_copy": "© 2026 Sentria", "footer_lab": "Lab", "footer_manifesto": "Dreams are not isolated entries — they are evolving structures of continuity across time.<br>Sentria is built to explore that continuity.", "footer_privacy": "Privacy", "footer_support": "Support Sentria", "hero_cta": "Enter the ecosystem", "hero_h1_line1": "Places return.", "hero_h1_line2": "Symbols evolve.", "hero_sub": "Dreams are not isolated entries. Sentria is a modular ecosystem for long-term dream exploration — built around recurring structures, symbolic continuity, and the gradual emergence of inner cartography across time.", "hero_tag": "Sentria · Dream Continuity Ecosystem", "lab_href": "/lab.html", "meta_description": "Sentria — a modular ecosystem for dream exploration, lucid dreaming, and reflective consciousness research.", "meta_title": "Sentria — Places return. Symbols evolve.", "privacy_href": "/privacy.html", "scroll_hint": "Scroll", "section_h2_line1": "Independent systems,", "section_h2_line2": "shared continuity", "section_label": "The Ecosystem", "signup_desc": "Occasional notes on new modules, early access, and the gradual emergence of continuity across Sentria.", "signup_label": "Stay connected", "signup_placeholder": "your@email.com", "signup_privacy": "No spam. Unsubscribe anytime. See our <a href=\"/privacy.html\">privacy policy</a>.", "signup_submit": "Subscribe", "signup_success": "Thank you — you're on the list.", "signup_title": "Follow the ecosystem<br>as it unfolds.", "signup_trigger": "Stay connected", "status_live": "🟢 Core", "status_research": "🔴 Research", "theme_toggle_aria": "Toggle theme"}, "sl": {"about_href": "/sl/about.html", "app_consciousflow_cta_label": "Beri na Substacku", "app_consciousflow_description": "Reflektivni dnevnik, ki skozi več kot dvajset let osebnih raziskav raziskuje sanje, lucidno sanjanje, simbolizem in zavest. Filozofska in narativna osnova ekosistema Sentria.", "app_consciousflow_ecosystem_role": "Filozofska osnova · narativna kontinuiteta", "app_consciousflow_name": "Conscious Flow", "app_consciousflow_role": "Raziskovanje in refleksija", "app_lab_cta_label": "Razišči Lab", "app_lab_description": "Razišči eksperimentalna orodja, raziskovalne prototipe in nastajajoče sisteme, ki oblikujejo prihodnost ekosistema Sentria.", "app_lab_ecosystem_role": "Raziskovalni laboratorij · prihodnji ekosistem", "app_lab_name": "Sentria Lab", "app_lab_role": "Kjer nastajajo nove ideje", "app_limina_cta_label": "Odpri Limina", "app_limina_description": "Eksperimentalno zvočno okolje za globoko sprostitev, hipnagogično plavanje in podporo lucidnemu sanjanju — atmosferski zvočni design, binauralni utripi in poglobljene zvočne izkušnje.", "app_limina_ecosystem_role": "Mejno okolje · podpira lucidni vstop", "app_limina_name": "Limina", "app_limina_role": "Zvočno okolje za spanje", "app_oneiro_cta_label": "Odpri Oneiro", "app_oneiro_description": "Lahek dnevnik sanj s poudarkom na hitrem zapisovanju in reflektivni AI-interpretaciji. Raziščite sanje skozi psihološke, jungovske in simbolne perspektive neposredno v brskalniku.", "app_oneiro_ecosystem_role": "AI-refleksija · del kontinuitetnega sloja", "app_oneiro_name": "Oneiro", "app_oneiro_role": "Dnevnik sanj in AI refleksija", "app_oneiroweb_cta_label": "Odpri Oneiro Web", "app_oneiroweb_description": "Interaktivni vhod v simboliko sanj z interpretacijami pogostih motivov in orodji za AI-refleksijo. Zasnovan za dostopno in intuitivno raziskovanje sanj.", "app_oneiroweb_ecosystem_role": "Vstopna točka v ekosistem", "app_oneiroweb_name": "Oneiro Web", "app_oneiroweb_role": "Prehod v simboliko sanj", "app_orbis_cta_label": "Odpri Orbis", "app_orbis_description": "Vizualni sistem za kartiranje sanj, ki ponavljajoče se lokacije pretvori v med seboj povezane simbolne pokrajine. Raziščite notranji svet skozi prostorsko kontinuiteto in geografijo sanj.", "app_orbis_ecosystem_role": "Prostorski spomin · črpa iz arhiva Somnia", "app_orbis_name": "Orbis", "app_orbis_role": "Vizualno kartiranje sanj", "app_somnia_cta_label": "Odpri Somnia", "app_somnia_description": "Lokalni sistem za vodenje dnevnika sanj, zasnovan za dolgoročno sledenje, podrobno analitiko in osebno simbolno raziskovanje. Zgrajen z mislijo na zasebnost, kontinuiteto in popolno lastništvo arhiva sanj.", "app_somnia_ecosystem_role": "Primarni arhiv · povezan z Orbisom in Loomom", "app_somnia_name": "Somnia", "app_somnia_role": "Arhiv sanj in analitika", "aria_close": "Zapri", "aria_jump_to": "Skoči na {name}", "aria_preview": "Predogled {name}", "aria_stay_connected": "Ostani povezan", "back_to_top_aria": "Nazaj na vrh", "contact_href": "/sl/contact.html", "footer_about": "O nas", "footer_contact": "Kontakt", "footer_copy": "© 2026 Sentria", "footer_lab": "Lab", "footer_manifesto": "Sanje niso izolirani zapisi — so razvijajoče se strukture kontinuitete skozi čas.<br>Sentria je zgrajena za raziskovanje te kontinuitete.", "footer_privacy": "Zasebnost", "footer_support": "Podpri Sentrio", "hero_cta": "Vstopi v ekosistem", "hero_h1_line1": "Kraji se vračajo.", "hero_h1_line2": "Simboli se razvijajo.", "hero_sub": "Sanje niso izolirani zapisi. Sentria je modularni ekosistem za dolgoročno raziskovanje sanj — zgrajen okoli ponavljajočih se struktur, simbolne kontinuitete in postopnega nastajanja notranje kartografije skozi čas.", "hero_tag": "Sentria · Ekosistem kontinuitete sanj", "lab_href": "/sl/lab.html", "meta_description": "Sentria — modularni ekosistem za raziskovanje sanj, lucidno sanjanje in refleksivno raziskovanje zavesti.", "meta_title": "Sentria — Kraji se vračajo. Simboli se razvijajo.", "privacy_href": "/sl/privacy.html", "scroll_hint": "Pobrskaj", "section_h2_line1": "Neodvisni sistemi,", "section_h2_line2": "skupna kontinuiteta", "section_label": "Ekosistem", "signup_desc": "Občasna obvestila o novih modulih, zgodnjem dostopu in postopnem nastajanju kontinuitete v Sentria.", "signup_label": "Ostani povezan", "signup_placeholder": "tvoj@email.com", "signup_privacy": "Brez vsiljive pošte. Odjava kadarkoli. Glej našo <a href=\"/sl/privacy.html\">politiko zasebnosti</a>.", "signup_submit": "Naroči se", "signup_success": "Hvala — na seznamu si.", "signup_title": "Spremljaj ekosistem,<br>ko se razvija.", "signup_trigger": "Ostani povezan", "status_live": "🟢 Jedro", "status_research": "🔴 Raziskovalno", "theme_toggle_aria": "Preklopi temo"}};
 
 const LANG_NAMES = { en: "EN", sl: "SL" };
-function getLang() { return localStorage.getItem("sentria-lang") || (navigator.language.startsWith("sl") ? "sl" : "en"); }
+function getLang() { return sentriaStore.get("sentria-lang") || (navigator.language.startsWith("sl") ? "sl" : "en"); }
 function setLang(lang) {
   if (!TRANSLATIONS[lang]) return;
-  localStorage.setItem("sentria-lang", lang);
+  sentriaStore.set("sentria-lang", lang);
   document.documentElement.setAttribute("lang", lang);
+  const t = TRANSLATIONS[lang];
+  // Tab title + description follow the language too (they were stuck in English).
+  if (t.meta_title) document.title = t.meta_title;
+  const metaDesc = document.querySelector('meta[name="description"]');
+  if (metaDesc && t.meta_description) metaDesc.setAttribute("content", t.meta_description);
+  // Screen-reader labels (aria-label can't use data-i18n, which sets innerHTML).
+  document.querySelectorAll("[data-i18n-aria]").forEach(el => {
+    const label = t[el.getAttribute("data-i18n-aria")];
+    if (label !== undefined) el.setAttribute("aria-label", label.replace("{name}", el.getAttribute("data-name") || ""));
+  });
   document.querySelectorAll("[data-i18n]").forEach(el => {
     const v = TRANSLATIONS[lang][el.getAttribute("data-i18n")];
     if (v !== undefined) el.innerHTML = v;
@@ -1068,9 +1093,9 @@ document.addEventListener("DOMContentLoaded", () => {
 /* ── Theme ───────────────────────────────────────────────── */
 const themeBtn = document.getElementById('theme-toggle');
 const html = document.documentElement;
-function setTheme(t) { html.setAttribute('data-theme', t); localStorage.setItem('sentria-theme', t); }
+function setTheme(t) { html.setAttribute('data-theme', t); sentriaStore.set('sentria-theme', t); }
 themeBtn.addEventListener('click', () => setTheme(html.dataset.theme === 'dark' ? 'light' : 'dark'));
-const savedTheme = localStorage.getItem('sentria-theme');
+const savedTheme = sentriaStore.get('sentria-theme');
 if (savedTheme) setTheme(savedTheme);
 
 /* ── Header scroll ───────────────────────────────────────── */
@@ -1268,7 +1293,7 @@ document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
 </script>
 
 <!-- Back to top -->
-<button id="back-to-top" aria-label="Back to top">
+<button id="back-to-top" aria-label="Back to top" data-i18n-aria="back_to_top_aria">
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
 </button>
 
@@ -1287,7 +1312,7 @@ document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
 <!-- ============================================================
      SIGNUP — floating button + modal
      ============================================================ -->
-<button id="signup-trigger" aria-label="Stay connected">
+<button id="signup-trigger" aria-label="Stay connected" data-i18n-aria="aria_stay_connected">
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h16v16H4z" opacity="0"/><path d="M4 6h16v12H4z"/><path d="M4 7l8 6 8-6"/></svg>
   <span class="signup-trigger-label" data-i18n="signup_trigger">Stay connected</span>
 </button>
@@ -1295,7 +1320,7 @@ document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
 <div class="signup-backdrop" id="signup-backdrop"></div>
 
 <div class="signup-modal" id="signup-modal" aria-hidden="true">
-  <button class="signup-close" id="signup-close" aria-label="Close">
+  <button class="signup-close" id="signup-close" aria-label="Close" data-i18n-aria="aria_close">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
   </button>
 

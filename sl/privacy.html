@@ -1,28 +1,42 @@
 <!DOCTYPE html>
 <html lang="sl" data-theme="dark">
-<script>document.documentElement.setAttribute('data-theme', localStorage.getItem('sentria-theme') || 'dark');</script>
 <head>
 <meta charset="UTF-8">
+<script>
+// Browser storage can throw (blocked site data, some in-app browsers, certain
+// private modes). Every read/write of the theme and language goes through this
+// wrapper so a blocked storage degrades to "preferences are not remembered"
+// instead of a broken page.
+window.sentriaStore = {
+  get: function (k) { try { return sentriaStore.get(k); } catch (e) { return null; } },
+  set: function (k, v) { try { sentriaStore.set(k, v); } catch (e) { /* not remembered */ } }
+};
+document.documentElement.setAttribute('data-theme', window.sentriaStore.get('sentria-theme') || 'dark');
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Zasebnost — Sentria</title>
 <meta name="description" content="Kako hub Sentria ravna z informacijami — razumljivo in pošteno pojasnjeno.">
 
 <link rel="canonical" href="https://sentria-hub.vercel.app/sl/privacy.html">
+<link rel="alternate" hreflang="sl" href="https://sentria-hub.vercel.app/sl/privacy.html">
 <link rel="alternate" hreflang="en" href="https://sentria-hub.vercel.app/privacy.html">
 <link rel="alternate" hreflang="x-default" href="https://sentria-hub.vercel.app/privacy.html">
 <link rel="icon" type="image/png" href="/favicon.png">
-<link rel="apple-touch-icon" href="/logo.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <meta name="theme-color" content="#0a0b0f" media="(prefers-color-scheme: dark)">
 <meta name="theme-color" content="#f2efe9" media="(prefers-color-scheme: light)">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://sentria-hub.vercel.app/sl/privacy.html">
 <meta property="og:title" content="Zasebnost — Sentria">
 <meta property="og:description" content="Kako hub Sentria ravna z informacijami — razumljivo in pošteno pojasnjeno.">
-<meta property="og:image" content="https://sentria-hub.vercel.app/logo.png">
+<meta property="og:image" content="https://sentria-hub.vercel.app/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Sentria — a glowing green crystal emblem">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Zasebnost — Sentria">
 <meta name="twitter:description" content="Kako hub Sentria ravna z informacijami — razumljivo in pošteno pojasnjeno.">
-<meta name="twitter:image" content="https://sentria-hub.vercel.app/logo.png">
+<meta name="twitter:image" content="https://sentria-hub.vercel.app/og-image.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Mono:wght@300;400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
@@ -621,7 +635,7 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
                confirms an active membership — see that script's unlock()
                success path. Harmless, inert markup on every other page
                using this template. -->
-          <button class="theme-btn" id="lab-status-toggle" aria-label="Lab membership" style="display:none">
+          <button class="theme-btn" id="lab-status-toggle" aria-label="Članstvo v Labu" style="display:none">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="3.5"/><path d="M4.5 20c1.4-3.6 4.4-5.5 7.5-5.5s6.1 1.9 7.5 5.5"/></svg>
           </button>
           <div class="lab-status-popup" id="lab-status-popup" style="display:none">
@@ -652,37 +666,55 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
 
   <div class="container">
     <div class="content-block  ">
-<p><em>Nazadnje posodobljeno: julij 2026</em></p>
+<p><em>Nazadnje posodobljeno: oktober 2026</em></p>
 
-<p>Ta stran opisuje, kako hub Sentria — spletna stran, na kateri se trenutno nahajate — ravna z informacijami. Ne pokriva tehničnih podrobnosti posameznih aplikacij v ekosistemu Sentria (Somnia, Orbis, Oneiro, Limina in druge), saj je vsaka od njih ločeno, samostojno gostovano orodje. Kjer je relevantno, ta stran na splošno pojasni, kako se ta orodja odnašajo do vaših podatkov; vsaka aplikacija lahko sčasoma objavi svoje, bolj specifično obvestilo o zasebnosti.</p>
+<p>Ta stran opisuje, kako Sentria ravna z informacijami. Zajema hub Sentria — spletno stran, na kateri se trenutno nahajate — vključno s postopkom nakupa članstva Lab, ter skupno zaledno storitev (Sentria Services), ki jo hub in nekatere aplikacije Sentrie uporabljajo za članstvo Lab in kredite. Ne pokriva v celoti tehničnih podrobnosti posameznih aplikacij v ekosistemu Sentria (Somnia, Orbis, Oneiro, Limina in druge), saj je vsaka od njih ločeno orodje; kjer je relevantno, ta stran na splošno pojasni, kako se ta orodja odnašajo do vaših podatkov, vsaka aplikacija pa lahko objavi svoje, bolj specifično obvestilo o zasebnosti.</p>
 
-<h2>Za koga velja</h2>
+<h2>Kdo je odgovoren</h2>
 
-<p>Sentria je neodvisen, osebno voden projekt. Za njim ne stoji podjetje ali ekipa — le ena oseba, ki gradi zbirko orodij za raziskovanje sanj in zavesti. Če imate vprašanja glede te politike ali svojih podatkov, nas lahko kontaktirate preko <a href="/sl/contact.html">kontaktne strani</a>.</p>
+<p>Sentria je neodvisen, osebno voden projekt. Za njim ne stoji podjetje ali ekipa — le ena oseba, ki gradi zbirko orodij za raziskovanje sanj in zavesti. Za vaše podatke je odgovoren, in prodajalec članstev Lab ter kreditov je: Sašo Drobnič, Ljubljana, Slovenija. Vprašanja glede te politike ali svojih podatkov lahko pošljete preko <a href="/sl/contact.html">kontaktne strani</a> ali na <a href="mailto:saso.drobnic@gmail.com">saso.drobnic@gmail.com</a>.</p>
 
 <h2>Katere informacije zbiramo</h2>
 
-<p>Hub Sentria je sam po sebi statična spletna stran. Ne zahteva uporabniškega računa in privzeto ne sledi obiskovalcem ali njihovi uporabi strani.</p>
-
-<p>Informacije zbiramo le, ko se odločite da jih posredujete, konkretno:</p>
+<p>Hub Sentria je sam po sebi statična spletna stran. Ne zahteva uporabniškega računa in ne uporablja analitike ali oglaševalskih sledilcev. Informacije zbiramo le, ko se odločite, da jih posredujete, ali uporabite funkcijo, ki jih potrebuje, kot je opisano spodaj.</p>
 
 <p><strong>Prijava na novice.</strong> Če preko obrazca "Ostani povezan" posredujete svoj email naslov, ga shranimo, da vam lahko pošiljamo občasne posodobitve o ekosistemu. Preko tega obrazca ne zbiramo nobenih drugih informacij razen tistih, ki jih vnesete.</p>
 
 <p><strong>Kontaktni obrazec.</strong> Če oddate kontaktni obrazec, prejmemo ime, email naslov in sporočilo, ki ga posredujete, da vam lahko odgovorimo.</p>
 
-<p>Oba obrazca obdeluje <a href="https://formspree.io/legal/privacy-policy/" target="_blank" rel="noopener">Formspree</a>, storitev tretje osebe za obdelavo obrazcev. Formspree v imenu Sentrie prejema in shranjuje te vnose; njihova lastna politika zasebnosti ureja kako ravnajo s temi podatki na svoji infrastrukturi.</p>
+<p>Oba obrazca obdeluje <a href="https://formspree.io/legal/privacy-policy/" target="_blank" rel="noopener">Formspree</a>, storitev tretje osebe za obdelavo obrazcev. Formspree v imenu Sentrie prejema in shranjuje te vnose; njihova lastna politika zasebnosti ureja, kako ravnajo s temi podatki na svoji infrastrukturi.</p>
+
+<p><strong>Nakupi članstva Lab.</strong> Ko kupite članstvo Lab, vas preusmerimo na stran za plačilo, ki jo upravlja <a href="https://stripe.com/privacy" target="_blank" rel="noopener">Stripe</a>. Ta zbere vaše plačilne podatke in email naslov ter obdela plačilo. Sentria nikoli ne vidi in ne shrani številke vaše kartice. Stripe nam posreduje informacije, potrebne za dokončanje naročila ter za potrdila, vračila in podporo; Sentriina lastna zbirka podatkov ne shranjuje vašega imena ali email naslova.</p>
+
+<p>Sentriini lastni zapisi o članstvu so: enosmerni zgoščeni zapis (hash) vašega ključa Lab (samega ključa ne hranimo — zato vam ga, če ga izgubite, ni mogoče znova prikazati), vrsta članstva in morebitna značka ali številka člana, ki jo prinaša, ali gre za enkratno ali naročniško članstvo, datum poteka in — pri naročnini — identifikator naročnine pri Stripe. Takoj po plačilu se vaš ključ Lab na strežniku hrani do 15 minut, da ga lahko predamo strani, na kateri ste; izbriše se, takoj ko stran potrdi, da ga je prejela.</p>
+
+<p><strong>Krediti in računi aplikacij.</strong> Nekatere aplikacije Sentrie uporabljajo kredite za funkcije umetne inteligence. Delujejo preko anonimnega računa: vaša naprava iz glavne fraze izpelje identifikator računa in samo ta identifikator — nikoli fraza sama — se pošlje storitvi Sentria Services. Za vsak račun Sentria hrani identifikator, aplikacijo, za katero je bil ustvarjen, stanje kreditov ter čas ustvarjanja in zadnje uporabe. Dnevnik uporabe za vsako operacijo beleži identifikator računa, aplikacijo, vrsto operacije, porabljene kredite, ponudnika in model umetne inteligence, število žetonov (tokens) in čas; hrani samo najnovejše vnose. Vsebine vaših zahtev in odgovorov umetne inteligence Sentria ne shranjuje. Nakupe kreditov obdeluje Stripe na enak način kot članstva Lab.</p>
+
+<p><strong>Zahteve umetni inteligenci.</strong> Ko uporabite funkcijo umetne inteligence, ki poteka preko Sentria Services, se vsebina, ki jo posredujete, pošlje ponudniku umetne inteligence (trenutno OpenAI, Anthropic in/ali Voyage AI, odvisno od aplikacije), da ustvari odgovor. To se zgodi le, ko to aktivno zahtevate. S to vsebino ponudnik ravna v skladu s svojo politiko zasebnosti.</p>
+
+<p><strong>Tehnični podatki.</strong> Za zaščito storitve pred zlorabami Sentria Services začasno hrani vaš IP naslov v kratkotrajnih števcih, ki omejujejo pogostost zahtev. Ti števci se samodejno izbrišejo, po eni minuti do 24 urah, odvisno od funkcije. Naši gostiteljski ponudniki lahko pri delovanju svoje infrastrukture beležijo tudi zahteve, vključno z IP naslovi.</p>
 
 <h2>Lokalno shranjevanje, ne sledenje</h2>
 
-<p>Ta stran uporablja lokalno shrambo vašega brskalnika (local storage), da si zapomni dve nastavitvi: izbrano vizualno temo (svetla ali temna) in izbrani jezik. Te nastavitve ostanejo na vaši napravi, se nikoli ne prenašajo nikamor, in se ne uporabljajo za prepoznavanje ali sledenje med sejami ali stranmi.</p>
+<p>Ta stran uporablja lokalno shrambo vašega brskalnika (local storage), da si zapomni izbrano vizualno temo (svetla ali temna) in jezik. Če imate članstvo Lab, shrani tudi vaš ključ Lab — in sklic na nakup, iz katerega izhaja — da lahko stran prepozna vaše članstvo, ne da bi morali ključ vsakič vnašati. Ti podatki ostanejo v vašem brskalniku. Vaš ključ Lab se storitvi Sentria Services pošlje le, ko stran preverja ali odklepa vaše članstvo; nič v lokalni shrambi se ne uporablja za prepoznavanje ali sledenje med stranmi. Izbrišete jo lahko kadar koli v nastavitvah brskalnika; če to storite, si prej shranite kopijo ključa Lab.</p>
 
-<p>V času pisanja hub Sentria ne uporablja analitike, oglaševalskih skript ali kakršnih koli sledilnih piškotkov tretjih oseb.</p>
+<p>V času pisanja hub Sentria ne uporablja analitike, oglaševalskih skript ali sledilnih piškotkov.</p>
+
+<h2>Storitve, na katere se zanašamo</h2>
+
+<p>Delovanje Sentrie vključuje nekaj ponudnikov tretjih oseb, ki podatke obdelujejo v imenu Sentrie ali kot samostojna storitev: <strong>Vercel</strong> (gostovanje spletne strani in storitve Sentria Services), <strong>Upstash</strong> (zbirka podatkov za Sentria Services, gostovana v Frankfurtu, Nemčija), <strong>Stripe</strong> (plačila), <strong>Formspree</strong> (kontaktni obrazec in obrazec za novice), zgoraj navedeni ponudniki umetne inteligence (samo za funkcije umetne inteligence, ki jih uporabite) in <strong>Google Fonts</strong>. Pisave se nalagajo s strežnikov Googla, kar pomeni, da Google ob nalaganju strani prejme vaš IP naslov.</p>
+
+<p>Nekateri od teh ponudnikov imajo sedež v Združenih državah ali podatke obdelujejo tam. Kadar se osebni podatki oseb v Evropski uniji ali Evropskem gospodarskem prostoru prenašajo izven EGP, se Sentria zanaša na mehanizem prenosa, ki ga priznava GDPR: bodisi sklep Evropske komisije o ustreznosti za okvir EU–ZDA za varstvo podatkov (Data Privacy Framework) pri ponudnikih, ki so v njem certificirani (na primer Vercel in Stripe), bodisi standardne pogodbene klavzule iz ponudnikovih pogojev obdelave podatkov. Zbirka podatkov storitve Sentria Services se nahaja v EU (Frankfurt, Nemčija).</p>
+
+<h2>Zakaj obdelujemo informacije</h2>
+
+<p>Nakupi, članstva in krediti se obdelujejo za izpolnitev pogodbe z vami. Novice pošiljamo le, če ste se nanje prijavili, in prijavo lahko kadar koli prekličete. Kratkotrajni tehnični podatki, kot so števci na podlagi IP naslova, se obdelujejo z zakonitim namenom ohranjanja varnosti in razpoložljivosti storitve.</p>
 
 <h2>Posamezne aplikacije</h2>
 
 <p>Ekosistem Sentria je, kjer je to praktično izvedljivo, zgrajen po lokalno-prvih načelih. Aplikacije kot sta Somnia in Orbis so zasnovane tako, da so zapisi sanj, opombe in osebni podatki, ki jih ustvarite znotraj njih, privzeto shranjeni na vaši lastni napravi ali v brskalniku, ne na centralnem strežniku Sentrie. Nekatera orodja — na primer tista, ki ponujajo AI-podprto refleksijo — lahko določeno vsebino, ki jo namerno posredujete, pošljejo ponudniku AI storitev tretje osebe, da ustvarijo odgovor; to se zgodi le, ko to aktivno zahtevate.</p>
 
-<p>Ker je vsaka aplikacija ločen projekt s svojo arhitekturo, ta politika na ravni huba v njihovem imenu ne more podati natančnih tehničnih trditev. Ko bo ekosistem rasel, bodo posamezne aplikacije morda objavile svoja lastna, podrobnejša obvestila o zasebnosti.</p>
+<p>Ker je vsaka aplikacija ločen projekt s svojo arhitekturo, ta politika v njihovem imenu ne more podati natančnih tehničnih trditev. Ko bo ekosistem rasel, bodo posamezne aplikacije morda objavile svoja lastna, podrobnejša obvestila o zasebnosti.</p>
 
 <h2>Vaše pravice</h2>
 
@@ -690,11 +722,11 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
 
 <p>dostopa do osebnih podatkov, ki jih hranimo o vas; zahteve po popravku netočnih podatkov; zahteve po izbrisu vaših podatkov; omejitve ali ugovora določeni obdelavi; in prejema kopije vaših podatkov v prenosljivi obliki.</p>
 
-<p>Za uveljavljanje katere koli od teh pravic — na primer, da odstranimo vaš email naslov s seznama za novice — nas kontaktirajte preko <a href="/sl/contact.html">kontaktne strani</a>. Imate tudi pravico vložiti pritožbo pri svojem lokalnem organu za varstvo podatkov; v Sloveniji je to <a href="https://www.ip-rs.si/" target="_blank" rel="noopener">Informacijski pooblaščenec</a>.</p>
+<p>Za uveljavljanje katere koli od teh pravic — na primer, da odstranimo vaš email naslov s seznama za novice ali izbrišemo račun s krediti — nas kontaktirajte preko <a href="/sl/contact.html">kontaktne strani</a>. Ker Sentria hrani le zgoščeni zapis vašega ključa Lab in identifikator računa, izpeljan na vaši napravi, vas lahko prosimo, da posredujete ključ Lab ali identifikator računa, da najdemo prave zapise. Plačilnih zapisov, ki jih hrani Stripe, in zapisov, ki jih moramo hraniti po zakonu (na primer računovodskih), na zahtevo ni vedno mogoče izbrisati. Imate tudi pravico vložiti pritožbo pri svojem lokalnem organu za varstvo podatkov; v Sloveniji je to <a href="https://www.ip-rs.si/" target="_blank" rel="noopener">Informacijski pooblaščenec</a>.</p>
 
 <h2>Hramba podatkov</h2>
 
-<p>Prijave na novice in kontaktna sporočila hranimo, dokler so koristni za namen, za katerega so bili zbrani — praviloma dokler ne zahtevate njihove odstranitve, ali dokler niso več relevantni. Izbris lahko zahtevate kadar koli.</p>
+<p>Prijave na novice in kontaktna sporočila hranimo, dokler so koristni za namen, za katerega so bili zbrani — praviloma dokler ne zahtevate njihove odstranitve, ali dokler niso več relevantni. Zapise o članstvu Lab hranimo, dokler članstvo obstaja, in po njegovem koncu do vaše zahteve za izbris; ne vsebujejo imena ali email naslova. Račune s krediti hranimo do zahteve za izbris; dnevnik uporabe hrani samo najnovejše vnose. Plačilne zapise in račune hranita Stripe in mi, dokler to zahtevata računovodska in davčna zakonodaja — v Sloveniji praviloma deset let od konca leta, v katerem je bil posel opravljen. Števci na podlagi IP naslova se samodejno izbrišejo v 24 urah, ključ Lab, ki čaka na prevzem, se izbriše v 15 minutah, neunovčene kode za prenos kreditov pa potečejo v 24 urah.</p>
 
 <h2>Spremembe te politike</h2>
 
@@ -727,14 +759,14 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
 <script>
 const themeBtn = document.getElementById('theme-toggle');
 const html = document.documentElement;
-function setTheme(t) { html.setAttribute('data-theme', t); localStorage.setItem('sentria-theme', t); }
+function setTheme(t) { html.setAttribute('data-theme', t); sentriaStore.set('sentria-theme', t); }
 themeBtn.addEventListener('click', () => setTheme(html.dataset.theme === 'dark' ? 'light' : 'dark'));
-const savedTheme = localStorage.getItem('sentria-theme');
+const savedTheme = sentriaStore.get('sentria-theme');
 if (savedTheme) setTheme(savedTheme);
 const mainHeader = document.getElementById('main-header');
 window.addEventListener('scroll', () => { mainHeader.classList.toggle('scrolled', window.scrollY > 40); }, { passive: true });
 document.querySelectorAll('.lang-btn[data-set-lang]').forEach(a => {
-  a.addEventListener('click', () => localStorage.setItem('sentria-lang', a.dataset.setLang));
+  a.addEventListener('click', () => sentriaStore.set('sentria-lang', a.dataset.setLang));
 });
 </script>
 

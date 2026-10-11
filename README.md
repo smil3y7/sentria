@@ -30,9 +30,12 @@ what you upload here is exactly what visitors see.
 ├── logo.png
 ├── logo-mark.png
 ├── favicon.png
+├── apple-touch-icon.png
+├── og-image.jpg         ← 1200×630 preview used by link shares (Open Graph / Twitter)
 ├── screenshots/
 ├── robots.txt
 ├── sitemap.xml
+├── vercel.json          ← security headers (generated)
 └── README.md            ← this file
 ```
 

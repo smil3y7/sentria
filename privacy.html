@@ -1,28 +1,42 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="dark">
-<script>document.documentElement.setAttribute('data-theme', localStorage.getItem('sentria-theme') || 'dark');</script>
 <head>
 <meta charset="UTF-8">
+<script>
+// Browser storage can throw (blocked site data, some in-app browsers, certain
+// private modes). Every read/write of the theme and language goes through this
+// wrapper so a blocked storage degrades to "preferences are not remembered"
+// instead of a broken page.
+window.sentriaStore = {
+  get: function (k) { try { return sentriaStore.get(k); } catch (e) { return null; } },
+  set: function (k, v) { try { sentriaStore.set(k, v); } catch (e) { /* not remembered */ } }
+};
+document.documentElement.setAttribute('data-theme', window.sentriaStore.get('sentria-theme') || 'dark');
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Privacy — Sentria</title>
 <meta name="description" content="How the Sentria hub handles information — plainly and honestly explained.">
 
 <link rel="canonical" href="https://sentria-hub.vercel.app/privacy.html">
+<link rel="alternate" hreflang="en" href="https://sentria-hub.vercel.app/privacy.html">
 <link rel="alternate" hreflang="sl" href="https://sentria-hub.vercel.app/sl/privacy.html">
 <link rel="alternate" hreflang="x-default" href="https://sentria-hub.vercel.app/privacy.html">
 <link rel="icon" type="image/png" href="/favicon.png">
-<link rel="apple-touch-icon" href="/logo.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <meta name="theme-color" content="#0a0b0f" media="(prefers-color-scheme: dark)">
 <meta name="theme-color" content="#f2efe9" media="(prefers-color-scheme: light)">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://sentria-hub.vercel.app/privacy.html">
 <meta property="og:title" content="Privacy — Sentria">
 <meta property="og:description" content="How the Sentria hub handles information — plainly and honestly explained.">
-<meta property="og:image" content="https://sentria-hub.vercel.app/logo.png">
+<meta property="og:image" content="https://sentria-hub.vercel.app/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Sentria — a glowing green crystal emblem">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Privacy — Sentria">
 <meta name="twitter:description" content="How the Sentria hub handles information — plainly and honestly explained.">
-<meta name="twitter:image" content="https://sentria-hub.vercel.app/logo.png">
+<meta name="twitter:image" content="https://sentria-hub.vercel.app/og-image.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Mono:wght@300;400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
@@ -652,19 +666,17 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
 
   <div class="container">
     <div class="content-block  ">
-<p><em>Last updated: July 2026</em></p>
+<p><em>Last updated: October 2026</em></p>
 
-<p>This page describes how the Sentria hub — the website you are currently on — handles information. It does not cover the individual applications in the Sentria ecosystem (Somnia, Orbis, Oneiro, Limina, and others) in technical detail, as each is a separate, independently hosted tool. Where relevant, this page notes how those tools generally relate to your data; each application may publish its own, more specific privacy information over time.</p>
+<p>This page describes how Sentria handles information. It covers the Sentria hub — the website you are currently on — including the Lab membership purchase flow, and the shared back-end service (Sentria Services) that the hub and some Sentria applications use for Lab membership and credits. It does not cover the individual applications in the Sentria ecosystem (Somnia, Orbis, Oneiro, Limina, and others) in full technical detail, as each is a separate tool; where relevant, this page notes how those tools generally relate to your data, and each application may publish its own, more specific privacy information.</p>
 
-<h2>Who this applies to</h2>
+<h2>Who is responsible</h2>
 
-<p>Sentria is an independent, personally maintained project. There is no company or team behind it — just one person building a set of tools for exploring dreams and consciousness. If you have questions about this policy or your data, you can reach out through the <a href="/contact.html">contact page</a>.</p>
+<p>Sentria is an independent, personally maintained project. There is no company or team behind it — just one person building a set of tools for exploring dreams and consciousness. The person responsible for your data, and the seller of Lab memberships and credits, is: Sašo Drobnič, Ljubljana, Slovenia. Questions about this policy or your data can be sent through the <a href="/contact.html">contact page</a> or to <a href="mailto:saso.drobnic@gmail.com">saso.drobnic@gmail.com</a>.</p>
 
 <h2>What information is collected</h2>
 
-<p>The Sentria hub itself is a static website. It does not require an account, and by default it does not track who visits it or how they use it.</p>
-
-<p>Information is collected only when you choose to provide it, specifically:</p>
+<p>The Sentria hub itself is a static website. It does not require an account, and it does not use analytics or advertising trackers. Information is collected only when you choose to provide it or use a feature that needs it, as described below.</p>
 
 <p><strong>Newsletter signup.</strong> If you submit your email address through the "Stay connected" form, that email is stored so occasional updates about the ecosystem can be sent to you. No other information is collected through this form beyond what you type in.</p>
 
@@ -672,17 +684,37 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
 
 <p>Both forms are processed through <a href="https://formspree.io/legal/privacy-policy/" target="_blank" rel="noopener">Formspree</a>, a third-party form processing service. Formspree receives and stores these submissions on Sentria's behalf; their own privacy policy governs how they handle that data on their infrastructure.</p>
 
+<p><strong>Lab membership purchases.</strong> When you buy a Lab membership, you are sent to a checkout page run by <a href="https://stripe.com/privacy" target="_blank" rel="noopener">Stripe</a>, which collects your payment details and email address and processes the payment. Sentria never sees or stores your card number. Stripe shares with Sentria the information needed to complete the order and to handle receipts, refunds and support; Sentria's own database does not store your name or email address.</p>
+
+<p>Sentria's own records for a membership consist of: a one-way hash of your Lab key (the key itself is not stored — which is also why it cannot be shown to you again if you lose it), the type of membership and any badge or member number that comes with it, whether it is a one-time or subscription membership, its expiry date, and — for subscriptions — the Stripe subscription identifier. Right after payment, your Lab key is held on the server for up to 15 minutes so it can be handed to the page you are on; it is deleted as soon as the page confirms it has been received.</p>
+
+<p><strong>Credits and app accounts.</strong> Some Sentria applications use credits for AI features. These work through an anonymous account: your device derives an account identifier from a master phrase, and only that identifier — never the phrase itself — is sent to Sentria Services. For each account Sentria stores the identifier, the application it was created for, the credit balance, and when it was created and last used. A usage log records, for each operation, the account identifier, application, type of operation, credits used, AI provider and model, number of tokens, and time; it keeps only the most recent entries. The content of your requests and the AI responses is not stored by Sentria. Credit purchases are processed by Stripe in the same way as Lab memberships.</p>
+
+<p><strong>AI requests.</strong> When you use an AI feature that runs through Sentria Services, the content you submit is passed on to an AI provider (currently OpenAI, Anthropic and/or Voyage AI, depending on the application) to generate the response. This happens only when you actively make a request. How the provider handles that content is governed by the provider's own privacy policy.</p>
+
+<p><strong>Technical data.</strong> To protect the service against abuse, Sentria Services temporarily keeps your IP address in short-lived counters that limit how often requests can be made. These counters expire automatically, after between one minute and 24 hours depending on the feature. Our hosting providers may also log requests, including IP addresses, as part of operating their infrastructure.</p>
+
 <h2>Local storage, not tracking</h2>
 
-<p>This site uses your browser's local storage to remember two preferences: your chosen visual theme (light or dark) and your chosen language. These settings stay on your device, are never transmitted anywhere, and are not used to identify or track you across sessions or sites.</p>
+<p>This site uses your browser's local storage to remember your chosen visual theme (light or dark) and language. If you hold a Lab membership, it also stores your Lab key — and a reference to the purchase it came from — so the site can recognize your membership without asking you to paste the key every time. This data stays in your browser. Your Lab key is sent to Sentria Services only when the site checks or unlocks your membership; nothing in local storage is used to identify or track you across sites. You can clear it at any time through your browser settings; if you do, keep a copy of your Lab key first.</p>
 
-<p>At the time of writing, the Sentria hub does not use analytics, advertising scripts, or third-party tracking cookies of any kind.</p>
+<p>At the time of writing, the Sentria hub does not use analytics, advertising scripts, or tracking cookies.</p>
+
+<h2>Services we rely on</h2>
+
+<p>Running Sentria involves a small number of third-party providers, each of which processes data on Sentria's behalf or as an independent service: <strong>Vercel</strong> (hosting of the website and of Sentria Services), <strong>Upstash</strong> (database for Sentria Services, hosted in Frankfurt, Germany), <strong>Stripe</strong> (payments), <strong>Formspree</strong> (contact and newsletter forms), the AI providers named above (only for AI features you use), and <strong>Google Fonts</strong>. Fonts are loaded from Google's servers, which means Google receives your IP address when a page loads.</p>
+
+<p>Some of these providers are based in the United States or process data there. Where personal data of people in the European Union or European Economic Area is transferred outside the EEA, Sentria relies on a transfer mechanism recognised by the GDPR: either the European Commission's adequacy decision for the EU–US Data Privacy Framework, for providers certified under it (for example Vercel and Stripe), or the standard contractual clauses contained in the provider's data processing terms. The database of Sentria Services is located in the EU (Frankfurt, Germany).</p>
+
+<h2>Why information is processed</h2>
+
+<p>Purchases, memberships and credits are processed to fulfill the contract with you. The newsletter is sent only if you signed up for it, and you can withdraw at any time. Short-lived technical data such as IP-based counters is processed for the legitimate purpose of keeping the service secure and available.</p>
 
 <h2>The individual applications</h2>
 
 <p>Sentria's ecosystem is built around local-first principles wherever practical. Applications like Somnia and Orbis are designed so that the dream entries, notes, and personal data you create within them are stored on your own device or browser by default, not on a central Sentria server. Some tools — such as those offering AI-assisted reflection — may send specific content you choose to submit to a third-party AI provider in order to generate a response; this happens only when you actively request it.</p>
 
-<p>Because each application is a separate project with its own architecture, this hub-level policy cannot make precise technical claims on their behalf. As the ecosystem grows, individual applications may publish their own, more detailed privacy notes.</p>
+<p>Because each application is a separate project with its own architecture, this policy cannot make precise technical claims on their behalf. As the ecosystem grows, individual applications may publish their own, more detailed privacy notes.</p>
 
 <h2>Your rights</h2>
 
@@ -690,11 +722,11 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
 
 <p>access the personal data held about you; request correction of inaccurate data; request deletion of your data; restrict or object to certain processing; and receive a copy of your data in a portable format.</p>
 
-<p>To exercise any of these rights — for example, to have your email address removed from the newsletter list — reach out via the <a href="/contact.html">contact page</a>. You also have the right to lodge a complaint with your local data protection authority; in Slovenia, this is the <a href="https://www.ip-rs.si/" target="_blank" rel="noopener">Information Commissioner (Informacijski pooblaščenec)</a>.</p>
+<p>To exercise any of these rights — for example, to have your email address removed from the newsletter list, or to have a credits account deleted — reach out via the <a href="/contact.html">contact page</a>. Because Sentria stores only a hash of your Lab key and an account identifier derived on your device, we may ask you to supply your Lab key or account identifier to find the right records. Payment records held by Stripe, and records we are legally required to keep (such as accounting records), cannot always be deleted on request. You also have the right to lodge a complaint with your local data protection authority; in Slovenia, this is the <a href="https://www.ip-rs.si/" target="_blank" rel="noopener">Information Commissioner (Informacijski pooblaščenec)</a>.</p>
 
 <h2>Data retention</h2>
 
-<p>Newsletter and contact submissions are kept for as long as they remain useful to the purpose they were collected for — generally, until you ask for them to be removed, or until they are no longer relevant. You can request deletion at any time.</p>
+<p>Newsletter and contact submissions are kept for as long as they remain useful to the purpose they were collected for — generally, until you ask for them to be removed, or until they are no longer relevant. Lab membership records are kept for as long as the membership exists and, after it ends, until you ask for them to be deleted; they contain no name or email address. Credits accounts are kept until deletion is requested; the usage log keeps only the most recent entries. Payment and invoice records are kept by Stripe and by us for as long as accounting and tax law require — in Slovenia, generally ten years from the end of the year in which the transaction took place. IP-based counters expire automatically within 24 hours, a Lab key waiting to be collected is deleted within 15 minutes, and unredeemed credit transfer codes expire within 24 hours.</p>
 
 <h2>Changes to this policy</h2>
 
@@ -727,14 +759,14 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
 <script>
 const themeBtn = document.getElementById('theme-toggle');
 const html = document.documentElement;
-function setTheme(t) { html.setAttribute('data-theme', t); localStorage.setItem('sentria-theme', t); }
+function setTheme(t) { html.setAttribute('data-theme', t); sentriaStore.set('sentria-theme', t); }
 themeBtn.addEventListener('click', () => setTheme(html.dataset.theme === 'dark' ? 'light' : 'dark'));
-const savedTheme = localStorage.getItem('sentria-theme');
+const savedTheme = sentriaStore.get('sentria-theme');
 if (savedTheme) setTheme(savedTheme);
 const mainHeader = document.getElementById('main-header');
 window.addEventListener('scroll', () => { mainHeader.classList.toggle('scrolled', window.scrollY > 40); }, { passive: true });
 document.querySelectorAll('.lang-btn[data-set-lang]').forEach(a => {
-  a.addEventListener('click', () => localStorage.setItem('sentria-lang', a.dataset.setLang));
+  a.addEventListener('click', () => sentriaStore.set('sentria-lang', a.dataset.setLang));
 });
 </script>
 

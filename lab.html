@@ -1,28 +1,42 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="dark">
-<script>document.documentElement.setAttribute('data-theme', localStorage.getItem('sentria-theme') || 'dark');</script>
 <head>
 <meta charset="UTF-8">
+<script>
+// Browser storage can throw (blocked site data, some in-app browsers, certain
+// private modes). Every read/write of the theme and language goes through this
+// wrapper so a blocked storage degrades to "preferences are not remembered"
+// instead of a broken page.
+window.sentriaStore = {
+  get: function (k) { try { return sentriaStore.get(k); } catch (e) { return null; } },
+  set: function (k, v) { try { sentriaStore.set(k, v); } catch (e) { /* not remembered */ } }
+};
+document.documentElement.setAttribute('data-theme', window.sentriaStore.get('sentria-theme') || 'dark');
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Lab — Sentria</title>
 <meta name="description" content="Experimental tools and research prototypes exploring the future of the Sentria ecosystem.">
 
 <link rel="canonical" href="https://sentria-hub.vercel.app/lab.html">
+<link rel="alternate" hreflang="en" href="https://sentria-hub.vercel.app/lab.html">
 <link rel="alternate" hreflang="sl" href="https://sentria-hub.vercel.app/sl/lab.html">
 <link rel="alternate" hreflang="x-default" href="https://sentria-hub.vercel.app/lab.html">
 <link rel="icon" type="image/png" href="/favicon.png">
-<link rel="apple-touch-icon" href="/logo.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <meta name="theme-color" content="#0a0b0f" media="(prefers-color-scheme: dark)">
 <meta name="theme-color" content="#f2efe9" media="(prefers-color-scheme: light)">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://sentria-hub.vercel.app/lab.html">
 <meta property="og:title" content="Lab — Sentria">
 <meta property="og:description" content="Experimental tools and research prototypes exploring the future of the Sentria ecosystem.">
-<meta property="og:image" content="https://sentria-hub.vercel.app/logo.png">
+<meta property="og:image" content="https://sentria-hub.vercel.app/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Sentria — a glowing green crystal emblem">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Lab — Sentria">
 <meta name="twitter:description" content="Experimental tools and research prototypes exploring the future of the Sentria ecosystem.">
-<meta name="twitter:image" content="https://sentria-hub.vercel.app/logo.png">
+<meta name="twitter:image" content="https://sentria-hub.vercel.app/og-image.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Mono:wght@300;400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
@@ -1004,6 +1018,15 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
     if (e.key === 'Escape') closePopup();
   });
 
+  // The unlock slots sit in the cards BELOW this script. unlock() is async, but a
+  // fast response (cached key check) can still land before the parser reached
+  // them — then querySelector found nothing and unlocked content was silently
+  // never shown. Wait for the document if it is still being parsed.
+  function whenDomReady(fn) {
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fn);
+    else fn();
+  }
+
   function applyContent(content) {
     content.forEach(function(entry) {
       var slot = document.querySelector('.lab-unlock-slot[data-app-id="' + entry.appId + '"]');
@@ -1055,7 +1078,7 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
         renderStatus(access);
         if (access.active) {
           joinBlock.style.display = 'none';
-          applyContent(access.content);
+          whenDomReady(function() { applyContent(access.content); });
         } else {
           // Valid key, lapsed membership: let them see pricing again (to
           // join again) rather than leaving the page looking broken.
@@ -1298,14 +1321,14 @@ const LAB_NOTES = [];
 <script>
 const themeBtn = document.getElementById('theme-toggle');
 const html = document.documentElement;
-function setTheme(t) { html.setAttribute('data-theme', t); localStorage.setItem('sentria-theme', t); }
+function setTheme(t) { html.setAttribute('data-theme', t); sentriaStore.set('sentria-theme', t); }
 themeBtn.addEventListener('click', () => setTheme(html.dataset.theme === 'dark' ? 'light' : 'dark'));
-const savedTheme = localStorage.getItem('sentria-theme');
+const savedTheme = sentriaStore.get('sentria-theme');
 if (savedTheme) setTheme(savedTheme);
 const mainHeader = document.getElementById('main-header');
 window.addEventListener('scroll', () => { mainHeader.classList.toggle('scrolled', window.scrollY > 40); }, { passive: true });
 document.querySelectorAll('.lang-btn[data-set-lang]').forEach(a => {
-  a.addEventListener('click', () => localStorage.setItem('sentria-lang', a.dataset.setLang));
+  a.addEventListener('click', () => sentriaStore.set('sentria-lang', a.dataset.setLang));
 });
 </script>
 
