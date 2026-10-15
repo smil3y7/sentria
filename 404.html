@@ -89,6 +89,15 @@ header.scrolled {
 }
 [data-theme="light"] header.scrolled { background: rgba(242,239,233,0.88); }
 
+/* THE page container — defined ONCE, here, because the fixed header (logo, language
+   switch, theme button) and the page content all sit inside it. It used to be
+   declared separately in each template (1140px on the homepage, 1100px on the
+   other pages, with different narrow-screen breakpoints), so the logo jumped
+   sideways by 20px when you moved between the homepage and any other page.
+   Change the width or padding here and every page follows. */
+.container { max-width: 1140px; margin: 0 auto; padding: 0 2rem; position: relative; z-index: 1; }
+@media (max-width: 480px) { .container { padding: 0 1.25rem; } }
+
 nav { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
 
 .nav-logo { display: flex; align-items: center; gap: 0.6rem; text-decoration: none; }
@@ -197,7 +206,6 @@ body::before {
 a:focus-visible, button:focus-visible {
   outline: 2px solid var(--seafoam); outline-offset: 3px; border-radius: 4px;
 }
-.container { max-width: 1100px; margin: 0 auto; padding: 0 2rem; position: relative; z-index: 1; }
 
 footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6rem; position: relative; z-index: 1; }
 .footer-inner { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1.25rem; }
@@ -227,7 +235,6 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
 .content-block .btn-primary { margin-top: 1rem; }
 
 @media (max-width: 768px) {
-  .container { padding: 0 1.25rem; }
   .footer-inner { flex-direction: column; text-align: center; }
   .footer-links { justify-content: center; }
 }
