@@ -195,7 +195,12 @@ nav { display: flex; align-items: center; justify-content: space-between; gap: 1
 
 /* BASE — page-specific: narrower container + prose line-height */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; scrollbar-gutter: stable; }
+/* Always reserve the scrollbar's space. Without it, a page too short to scroll
+   (e.g. the Lab page while its price cards are still loading) is wider than a
+   long page, and everything centred — the logo included — jumps sideways by the
+   scrollbar's width when you move between them (or when the page grows). */
+@supports not (scrollbar-gutter: stable) { html { overflow-y: scroll; } }
 body {
   background: var(--bg); color: var(--text-primary);
   font-family: var(--font-body); font-weight: 300; font-size: 16px;
@@ -739,7 +744,8 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
     "badge": {
       "founding_member": "Founding member",
       "early_supporter": "Early supporter",
-      "member": "Member"
+      "member": "Member",
+      "complimentary": "Brezplačen dostop"
     },
     "lifetime": "Trajni dostop.",
     "renews": "Obnovi se okoli {date}.",
@@ -765,8 +771,25 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
     "keyBad": "Ta ključ ne izgleda pravilno — preveri, ali je brez tipkarskih napak.",
     "keyErr": "Nekaj je šlo narobe — poskusi znova.",
     "open": "Odpri",
-    "pending": "V razvoju — dostop boš dobil tukaj samodejno."
+    "pending": "V razvoju — dostop boš dobil tukaj samodejno.",
+    "resume": "Nadaljuj naročnino",
+    "resumeDone": "Naročnina nadaljuje — obnovi se okoli {date}.",
+    "resumeFailed": "Nadaljevanje ni uspelo — poskusi znova ali nas kontaktiraj.",
+    "resumeGone": "Ta naročnina se je že končala in je ni mogoče nadaljevati. Spodaj se pridruži znova.",
+    "compNoEnd": "Brezplačen dostop — brez datuma poteka.",
+    "compUntil": "Brezplačen dostop do {date}.",
+    "compEnded": "Tvoj brezplačen dostop se je končal."
   };
+
+  // Shared with the Lab Notes script that follows on this page: it needs to
+  // know whether a membership is unlocked (and which key to ask the server
+  // with) to open members-only notes. Updated by setLabState() below.
+  window.__sentriaLab = { apiBase: API_BASE, active: false, labKey: null };
+  function setLabState(active, labKey) {
+    window.__sentriaLab.active = !!active;
+    window.__sentriaLab.labKey = active ? labKey : null;
+    try { window.dispatchEvent(new CustomEvent('sentria-lab-state')); } catch (e) { /* very old browsers: notes just stay in their initial state */ }
+  }
 
   var grid = document.getElementById('lab-tier-grid');
   var tierEls = {};
@@ -903,7 +926,7 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
   function badgeClass(badge) {
     return badge === 'founding_member' ? 'lab-badge-founding'
       : badge === 'early_supporter' ? 'lab-badge-early'
-      : 'lab-badge-member';
+      : 'lab-badge-member'; // member and complimentary share the plain look
   }
 
   function renderStatus(access) {
@@ -920,7 +943,12 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
     var isSubscription = access.billingType === 'subscription' && !!access.membershipUntil;
     var text;
     var warn = false;
-    if (!isSubscription) {
+    if (access.billingType === 'complimentary') {
+      // Access granted by hand (the owner, a gift, a tester): nothing to
+      // cancel or upgrade, just an optional end date.
+      if (access.status === 'expired') { text = T.compEnded; warn = true; }
+      else text = access.membershipUntil ? T.compUntil.replace('{date}', formatDate(access.membershipUntil)) : T.compNoEnd;
+    } else if (!isSubscription) {
       text = T.lifetime;
     } else if (access.status === 'expired') {
       text = access.cancelRequested ? T.ended : T.lapsed;
@@ -945,10 +973,42 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
     statusActions.textContent = '';
     if (!isSubscription || access.status === 'expired') return;
 
+    if (access.cancelRequested) {
+      // Cancelled by mistake, or changed their mind: the paid period is still
+      // running, so the cancellation can be undone.
+      statusActions.appendChild(makeButton(T.resume, '', function(btn) { doResume(btn, access); }));
+    }
     statusActions.appendChild(makeButton(T.upgrade, '', function(btn) { startUpgrade(btn); }));
     if (!access.cancelRequested) {
       statusActions.appendChild(makeButton(T.cancel, 'lab-status-danger', function() { askCancel(access); }));
     }
+  }
+
+  function doResume(btn, access) {
+    btn.disabled = true;
+    setMessage(T.working);
+    fetch(API_BASE + '/api/lab-access/resume', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ labKey: currentKey })
+    })
+      .then(function(r) { return r.json().then(function(data) { return { ok: r.ok, status: r.status, data: data }; }); })
+      .then(function(result) {
+        if (result.status === 409) {
+          // Stripe no longer has a subscription to resume (it already ended).
+          btn.disabled = false;
+          setMessage(T.resumeGone, true);
+          return;
+        }
+        if (!result.ok) throw new Error('resume');
+        return unlock(currentKey, { silent: true }).then(function() {
+          setMessage(T.resumeDone.replace('{date}', formatDate(access.membershipUntil)));
+        });
+      })
+      .catch(function() {
+        btn.disabled = false;
+        setMessage(T.resumeFailed, true);
+      });
   }
 
   function startUpgrade(btn) {
@@ -1070,12 +1130,14 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
         checkingMsg.style.display = 'none';
         if (!access.valid) {
           joinBlock.style.display = ''; // undo the early synchronous hide, if it ran
+          setLabState(false, null);
           if (!opts.silent) showKeyError(T.keyBad);
           return;
         }
         currentKey = labKey;
         try { localStorage.setItem(STORAGE_KEY, labKey); } catch (e) { /* storage unavailable — unlock still works for this visit */ }
         renderStatus(access);
+        setLabState(access.active, labKey);
         if (access.active) {
           joinBlock.style.display = 'none';
           whenDomReady(function() { applyContent(access.content); });
@@ -1212,15 +1274,15 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
 </div>
 
 <h2>Lab Notes</h2>
-<p>Razmišljanja o tem, kam gre Sentria, zapisana sproti. Na voljo podpornikom Laba.</p>
+<p>Razmišljanja o tem, kam gre Sentria, zapisana sproti. Nekateri zapisi so odprti za vse, tisti z ključavnico pa so za člane Laba.</p>
 
 <div class="notes-list">
   <p class="notes-empty">Tukaj še ni ničesar — novi zapisi se dodajajo postopoma.</p>
 </div>
 
 <div class="notes-modal-backdrop" id="notes-modal-backdrop"></div>
-<div class="notes-modal" id="notes-modal" aria-hidden="true">
-  <button class="notes-modal-close" id="notes-modal-close" aria-label="Close">&times;</button>
+<div class="notes-modal" id="notes-modal" role="dialog" aria-modal="true" aria-hidden="true">
+  <button class="notes-modal-close" id="notes-modal-close" aria-label="Zapri">&times;</button>
   <div class="notes-modal-body" id="notes-modal-body"></div>
 </div>
 
@@ -1235,6 +1297,8 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
 }
 .notes-item:hover { border-color: var(--border-hover); background: var(--seafoam-soft); }
 .notes-item-lock { flex-shrink: 0; opacity: 0.6; font-size: 0.85rem; }
+.notes-item-title { flex: 1; }
+.notes-item-tag { flex-shrink: 0; font-size: 0.72rem; letter-spacing: 0.04em; color: var(--text-muted); }
 .notes-empty { font-size: 0.85rem; color: var(--text-muted); font-style: italic; }
 .notes-modal-backdrop {
   position: fixed; inset: 0; background: rgba(10,11,15,0.6); backdrop-filter: blur(6px);
@@ -1259,10 +1323,18 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
 .notes-modal-close:hover { color: var(--seafoam); border-color: var(--border-hover); }
 .notes-modal-body h2 { font-family: var(--font-display); font-size: 1.6rem; font-weight: 400; margin-bottom: 1.25rem; }
 .notes-modal-body p { color: var(--text-secondary); font-size: 0.92rem; line-height: 1.85; margin-bottom: 1.1rem; }
+.notes-modal-body .notes-locked-cta { margin-top: 0.5rem; }
+.notes-modal-body .notes-status { color: var(--text-muted); font-style: italic; }
 </style>
 
 <script>
+// Public notes carry their text here. Members-only notes carry NO text: only
+// id + title. Their text is fetched from Sentria Services when an unlocked
+// member opens one (the server checks the membership), so it never ships in
+// this page.
 const LAB_NOTES = [];
+const NOTES_LANG = 'sl';
+const NOTES_T = {"lockedTitle": "Samo za člane Laba", "lockedBody": "Ta zapis je za člane Laba. Pridruži se Labu ali zgoraj vnesi svoj Lab ključ, da ga prebereš.", "lockedCta": "Na članstvo", "loading": "Nalaganje…", "error": "Zapisa ni bilo mogoče naložiti. Če je tvoje članstvo poteklo, ni več na voljo."};
 (function() {
   const backdrop = document.getElementById('notes-modal-backdrop');
   const modal    = document.getElementById('notes-modal');
@@ -1270,30 +1342,91 @@ const LAB_NOTES = [];
   const body     = document.getElementById('notes-modal-body');
   if (!modal) return;
 
-  function openNote(idx) {
-    const note = LAB_NOTES[idx];
-    if (!note) return;
-    body.innerHTML = '<h2>' + note.title + '</h2>' + note.html;
+  const cache = {};      // members-only note id -> { title, html } (this visit only)
+  let openToken = 0;     // ignore a slow response if the reader already closed/changed note
+
+  function esc(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+  function labState() {
+    return window.__sentriaLab || { active: false, labKey: null, apiBase: null };
+  }
+  function show(html) {
+    body.innerHTML = html;
     modal.classList.add('open');
     backdrop.classList.add('open');
     modal.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
   }
   function closeNote() {
+    openToken++;
     modal.classList.remove('open');
     backdrop.classList.remove('open');
     modal.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
   }
-  document.querySelectorAll('.notes-item').forEach((btn, idx) => {
-    btn.addEventListener('click', () => openNote(idx));
-    btn.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openNote(idx); }
+  function renderNote(note) { return '<h2>' + esc(note.title) + '</h2>' + note.html; }
+
+  function showLocked(note) {
+    show('<h2>' + esc(note.title) + '</h2>'
+      + '<p><strong>' + esc(NOTES_T.lockedTitle) + '</strong></p>'
+      + '<p>' + esc(NOTES_T.lockedBody) + '</p>'
+      + '<p><button type="button" class="btn-primary notes-locked-cta">' + esc(NOTES_T.lockedCta) + '</button></p>');
+    const cta = body.querySelector('.notes-locked-cta');
+    if (cta) cta.addEventListener('click', function() {
+      closeNote();
+      const join = document.getElementById('lab-join-block');
+      if (join) join.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      const keyInput = document.getElementById('lab-key-input');
+      if (keyInput) setTimeout(function() { keyInput.focus({ preventScroll: true }); }, 400);
     });
+  }
+
+  function openMembersNote(note) {
+    const state = labState();
+    if (!state.active || !state.labKey) { showLocked(note); return; }
+    if (cache[note.id]) { show(renderNote(cache[note.id])); return; }
+
+    const token = ++openToken;
+    show('<h2>' + esc(note.title) + '</h2><p class="notes-status">' + esc(NOTES_T.loading) + '</p>');
+    fetch(state.apiBase + '/api/lab-access/note', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ labKey: state.labKey, lang: NOTES_LANG, noteId: note.id })
+    })
+      .then(function(r) { if (!r.ok) throw new Error('note ' + r.status); return r.json(); })
+      .then(function(data) {
+        cache[note.id] = { title: data.title || note.title, html: data.html };
+        if (token === openToken) show(renderNote(cache[note.id]));
+      })
+      .catch(function() {
+        if (token === openToken) show('<h2>' + esc(note.title) + '</h2><p class="notes-status">' + esc(NOTES_T.error) + '</p>');
+      });
+  }
+
+  function openNote(btn) {
+    const note = LAB_NOTES.find(function(n) { return n.id === btn.getAttribute('data-note-id'); });
+    if (!note) return;
+    if (note.access === 'public') show(renderNote(note));
+    else openMembersNote(note);
+  }
+
+  // 🔒 until a membership is unlocked, 🔓 after — for members-only notes.
+  function updateLocks() {
+    const unlocked = !!labState().active;
+    document.querySelectorAll('.notes-item[data-access="members"] .notes-item-lock').forEach(function(el) {
+      el.textContent = unlocked ? '🔓' : '🔒';
+    });
+  }
+  window.addEventListener('sentria-lab-state', updateLocks);
+  updateLocks();
+
+  document.querySelectorAll('.notes-item').forEach(function(btn) {
+    btn.addEventListener('click', function() { openNote(btn); });
   });
   closeBtn.addEventListener('click', closeNote);
   backdrop.addEventListener('click', closeNote);
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeNote(); });
+  document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeNote(); });
 })();
 </script>
 

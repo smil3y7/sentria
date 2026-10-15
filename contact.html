@@ -195,7 +195,12 @@ nav { display: flex; align-items: center; justify-content: space-between; gap: 1
 
 /* BASE — page-specific: narrower container + prose line-height */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; scrollbar-gutter: stable; }
+/* Always reserve the scrollbar's space. Without it, a page too short to scroll
+   (e.g. the Lab page while its price cards are still loading) is wider than a
+   long page, and everything centred — the logo included — jumps sideways by the
+   scrollbar's width when you move between them (or when the page grows). */
+@supports not (scrollbar-gutter: stable) { html { overflow-y: scroll; } }
 body {
   background: var(--bg); color: var(--text-primary);
   font-family: var(--font-body); font-weight: 300; font-size: 16px;
