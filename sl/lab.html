@@ -407,7 +407,14 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
   transition: gap var(--transition); font-weight: 400;
 }
 .lab-card-cta:hover { gap: 0.85rem; }
-.lab-card-cta svg { width: 13px; height: 13px; }
+.lab-card-cta svg { width: 13px; height: 13px; flex-shrink: 0; transition: transform var(--transition); }
+/* A download link points the arrow DOWN, and on hover the arrow dips instead of
+   sliding sideways. */
+.lab-card-cta--download:hover { gap: 0.5rem; }
+.lab-card-cta--download:hover svg { transform: translateY(3px); }
+@media (prefers-reduced-motion: reduce) {
+  .lab-card-cta, .lab-card-cta svg { transition: none; }
+}
 
 .lab-locked-tag {
   display: inline-flex;
@@ -420,12 +427,6 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
   margin-top: 0.9rem;
 }
 
-.lab-unlock-slot .lab-card-cta {
-  display: inline-flex; align-items: center; gap: 0.5rem;
-  color: var(--seafoam);
-  text-decoration: none; font-size: 0.82rem;
-  margin-top: 0.9rem; padding-top: 0.9rem; border-top: 1px solid var(--border);
-}
 .lab-unlock-slot .lab-card-pending {
   font-size: 0.78rem;
   color: var(--text-muted);
@@ -785,7 +786,8 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
     "resumeGone": "Ta naročnina se je že končala in je ni mogoče nadaljevati. Spodaj se pridruži znova.",
     "compNoEnd": "Brezplačen dostop — brez datuma poteka.",
     "compUntil": "Brezplačen dostop do {date}.",
-    "compEnded": "Tvoj brezplačen dostop se je končal."
+    "compEnded": "Tvoj brezplačen dostop se je končal.",
+    "download": "Prenesi"
   };
 
   // Shared with the Lab Notes script that follows on this page: it needs to
@@ -1094,6 +1096,24 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
     else fn();
   }
 
+  // A link whose path ends in one of these is treated as a file download.
+  var DOWNLOAD_FILE = /\.(zip|apk|aab|ipa|dmg|pkg|exe|msi|deb|appimage|pdf|epub)(?:[?#].*)?$/i;
+
+  // Built with DOM calls, not innerHTML (the same icon the homepage cards use).
+  function arrowIcon(down) {
+    var NS = 'http://www.w3.org/2000/svg';
+    var svg = document.createElementNS(NS, 'svg');
+    svg.setAttribute('viewBox', '0 0 24 24');
+    svg.setAttribute('fill', 'none');
+    svg.setAttribute('stroke', 'currentColor');
+    svg.setAttribute('stroke-width', '2');
+    svg.setAttribute('aria-hidden', 'true');
+    var path = document.createElementNS(NS, 'path');
+    path.setAttribute('d', down ? 'M12 5v14M5 12l7 7 7-7' : 'M5 12h14M12 5l7 7-7 7');
+    svg.appendChild(path);
+    return svg;
+  }
+
   function applyContent(content) {
     content.forEach(function(entry) {
       var slot = document.querySelector('.lab-unlock-slot[data-app-id="' + entry.appId + '"]');
@@ -1102,11 +1122,18 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6re
       slot.textContent = ''; // idempotent: unlock() can run again after a cancel
 
       if (entry.url) {
+        // Same look as the "Open …" links on the homepage cards: label + arrow
+        // that slides on hover. A link to a file is labelled "Download" and gets
+        // a downward arrow.
+        var isDownload = DOWNLOAD_FILE.test(entry.url);
         var a = document.createElement('a');
         a.href = entry.url;
-        a.className = 'lab-card-cta';
-        a.textContent = T.open;
-        if (entry.url.indexOf('http') === 0) a.target = '_blank';
+        a.className = 'lab-card-cta' + (isDownload ? ' lab-card-cta--download' : '');
+        var label = document.createElement('span');
+        label.textContent = isDownload ? T.download : T.open;
+        a.appendChild(label);
+        a.appendChild(arrowIcon(isDownload));
+        if (entry.url.indexOf('http') === 0) { a.target = '_blank'; a.rel = 'noopener'; }
         slot.appendChild(a);
       } else {
         var p = document.createElement('p');
