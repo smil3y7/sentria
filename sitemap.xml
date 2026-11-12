@@ -26,6 +26,16 @@
     <priority>0.3</priority>
   </url>
   <url>
+    <loc>https://sentria-hub.vercel.app/terms.html</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://sentria-hub.vercel.app/sl/terms.html</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
     <loc>https://sentria-hub.vercel.app/lab.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>

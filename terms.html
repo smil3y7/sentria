@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<script>
+// Browser storage can throw (blocked site data, some in-app browsers, certain
+// private modes). Every read/write of the theme and language goes through this
+// wrapper so a blocked storage degrades to "preferences are not remembered"
+// instead of a broken page.
+window.sentriaStore = {
+  get: function (k) { try { return sentriaStore.get(k); } catch (e) { return null; } },
+  set: function (k, v) { try { sentriaStore.set(k, v); } catch (e) { /* not remembered */ } }
+};
+document.documentElement.setAttribute('data-theme', window.sentriaStore.get('sentria-theme') || 'dark');
+</script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Terms — Sentria</title>
+<meta name="description" content="The terms under which Sentria Lab memberships and credits are sold — in plain language.">
+
+<link rel="canonical" href="https://sentria-hub.vercel.app/terms.html">
+<link rel="alternate" hreflang="en" href="https://sentria-hub.vercel.app/terms.html">
+<link rel="alternate" hreflang="sl" href="https://sentria-hub.vercel.app/sl/terms.html">
+<link rel="alternate" hreflang="x-default" href="https://sentria-hub.vercel.app/terms.html">
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="theme-color" content="#0a0b0f" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#f2efe9" media="(prefers-color-scheme: light)">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://sentria-hub.vercel.app/terms.html">
+<meta property="og:title" content="Terms — Sentria">
+<meta property="og:description" content="The terms under which Sentria Lab memberships and credits are sold — in plain language.">
+<meta property="og:image" content="https://sentria-hub.vercel.app/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Sentria — a glowing green crystal emblem">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Terms — Sentria">
+<meta name="twitter:description" content="The terms under which Sentria Lab memberships and credits are sold — in plain language.">
+<meta name="twitter:image" content="https://sentria-hub.vercel.app/og-image.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Mono:wght@300;400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   SENTRIA — page-specific styles (tokens/nav/shared components
+   come from templates/_shared.css, injected via the shared-CSS token)
+   ============================================================ */
+/* ============================================================
+   TOKENS
+   ============================================================ */
+:root {
+  --bg:             #0a0b0f;
+  --bg-card:        #0f1018;
+  --bg-card-hover:  #141620;
+  --surface:        #13151e;
+  --border:         rgba(126,207,196,0.09);
+  --border-hover:   rgba(126,207,196,0.26);
+  --text-primary:   #f0ede8;
+  --text-secondary: #8ba8a5;
+  --text-muted:     #3d5452;
+  --seafoam:        #7ecfc4;
+  --lavender:       #b9a3e6;   /* Lab: early supporter badge */
+  --seafoam-dim:    #4a9e96;
+  --seafoam-soft:   rgba(126,207,196,0.08);
+  --seafoam-glow:   rgba(126,207,196,0.04);
+  --obsidian:       #0a0b0f;
+  --font-display:   'Cormorant Garamond', Georgia, serif;
+  --font-body:      'DM Sans', sans-serif;
+  --font-mono:      'DM Mono', monospace;
+  --radius:         14px;
+  --radius-lg:      22px;
+  --transition:     0.35s cubic-bezier(0.4,0,0.2,1);
+}
+
+[data-theme="light"] {
+  --bg:             #f2efe9;
+  --bg-card:        #ffffff;
+  --bg-card-hover:  #faf8f4;
+  --surface:        #e8e3da;
+  --border:         rgba(45,107,100,0.12);
+  --border-hover:   rgba(45,107,100,0.30);
+  --text-primary:   #0d0e12;
+  --text-secondary: #3d6b66;
+  --text-muted:     #9ab0ac;
+  --seafoam:        #2d6b64;
+  --lavender:       #6a4fb0;   /* Lab: early supporter badge (darker for light bg) */
+  --seafoam-dim:    #4a9e96;
+  --seafoam-soft:   rgba(45,107,100,0.07);
+  --seafoam-glow:   rgba(45,107,100,0.03);
+  --obsidian:       #0d0e12;
+}
+
+/* ============================================================
+   NAV
+   ============================================================ */
+header {
+  position: fixed; top: 0; left: 0; right: 0;
+  z-index: 200; padding: 1.1rem 0;
+  border-bottom: 1px solid transparent;
+  transition: all var(--transition);
+}
+header.scrolled {
+  background: rgba(10,11,15,0.88);
+  backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+  border-bottom-color: var(--border);
+}
+[data-theme="light"] header.scrolled { background: rgba(242,239,233,0.88); }
+
+/* THE page container — defined ONCE, here, because the fixed header (logo, language
+   switch, theme button) and the page content all sit inside it. It used to be
+   declared separately in each template (1140px on the homepage, 1100px on the
+   other pages, with different narrow-screen breakpoints), so the logo jumped
+   sideways by 20px when you moved between the homepage and any other page.
+   Change the width or padding here and every page follows. */
+.container { max-width: 1140px; margin: 0 auto; padding: 0 2rem; position: relative; z-index: 1; }
+@media (max-width: 480px) { .container { padding: 0 1.25rem; } }
+
+nav { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+
+.nav-logo { display: flex; align-items: center; gap: 0.6rem; text-decoration: none; }
+.nav-logo img { height: 46px; width: auto; display: block; }
+
+.nav-right { display: flex; align-items: center; gap: 0.5rem; }
+
+#lang-switcher {
+  display: flex; gap: 2px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 100px; padding: 3px;
+}
+.lang-btn {
+  background: none; border: none; cursor: pointer;
+  font-family: var(--font-mono); font-size: 0.65rem;
+  letter-spacing: 0.1em; color: var(--text-muted);
+  padding: 0.3rem 0.65rem; border-radius: 100px;
+  transition: all var(--transition);
+}
+.lang-btn.active, .lang-btn:hover { background: var(--seafoam); color: var(--obsidian); }
+
+.theme-btn {
+  background: none; border: 1px solid var(--border);
+  border-radius: 50%; width: 36px; height: 36px;
+  cursor: pointer; color: var(--text-secondary);
+  display: flex; align-items: center; justify-content: center;
+  transition: all var(--transition); flex-shrink: 0;
+}
+.theme-btn:hover { border-color: var(--border-hover); color: var(--seafoam); background: var(--seafoam-soft); }
+.icon-sun, .icon-moon { width: 15px; height: 15px; display: block; }
+[data-theme="dark"]  .icon-sun  { display: none; }
+[data-theme="dark"]  .icon-moon { display: block; }
+[data-theme="light"] .icon-sun  { display: block; }
+[data-theme="light"] .icon-moon { display: none; }
+
+/* ============================================================
+   SHARED COMPONENTS
+   ============================================================ */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--seafoam);
+  color: var(--obsidian);
+  text-decoration: none;
+  padding: 0.8rem 1.9rem;
+  border-radius: 100px;
+  font-size: 0.88rem;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  transition: all var(--transition);
+  border: none;
+  cursor: pointer;
+}
+.btn-primary:hover { background: var(--seafoam-dim); transform: translateY(-2px); }
+.btn-primary svg { width: 14px; height: 14px; }
+
+#back-to-top {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 150;
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0;
+  transform: translateY(8px);
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+#back-to-top svg { width: 14px; height: 14px; }
+#back-to-top.visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: all;
+}
+#back-to-top:hover {
+  color: var(--seafoam);
+  border-color: var(--border-hover);
+}
+
+
+/* BASE — page-specific: narrower container + prose line-height */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; scrollbar-gutter: stable; }
+/* Always reserve the scrollbar's space. Without it, a page too short to scroll
+   (e.g. the Lab page while its price cards are still loading) is wider than a
+   long page, and everything centred — the logo included — jumps sideways by the
+   scrollbar's width when you move between them (or when the page grows). */
+@supports not (scrollbar-gutter: stable) { html { overflow-y: scroll; } }
+body {
+  background: var(--bg); color: var(--text-primary);
+  font-family: var(--font-body); font-weight: 300; font-size: 16px;
+  line-height: 1.75; min-height: 100vh; overflow-x: hidden;
+  transition: background var(--transition), color var(--transition);
+}
+body::before {
+  content: ''; position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.014'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 0;
+}
+a:focus-visible, button:focus-visible {
+  outline: 2px solid var(--seafoam); outline-offset: 3px; border-radius: 4px;
+}
+
+
+footer { border-top: 1px solid var(--border); padding: 2.5rem 0; margin-top: 6rem; position: relative; z-index: 1; }
+.footer-inner { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1.25rem; }
+.footer-logo { font-family: var(--font-display); font-size: 1.1rem; color: var(--text-muted); letter-spacing: 0.08em; }
+.footer-links { display: flex; gap: 2rem; list-style: none; }
+.footer-links a { font-size: 0.78rem; color: var(--text-muted); text-decoration: none; font-family: var(--font-mono); letter-spacing: 0.08em; transition: color var(--transition); }
+.footer-links a:hover { color: var(--seafoam); }
+.footer-support a { opacity: 0.6; }
+.footer-support a:hover { opacity: 1; }
+.footer-copy { font-size: 0.72rem; color: var(--text-muted); font-family: var(--font-mono); }
+
+.section-label { font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--seafoam); margin-bottom: 0.85rem; display: block; }
+
+.back-link {
+  display: inline-flex; align-items: center; gap: 0.5rem; color: var(--seafoam);
+  text-decoration: none; font-family: var(--font-mono); font-size: 0.72rem;
+  letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 3rem;
+  transition: gap var(--transition);
+}
+.back-link:hover { gap: 0.85rem; }
+.back-link svg { width: 14px; height: 14px; }
+
+.subpage-hero { padding: 10rem 0 4rem; }
+.subpage-hero h1 {
+  font-family: var(--font-display); font-size: clamp(2.5rem, 6vw, 4.5rem);
+  font-weight: 300; line-height: 1.1; color: var(--text-primary); margin-bottom: 0;
+}
+.subpage-hero h1 em { font-style: italic; color: var(--seafoam); }
+
+.content-block { max-width: 680px; padding-bottom: 6rem; }
+.content-block.wide { max-width: 920px; }
+.content-block p { color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 1rem; line-height: 1.85; }
+.content-block p em a,
+.content-block p a { color: var(--seafoam); text-decoration: underline; text-underline-offset: 3px; transition: opacity var(--transition); }
+.content-block p a:hover { opacity: 0.75; }
+.content-block strong { color: var(--text-primary); font-weight: 500; }
+
+/* Centered layout — for short utility pages (e.g. thank-you) rather than
+   the left-aligned reading prose the rest of these real pages use. */
+.subpage-hero.centered { text-align: center; }
+.content-block.centered { max-width: 560px; margin: 0 auto; text-align: center; }
+.content-block.centered .btn-primary { margin-top: 0.5rem; }
+.content-block h2 {
+  font-family: var(--font-display); font-size: 1.7rem; font-weight: 400;
+  color: var(--text-primary); margin: 3rem 0 1rem;
+}
+.content-block h2:first-child { margin-top: 0; }
+
+/* ── Lab experiment cards ─────────────────────────────────── */
+.lab-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem;
+  margin: 2rem 0;
+}
+@media (max-width: 680px) {
+  .lab-cards-grid { grid-template-columns: 1fr; }
+}
+
+.lab-card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  transition: border-color var(--transition), transform var(--transition);
+  display: flex;
+  flex-direction: column;
+}
+.lab-card:hover { border-color: var(--border-hover); transform: translateY(-2px); }
+
+.lab-card-visual {
+  aspect-ratio: 16/9;
+  background: var(--surface);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.lab-card-visual img {
+  width: 100%; height: 100%;
+  object-fit: cover; object-position: top;
+  display: block;
+  transition: transform 0.5s ease;
+}
+.lab-card:hover .lab-card-visual img { transform: scale(1.03); }
+
+.lab-card-body {
+  padding: 1.5rem 1.75rem;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.lab-card-top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.3rem;
+}
+
+.lab-card-name {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 400;
+  color: var(--text-primary);
+}
+
+.status-badge {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.25rem 0.6rem;
+  border-radius: 100px;
+  border: 1px solid var(--border);
+  white-space: nowrap;
+}
+.status-badge.experimental { color: #c9a96e; border-color: rgba(201,169,110,0.3); }
+.status-badge.research     { color: #c47e8a; border-color: rgba(196,126,138,0.3); }
+.status-badge.beta         { color: var(--seafoam); border-color: rgba(126,207,196,0.3); }
+.status-badge.coming-soon  { color: var(--text-muted); }
+
+.lab-card-role {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  color: var(--seafoam);
+  margin-bottom: 0.85rem;
+}
+
+.lab-card p {
+  font-size: 0.9rem;
+  margin-bottom: 0.9rem;
+  flex-grow: 1;
+}
+
+.lab-card-continuity {
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  padding: 0.4rem 0.7rem;
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  width: fit-content;
+  margin-bottom: 0.9rem;
+}
+.lab-card-continuity::before {
+  content: '';
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  background: var(--seafoam);
+  opacity: 0.45;
+  flex-shrink: 0;
+}
+
+.lab-card-meta {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--border);
+}
+.lab-card-meta span strong {
+  color: var(--text-secondary);
+  font-weight: 400;
+}
+
+.lab-card-cta {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  color: var(--seafoam);
+  text-decoration: none; font-size: 0.82rem;
+  margin-top: 0.9rem; padding-top: 0.9rem; border-top: 1px solid var(--border);
+  transition: gap var(--transition); font-weight: 400;
+}
+.lab-card-cta:hover { gap: 0.85rem; }
+.lab-card-cta svg { width: 13px; height: 13px; flex-shrink: 0; transition: transform var(--transition); }
+/* A download link points the arrow DOWN, and on hover the arrow dips instead of
+   sliding sideways. */
+.lab-card-cta--download:hover { gap: 0.5rem; }
+.lab-card-cta--download:hover svg { transform: translateY(3px); }
+@media (prefers-reduced-motion: reduce) {
+  .lab-card-cta, .lab-card-cta svg { transition: none; }
+}
+
+.lab-locked-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  margin-top: 0.9rem;
+}
+
+.lab-unlock-slot .lab-card-pending {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-top: 0.9rem; padding-top: 0.9rem; border-top: 1px solid var(--border);
+}
+.lab-unlock-slot .lab-card-instructions {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  margin-top: 0.5rem;
+  white-space: pre-line;
+}
+
+.lab-key-entry {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin: 1.25rem 0;
+}
+.lab-key-entry input {
+  flex: 1 1 260px;
+  min-width: 0;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.7rem 0.9rem;
+  color: var(--text-primary);
+}
+.lab-key-entry input::placeholder { color: var(--text-muted); }
+.lab-key-entry .btn-primary { flex-shrink: 0; margin-top: 0; }
+.lab-key-entry input.lab-key-error { border-color: #e0b65c; color: #e0b65c; }
+.lab-key-entry input.lab-key-error::placeholder { color: #e0b65c; }
+
+.lab-status-wrap { position: relative; }
+.lab-status-popup {
+  position: absolute;
+  top: calc(100% + 0.6rem);
+  right: 0;
+  z-index: 50;
+  width: 280px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.1rem 1.3rem;
+  background: var(--surface);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+}
+.lab-status-badge {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--seafoam);
+}
+.lab-status-detail {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-top: 0.4rem;
+}
+.lab-status-detail.lab-status-warning { color: #e0b65c; }
+.lab-status-actions { margin-top: 0.9rem; display: flex; flex-direction: column; gap: 0.5rem; }
+.lab-status-actions:empty { display: none; }
+.lab-status-action {
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  padding: 0.5rem 0.8rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: transparent;
+  color: var(--text-primary);
+  cursor: pointer;
+  text-align: center;
+  transition: border-color var(--transition), color var(--transition);
+}
+.lab-status-action:hover:not(:disabled) { border-color: var(--seafoam); color: var(--seafoam); }
+.lab-status-action:disabled { opacity: 0.55; cursor: default; }
+.lab-status-action.lab-status-danger:hover:not(:disabled) { border-color: #e0b65c; color: #e0b65c; }
+.lab-status-confirm { font-size: 0.8rem; color: var(--text-secondary); margin: 0; }
+.lab-status-message { font-size: 0.8rem; margin: 0.6rem 0 0; color: var(--text-secondary); }
+.lab-status-message:empty { display: none; }
+
+.lab-join-block {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 2rem;
+  margin: 1.5rem 0 3rem;
+  text-align: center;
+}
+.lab-join-block p { margin-bottom: 1rem; }
+.lab-join-block .btn-primary { margin-top: 0.25rem; }
+
+.lab-notify-form {
+  display: flex; gap: 0.75rem; max-width: 420px; margin: 0 auto;
+}
+.lab-notify-form input {
+  flex: 1; min-width: 0;
+  background: var(--bg, var(--obsidian));
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  padding: 0.8rem 1.25rem;
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 0.88rem; font-weight: 300;
+  outline: none;
+  transition: border-color var(--transition);
+}
+.lab-notify-form input:focus { border-color: var(--seafoam); }
+.lab-notify-form input::placeholder { color: var(--text-muted); }
+.lab-notify-form .btn-primary { flex-shrink: 0; margin-top: 0; justify-content: center; }
+.lab-notify-privacy { font-size: 0.78rem; color: var(--text-muted); margin-top: 0.9rem; margin-bottom: 0; }
+.lab-notify-privacy a { color: var(--text-muted); text-decoration: underline; }
+
+.lab-tier-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
+  text-align: left;
+}
+.lab-tier {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  background: var(--surface);
+  /* column flex + margin-top:auto on the button pins every card's button to
+     the bottom, whatever the note text length (grid items are already equal height) */
+  display: flex;
+  flex-direction: column;
+}
+.lab-tier-badge {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--seafoam);
+  margin-bottom: 0.5rem;
+}
+/* Badge colours per tier — shared by the pricing cards and the profile
+   window, so a member's badge looks the same everywhere. */
+.lab-tier[data-tier="earlySupporter"] .lab-tier-badge,
+.lab-status-badge.lab-badge-early { color: var(--lavender); }
+.lab-tier[data-tier="standard"] .lab-tier-badge,
+.lab-tier[data-tier="subscription"] .lab-tier-badge,
+.lab-status-badge.lab-badge-member { color: var(--text-secondary); }
+
+.lab-tier-price {
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  color: var(--text-primary);
+  margin-bottom: 0.4rem;
+}
+.lab-tier-price span {
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-left: 0.3rem;
+}
+.lab-tier-note {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+}
+.lab-join-block .lab-tier .btn-primary { width: 100%; justify-content: center; text-align: center; margin-top: auto; padding-left: 1rem; padding-right: 1rem; }
+.lab-join-status {
+  font-size: 0.85rem;
+  color: var(--seafoam);
+  margin-top: 1rem;
+}
+.lab-claim-key {
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  word-break: break-all;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem 1.25rem;
+  color: var(--seafoam);
+  margin: 0.75rem 0 1.25rem;
+}
+.lab-claim-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+}
+/* breathing room between the claim buttons and the "back to homepage" link */
+[data-thanks="lab"] { margin-bottom: 2.5rem; }
+
+@media (max-width: 480px) {
+  .lab-notify-form { flex-direction: column; }
+}
+
+@media (max-width: 768px) {
+  .footer-inner { flex-direction: column; text-align: center; }
+  .footer-links { justify-content: center; }
+}
+</style>
+</head>
+
+<body>
+
+<header id="main-header">
+  <div class="container">
+    <nav>
+      <a href="/" class="nav-logo">
+        <img src="/logo-mark.png" alt="Sentria logo">
+      </a>
+      <div class="nav-right">
+        <div id="lang-switcher">
+          <a href="/terms.html" class="lang-btn active" data-set-lang="en">EN</a>
+          <a href="https://sentria-hub.vercel.app/sl/terms.html" class="lang-btn" data-set-lang="sl">SL</a>
+        </div>
+        <button class="theme-btn" id="theme-toggle" aria-label="Toggle theme">
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </button>
+        <div class="lab-status-wrap">
+          <!-- Hidden until a page-specific script (currently only lab.html's)
+               confirms an active membership — see that script's unlock()
+               success path. Harmless, inert markup on every other page
+               using this template. -->
+          <button class="theme-btn" id="lab-status-toggle" aria-label="Lab membership" style="display:none">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="3.5"/><path d="M4.5 20c1.4-3.6 4.4-5.5 7.5-5.5s6.1 1.9 7.5 5.5"/></svg>
+          </button>
+          <div class="lab-status-popup" id="lab-status-popup" style="display:none">
+            <div class="lab-status-badge" id="lab-status-badge"></div>
+            <p class="lab-status-detail" id="lab-status-detail"></p>
+            <!-- Filled in by lab.html's script (localized there): cancel /
+                 upgrade controls, shown only to subscribers. -->
+            <div class="lab-status-actions" id="lab-status-actions"></div>
+            <p class="lab-status-message" id="lab-status-message" role="status"></p>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="subpage-hero ">
+    <div class="container">
+      <a href="/" class="back-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        Sentria
+      </a>
+      <span class="section-label">Legal</span>
+      <h1>Terms of <em>Sale</em></h1>
+    </div>
+  </section>
+
+  <div class="container">
+    <div class="content-block  ">
+<p><em>Last updated: November 2026</em></p>
+
+<p>These terms explain what you get when you buy something from Sentria — a Lab membership or app credits — and what both sides can expect. They are written to be read, not skimmed past. They do not limit any rights you have under mandatory consumer law.</p>
+
+<h2>Who is selling</h2>
+
+<p>Sentria is an independent, personally maintained project. The seller is Sašo Drobnič, Ljubljana, Slovenia, an individual. Contact: <a href="mailto:saso.drobnic@gmail.com">saso.drobnic@gmail.com</a> or the <a href="/contact.html">contact page</a>. Payments are processed by <a href="https://stripe.com/legal" target="_blank" rel="noopener">Stripe</a>; the price you see in checkout is the price you pay, and Stripe sends you the receipt.</p>
+
+<h2>What you can buy</h2>
+
+<p><strong>Lab membership.</strong> Access to the Sentria Lab: experimental apps and members-only Lab Notes. It is sold either as a one-time purchase ("lifetime") or as a monthly subscription. Early one-time purchases are limited in number and priced in phases (Founding Member, Early Supporter, then standard); the phase and price on sale are decided by the server at checkout. Subscribers can upgrade to a lifetime membership at the upgrade price shown to them.</p>
+
+<p><strong>Credits.</strong> Some Sentria apps use credits for AI features. Credits are bought in packages, tied to the anonymous account of the app you buy them in, and spent per operation at the rate that app shows.</p>
+
+<h2>Your Lab key</h2>
+
+<p>After a Lab purchase you receive a personal key beginning with <code>LAB-</code>. It is shown once on the thank-you page. Sentria stores only a one-way hash of it, so it cannot be shown again — keep it somewhere safe. If you lose it, write to me and I will look into issuing a new one. The key is for your own use; please do not publish or share it. I may switch off a key that is being widely shared or abused.</p>
+
+<h2>Delivery and your right of withdrawal</h2>
+
+<p>Lab access and credits are digital content delivered immediately after payment. Under EU consumer rules you normally have 14 days to withdraw from a distance purchase, but that right ends for digital content once delivery has begun with your prior express consent and your acknowledgement that you lose the right of withdrawal. For this reason, checkout asks you to tick a box confirming exactly that before you pay. If you do not agree, please do not buy. Your statutory rights in case of faulty or non-delivered digital content are not affected.</p>
+
+<h2>Subscriptions</h2>
+
+<p>A subscription renews automatically every month until you cancel. You can cancel at any time from your Lab profile on the Lab page. Cancelling takes effect at the end of the period you have already paid for; you keep access until then, and access ends right after. Payments are not refunded pro rata for the unused part of a period. If a renewal payment fails, access continues for a short grace period while Stripe retries the payment; if it is not resolved, the membership ends.</p>
+
+<h2>Refunds and disputes</h2>
+
+<p>Beyond what the law requires, refunds are at my discretion — if something went wrong, write to me and we will sort it out. If a purchase is refunded in full, the Lab key is switched off and a subscription is cancelled. If a payment is disputed with your bank, access is suspended while the dispute is open and restored if the dispute is decided in my favour. Please contact me before opening a dispute; it is faster for both of us.</p>
+
+<h2>What "lifetime" means</h2>
+
+<p>"Lifetime" means access to the Sentria Lab for as long as the Lab is operated — not for the lifetime of the buyer. I intend to keep it running for a long time, and if I ever decide to discontinue it, I will announce that in advance. Which apps and notes are in the Lab will change over time: apps are added, updated, and sometimes removed.</p>
+
+<h2>Experimental software and no medical advice</h2>
+
+<p>Lab apps are labelled experimental, beta or research for a reason: they can have bugs, change, or be incomplete, and are provided as they are. Sentria apps are tools for exploring dreams and consciousness. They are not medical devices and do not give medical, psychological or therapeutic advice; AI-generated output can be wrong. If you have a health condition, or if a particular app (for example one using sound or light) could affect you, take sensible care and ask a professional.</p>
+
+<h2>Liability</h2>
+
+<p>I am responsible for damage I cause intentionally or through gross negligence, and for anything the law does not allow me to exclude. Otherwise my liability for the service is limited to the amount you paid for it.</p>
+
+<h2>Changes and applicable law</h2>
+
+<p>If these terms change, the new version applies to purchases made after the change; what you bought keeps the terms that applied when you bought it. The date at the top shows the current version. These terms are governed by Slovenian law, without taking away any protection that mandatory consumer law of your country of residence gives you.</p>
+
+<p>Questions? <a href="/contact.html">Get in touch</a>. See also the <a href="/privacy.html">privacy policy</a>.</p>
+
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="container">
+    <div class="footer-inner">
+      <div class="footer-logo">Sentria</div>
+      <ul class="footer-links">
+        <li><a href="/about.html">About</a></li>
+        <li><a href="/lab.html">Lab</a></li>
+        <li><a href="/privacy.html">Privacy</a></li>
+        <li><a href="/terms.html">Terms</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li class="footer-support"><a href="https://ko-fi.com/smiley7" target="_blank" rel="noopener">Support Sentria</a></li>
+      </ul>
+      <div class="footer-copy">© 2026 Sentria</div>
+    </div>
+  </div>
+</footer>
+
+<script>
+const themeBtn = document.getElementById('theme-toggle');
+const html = document.documentElement;
+function setTheme(t) { html.setAttribute('data-theme', t); sentriaStore.set('sentria-theme', t); }
+themeBtn.addEventListener('click', () => setTheme(html.dataset.theme === 'dark' ? 'light' : 'dark'));
+const savedTheme = sentriaStore.get('sentria-theme');
+if (savedTheme) setTheme(savedTheme);
+const mainHeader = document.getElementById('main-header');
+window.addEventListener('scroll', () => { mainHeader.classList.toggle('scrolled', window.scrollY > 40); }, { passive: true });
+document.querySelectorAll('.lang-btn[data-set-lang]').forEach(a => {
+  a.addEventListener('click', () => sentriaStore.set('sentria-lang', a.dataset.setLang));
+});
+</script>
+
+<!-- Back to top -->
+<button id="back-to-top" aria-label="Back to top">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+</button>
+
+<style>
+/* ── Contact page ─────────────────────────────────────────────── */
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.6fr;
+  gap: 5rem;
+  padding-bottom: 6rem;
+  align-items: start;
+}
+@media (max-width: 700px) {
+  .contact-grid { grid-template-columns: 1fr; gap: 3rem; }
+}
+.contact-info h2 {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 300;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+  line-height: 1.3;
+}
+.contact-info p {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.85;
+  margin-bottom: 2rem;
+}
+.contact-detail { display: flex; flex-direction: column; gap: 1rem; }
+.contact-row { display: flex; flex-direction: column; gap: 0.2rem; }
+.contact-row-label {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--seafoam);
+}
+.contact-row-value { font-size: 0.9rem; color: var(--text-secondary); }
+.contact-row-value a { color: var(--seafoam); text-decoration: none; transition: opacity 0.2s; }
+.contact-row-value a:hover { opacity: 0.75; }
+
+.contact-form { display: flex; flex-direction: column; gap: 1.25rem; max-width: 560px; }
+.form-group { display: flex; flex-direction: column; gap: 0.4rem; }
+.form-group label {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--seafoam);
+}
+.form-group input,
+.form-group textarea {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.75rem 1rem;
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 300;
+  outline: none;
+  transition: border-color var(--transition);
+  resize: vertical;
+}
+.form-group input:focus,
+.form-group textarea:focus { border-color: var(--seafoam); }
+.form-group input::placeholder,
+.form-group textarea::placeholder { color: var(--text-muted); }
+.form-group textarea { min-height: 140px; }
+.form-submit { margin-top: 0.5rem; }
+</style>
+
+<script>
+(function() {
+  const btn = document.getElementById('back-to-top');
+  window.addEventListener('scroll', () => {
+    btn.classList.toggle('visible', window.scrollY > 400);
+  }, { passive: true });
+  btn.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+})();
+
+// Redirect to our own thank-you page after a Formspree submission,
+// without depending on Formspree's server-side "Thank You redirect"
+// setting — that feature is Personal/Professional/Business-plan only
+// (help.formspree.io/articles/form-and-project-settings/thank-you-redirect),
+// so a hidden _next field alone isn't reliable on the Free plan. Instead,
+// submit via fetch and navigate client-side ourselves on completion.
+// Any form without a "_next" field (there aren't any today, but if one's
+// added later without it) is left completely alone and submits normally.
+(function() {
+  document.querySelectorAll('form').forEach(form => {
+    const nextInput = form.querySelector('input[name="_next"]');
+    if (!nextInput) return;
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const data = new FormData(form);
+      try {
+        await fetch(form.action, {
+          method: 'POST',
+          body: data,
+          headers: { 'Accept': 'application/json' }
+        });
+      } catch (err) {
+        // Network error — still proceed to the thank-you page;
+        // Formspree handles validation server-side regardless.
+      }
+      window.location.href = nextInput.value;
+    });
+  });
+})();
+</script>
+
+</body>
+</html>
