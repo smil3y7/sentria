@@ -8,8 +8,8 @@
 // wrapper so a blocked storage degrades to "preferences are not remembered"
 // instead of a broken page.
 window.sentriaStore = {
-  get: function (k) { try { return sentriaStore.get(k); } catch (e) { return null; } },
-  set: function (k, v) { try { sentriaStore.set(k, v); } catch (e) { /* not remembered */ } }
+  get: function (k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+  set: function (k, v) { try { localStorage.setItem(k, v); } catch (e) { /* not remembered */ } }
 };
 document.documentElement.setAttribute('data-theme', window.sentriaStore.get('sentria-theme') || 'dark');
 </script>
@@ -757,6 +757,10 @@ const savedTheme = sentriaStore.get('sentria-theme');
 if (savedTheme) setTheme(savedTheme);
 const mainHeader = document.getElementById('main-header');
 window.addEventListener('scroll', () => { mainHeader.classList.toggle('scrolled', window.scrollY > 40); }, { passive: true });
+// The page the visitor is reading IS their language choice. Remember it even if
+// they arrived straight on /sl/... (search, shared link) and never clicked the
+// switcher — otherwise the logo (→ "/") falls back to the browser language.
+sentriaStore.set('sentria-lang', 'sl');
 document.querySelectorAll('.lang-btn[data-set-lang]').forEach(a => {
   a.addEventListener('click', () => sentriaStore.set('sentria-lang', a.dataset.setLang));
 });

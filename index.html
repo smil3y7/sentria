@@ -8,8 +8,8 @@
 // wrapper so a blocked storage degrades to "preferences are not remembered"
 // instead of a broken page.
 window.sentriaStore = {
-  get: function (k) { try { return sentriaStore.get(k); } catch (e) { return null; } },
-  set: function (k, v) { try { sentriaStore.set(k, v); } catch (e) { /* not remembered */ } }
+  get: function (k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+  set: function (k, v) { try { localStorage.setItem(k, v); } catch (e) { /* not remembered */ } }
 };
 document.documentElement.setAttribute('data-theme', window.sentriaStore.get('sentria-theme') || 'dark');
 </script>
